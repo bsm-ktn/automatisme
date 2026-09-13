@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Entraînement — Conversions de bases | Automatisme</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-base:#0D1117;
+    --bg-panel:#141B24;
+    --bg-panel-2:#101720;
+    --grid-line: rgba(255,255,255,0.045);
+    --text-primary:#EAF0F6;
+    --text-muted:#8A97A8;
+    --text-dim:#5C6B7D;
+    --hairline: rgba(255,255,255,0.09);
+
+    --dec: #FFB020;
+    --dec-dim: rgba(255,176,32,0.12);
+    --bin: #29C5F6;
+    --bin-dim: rgba(41,197,246,0.12);
+    --oct: #3ECF8E;
+    --oct-dim: rgba(62,207,142,0.12);
+    --hex: #C77DFF;
+    --hex-dim: rgba(199,125,255,0.12);
+    --bad: #FF5C6C;
+    --bad-dim: rgba(255,92,108,0.12);
+
+    --font-display:'Big Shoulders Display', sans-serif;
+    --font-body:'IBM Plex Sans', sans-serif;
+    --font-mono:'IBM Plex Mono', monospace;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html,body{
+    background:var(--bg-base);
+    color:var(--text-primary);
+    font-family:var(--font-body);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  body{
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 28px 28px;
+    padding: 40px 40px 60px 40px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .sheet{
+    width:100%;
+    max-width: 1200px;
+  }
+
+  /* ---------- HEADER ---------- */
+  header{
+    padding: 6px 4px 24px 4px;
+    border-bottom: 1px solid var(--hairline);
+    margin-bottom: 26px;
+  }
+
+  .eyebrow{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .eyebrow .dot{
+    width:6px; height:6px; border-radius:50%;
+    background: var(--bin);
+    box-shadow: 0 0 8px var(--bin);
+  }
+
+  h1{
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(30px, 4vw, 46px);
+    line-height: 0.95;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  h1 span{ color: var(--bin); }
+
+  .subtitle{
+    font-size: 14.5px;
+    color: var(--text-muted);
+    margin-top: 10px;
+    max-width: 620px;
+    line-height: 1.5;
+  }
+
+  /* ---------- SETTINGS ---------- */
+  .settings-panel{
+    background: var(--bg-panel);
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 22px;
+    display:flex;
+    flex-direction:column;
+    gap: 16px;
+  }
+
+  .settings-row{
+    display:flex;
+    align-items:center;
+    gap: 16px;
+    flex-wrap:wrap;
+  }
+
+  .settings-label{
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    width: 160px;
+    flex-shrink:0;
+  }
+
+  .chips{ display:flex; gap:8px; flex-wrap:wrap; }
+
+  .chip{
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--hairline);
+    background: var(--bg-panel-2);
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all .15s ease;
+  }
+  .chip:hover{ border-color: var(--text-dim); color: var(--text-muted); }
+
+  .chip.dec.active{ background: var(--dec-dim); border-color: var(--dec); color: var(--dec); }
+  .chip.bin.active{ background: var(--bin-dim); border-color: var(--bin); color: var(--bin); }
+  .chip.oct.active{ background: var(--oct-dim); border-color: var(--oct); color: var(--oct); }
+  .chip.hex.active{ background: var(--hex-dim); border-color: var(--hex); color: var(--hex); }
+  .chip.diff.active{ background: rgba(255,255,255,0.09); border-color: var(--text-primary); color: var(--text-primary); }
+
+  .chip.disabled-lock{ opacity:.35; cursor:not-allowed; }
+
+  /* ---------- WORKSPACE ---------- */
+  .workspace{
+    display:grid;
+    grid-template-columns: 1fr 300px;
+    gap: 20px;
+    align-items:start;
+  }
+
+  .exercise-card{
+    background: var(--bg-panel);
+    border: 1px solid var(--hairline);
+    border-radius: 12px;
+    padding: 30px 32px 28px 32px;
+    min-height: 380px;
+    display:flex;
+    flex-direction:column;
+  }
+
+  .exercise-head{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 18px;
+    margin-bottom: 26px;
+  }
+
+  .badge{
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    padding: 7px 16px;
+    border-radius: 6px;
+    border: 1px solid currentColor;
+    background: rgba(255,255,255,0.03);
+  }
+
+  .arrow{
+    color: var(--text-dim);
+    font-size: 20px;
+  }
+
+  .question-label{
+    text-align:center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform:uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+
+  .question-value{
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: clamp(34px, 5vw, 52px);
+    text-align:center;
+    letter-spacing: 3px;
+    margin-bottom: 30px;
+    word-break: break-all;
+  }
+
+  .answer-row{
+    display:flex;
+    gap: 12px;
+    justify-content:center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  #answerInput{
+    font-family: var(--font-mono);
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    background: var(--bg-panel-2);
+    border: 2px solid var(--hairline);
+    border-radius: 8px;
+    padding: 12px 18px;
+    color: var(--text-primary);
+    width: 260px;
+    text-align:center;
+    text-transform: uppercase;
+    outline:none;
+    transition: border-color .15s ease;
+  }
+  #answerInput:focus{ border-color: var(--bin); }
+
+  button{
+    font-family: var(--font-body);
+    cursor:pointer;
+    border:none;
+    outline:none;
+  }
+
+  .primary-btn{
+    font-weight: 700;
+    font-size: 14px;
+    padding: 13px 22px;
+    border-radius: 8px;
+    background: var(--bin);
+    color: #04222c;
+    transition: transform .1s ease, filter .15s ease;
+  }
+  .primary-btn:hover{ filter:brightness(1.1); }
+  .primary-btn:active{ transform: scale(0.97); }
+  .primary-btn:disabled{ opacity:.4; cursor:not-allowed; }
+
+  .ghost-btn{
+    font-weight: 600;
+    font-size: 12.5px;
+    padding: 9px 16px;
+    border-radius: 8px;
+    background: transparent;
+    border: 1px solid var(--hairline);
+    color: var(--text-muted);
+    transition: all .15s ease;
+  }
+  .ghost-btn:hover{ border-color: var(--text-dim); color: var(--text-primary); }
+
+  .feedback{
+    text-align:center;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    min-height: 22px;
+    margin-bottom: 10px;
+  }
+  .feedback.ok{ color: var(--oct); }
+  .feedback.bad{ color: var(--bad); }
+  .feedback.warn{ color: var(--dec); }
+
+  .actions{
+    display:flex;
+    justify-content:center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: auto;
+    padding-top: 16px;
+  }
+
+  .hint-box, .solution-box{
+    margin-top: 16px;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: var(--text-muted);
+    background: var(--bg-panel-2);
+    border: 1px dashed var(--hairline);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .hint-box{ border-color: rgba(255,176,32,0.3); }
+  .solution-box b{ color: var(--text-primary); }
+  .sol-line{ margin-bottom: 6px; }
+  .sol-steps{ color: var(--text-dim); margin: 6px 0; }
+
+  /* ---------- SIDE PANEL ---------- */
+  .side-panel{
+    display:flex;
+    flex-direction:column;
+    gap: 16px;
+  }
+
+  .stat-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .stat{
+    background: var(--bg-panel);
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
+    padding: 16px 10px;
+    text-align:center;
+  }
+  .stat-value{
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 30px;
+    color: var(--text-primary);
+  }
+  .stat-label{
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  .history-panel{
+    background: var(--bg-panel);
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+  .history-label{
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+  .history{
+    display:flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .hist-dot{
+    width: 16px; height:16px;
+    border-radius: 4px;
+    background: var(--bg-panel-2);
+    border: 1px solid var(--hairline);
+  }
+  .hist-dot.ok{ background: var(--oct); border-color: var(--oct); box-shadow: 0 0 6px rgba(62,207,142,0.5); }
+  .hist-dot.bad{ background: var(--bad); border-color: var(--bad); box-shadow: 0 0 6px rgba(255,92,108,0.5); }
+  .hist-empty{ font-family: var(--font-mono); font-size:11px; color:var(--text-dim); }
+
+  .memo-panel{
+    background: var(--bg-panel-2);
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
+    padding: 16px 18px;
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+  .memo-panel h3{
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+  .memo-panel code{
+    font-family: var(--font-mono);
+    background: rgba(255,255,255,0.06);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--text-primary);
+  }
+
+  footer{
+    text-align:center;
+    padding: 26px 0 4px 0;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--text-dim);
+    letter-spacing: 0.5px;
+  }
+
+  @media (max-width: 860px){
+    .workspace{ grid-template-columns: 1fr; }
+    .settings-label{ width:auto; }
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <header>
+    <div class="eyebrow"><span class="dot"></span>Entraînement · Automatisme &amp; PLC</div>
+    <h1>Convertir&nbsp;<span>DEC · BIN · OCT · HEX</span></h1>
+    <p class="subtitle">Générez des exercices aléatoires, vérifiez vos réponses et suivez votre progression. Choisissez les systèmes à pratiquer et le niveau de difficulté ci-dessous.</p>
+  </header>
+
+  <section class="settings-panel">
+    <div class="settings-row">
+      <div class="settings-label">Systèmes à pratiquer</div>
+      <div class="chips" id="systemChips">
+        <button class="chip dec active" data-base="10">Décimal</button>
+        <button class="chip bin active" data-base="2">Binaire</button>
+        <button class="chip oct active" data-base="8">Octal</button>
+        <button class="chip hex active" data-base="16">Hexadécimal</button>
+      </div>
+    </div>
+    <div class="settings-row">
+      <div class="settings-label">Niveau</div>
+      <div class="chips" id="difficultyChips">
+        <button class="chip diff active" data-max="15">Facile (0–15)</button>
+        <button class="chip diff" data-max="255">Intermédiaire (0–255)</button>
+        <button class="chip diff" data-max="4095">Avancé (0–4095)</button>
+      </div>
+    </div>
+  </section>
+
+  <main class="workspace">
+    <div class="exercise-card" id="exerciseCard">
+      <div class="exercise-head">
+        <div class="badge" id="fromBadge">DEC</div>
+        <div class="arrow">→</div>
+        <div class="badge" id="toBadge">BIN</div>
+      </div>
+      <div class="question-label">Convertissez la valeur suivante</div>
+      <div class="question-value" id="questionValue">—</div>
+      <div class="answer-row">
+        <input type="text" id="answerInput" placeholder="Votre réponse" autocomplete="off" spellcheck="false">
+        <button class="primary-btn" id="validateBtn">Valider</button>
+      </div>
+      <div class="feedback" id="feedback"></div>
+      <div class="hint-box" id="hintBox" hidden></div>
+      <div class="solution-box" id="solutionBox" hidden></div>
+      <div class="actions">
+        <button class="ghost-btn" id="hintBtn">💡 Indice</button>
+        <button class="ghost-btn" id="solutionBtn">🔍 Solution</button>
+        <button class="primary-btn" id="nextBtn">Question suivante →</button>
+      </div>
+    </div>
+
+    <aside class="side-panel">
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-value" id="statCorrect">0</div><div class="stat-label">Réussies</div></div>
+        <div class="stat"><div class="stat-value" id="statWrong">0</div><div class="stat-label">Erreurs</div></div>
+        <div class="stat"><div class="stat-value" id="statStreak">0</div><div class="stat-label">Série</div></div>
+        <div class="stat"><div class="stat-value" id="statAccuracy">—</div><div class="stat-label">Précision</div></div>
+      </div>
+      <div class="history-panel">
+        <div class="history-label">Historique</div>
+        <div class="history" id="historyRow"><span class="hist-empty">Aucune tentative pour l'instant</span></div>
+      </div>
+      <div class="memo-panel">
+        <h3>Rappel express</h3>
+        1 chiffre <code>HEX</code> = 4 bits · 1 chiffre <code>OCT</code> = 3 bits<br>
+        DEC→BIN : divisions par 2, restes de bas en haut.
+      </div>
+    </aside>
+  </main>
+
+  <footer>ENTRAÎNEMENT · CONVERSIONS DE BASES · AUTOMATISME INDUSTRIEL</footer>
+</div>
+
+<script>
+(function(){
+  const SYSTEMS = {
+    10: { name:'Décimal',      short:'DEC', cls:'dec', varc:'--dec' },
+    2:  { name:'Binaire',      short:'BIN', cls:'bin', varc:'--bin' },
+    8:  { name:'Octal',        short:'OCT', cls:'oct', varc:'--oct' },
+    16: { name:'Hexadécimal',  short:'HEX', cls:'hex', varc:'--hex' },
+  };
+
+  const state = {
+    enabled: new Set([10,2,8,16]),
+    maxValue: 15,
+    current: null,
+    locked: false,
+    correct: 0,
+    wrong: 0,
+    streak: 0,
+    history: []
+  };
+
+  // ---------- DOM refs ----------
+  const fromBadge = document.getElementById('fromBadge');
+  const toBadge = document.getElementById('toBadge');
+  const questionValue = document.getElementById('questionValue');
+  const answerInput = document.getElementById('answerInput');
+  const validateBtn = document.getElementById('validateBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const hintBtn = document.getElementById('hintBtn');
+  const solutionBtn = document.getElementById('solutionBtn');
+  const hintBox = document.getElementById('hintBox');
+  const solutionBox = document.getElementById('solutionBox');
+  const feedback = document.getElementById('feedback');
+  const statCorrect = document.getElementById('statCorrect');
+  const statWrong = document.getElementById('statWrong');
+  const statStreak = document.getElementById('statStreak');
+  const statAccuracy = document.getElementById('statAccuracy');
+  const historyRow = document.getElementById('historyRow');
+  const systemChips = document.querySelectorAll('#systemChips .chip');
+  const difficultyChips = document.querySelectorAll('#difficultyChips .chip');
+
+  // ---------- helpers ----------
+  function formatInBase(value, base){
+    let s = value.toString(base).toUpperCase();
+    if(base === 2){
+      const len = Math.max(4, Math.ceil(s.length/4)*4);
+      s = s.padStart(len, '0');
+      return s.replace(/(.{4})(?=.)/g, '$1 ');
+    }
+    if(base === 16){
+      const len = Math.max(2, Math.ceil(s.length/2)*2);
+      s = s.padStart(len, '0');
+      return s.replace(/(.{2})(?=.)/g, '$1 ');
+    }
+    return s;
+  }
+
+  function cleanInput(str){
+    return str.replace(/\s+/g, '').toUpperCase();
+  }
+
+  function isValidForBase(str, base){
+    const digits = '0123456789ABCDEF'.slice(0, base);
+    const re = new RegExp('^[' + digits + ']+$');
+    return re.test(str);
+  }
+
+  function pickTwoDistinct(arr){
+    const a = arr[Math.floor(Math.random() * arr.length)];
+    let b;
+    do { b = arr[Math.floor(Math.random() * arr.length)]; } while(b === a);
+    return [a, b];
+  }
+
+  function getHint(fromBase, toBase){
+    const key = fromBase + '-' + toBase;
+    const hints = {
+      '2-16': "Regroupez les bits par paquets de 4 (quartets) en partant de la droite, en complétant par des zéros à gauche si besoin. Chaque quartet correspond à un chiffre hexadécimal (0-9, A-F).",
+      '16-2': "Remplacez chaque chiffre hexadécimal par son équivalent binaire sur 4 bits (table 0000 à 1111).",
+      '2-8':  "Regroupez les bits par paquets de 3 en partant de la droite, en complétant par des zéros à gauche si besoin.",
+      '8-2':  "Remplacez chaque chiffre octal par son équivalent binaire sur 3 bits (table 000 à 111).",
+      '10-2': "Effectuez des divisions successives par 2 et lisez les restes de bas en haut. Ou soustrayez les puissances de 2 décroissantes (128-64-32-16-8-4-2-1).",
+      '10-8': "Effectuez des divisions successives par 8 et lisez les restes de bas en haut.",
+      '10-16':"Effectuez des divisions successives par 16 et lisez les restes de bas en haut (utilisez A-F pour les restes ≥ 10).",
+      '2-10': "Faites la somme de chaque bit multiplié par son poids de position (…,32,16,8,4,2,1).",
+      '8-10': "Faites la somme de chaque chiffre octal multiplié par la puissance de 8 correspondant à sa position.",
+      '16-10':"Faites la somme de chaque chiffre hexadécimal multiplié par la puissance de 16 correspondant à sa position.",
+      '8-16': "Passez par le binaire : convertissez d'abord en binaire (3 bits par chiffre octal), puis regroupez par 4 bits pour l'hexadécimal.",
+      '16-8': "Passez par le binaire : convertissez d'abord en binaire (4 bits par chiffre hexa), puis regroupez par 3 bits pour l'octal.",
+    };
+    return hints[key] || "Utilisez la formule N = Σ (chiffre × base^position).";
+  }
+
+  function buildSolution(value, fromBase, toBase){
+    let html = '';
+    html += `<div class="sol-line">Valeur décimale intermédiaire : <b>${value}</b></div>`;
+
+    if(fromBase !== 10){
+      const s = value.toString(fromBase).toUpperCase();
+      const terms = s.split('').map((d, i) => {
+        const pos = s.length - 1 - i;
+        return `${d}×${fromBase}<sup>${pos}</sup>`;
+      }).join(' + ');
+      html += `<div class="sol-line">${s} (base ${fromBase}) = ${terms} = ${value}</div>`;
+    }
+
+    if(toBase !== 10){
+      let v = value;
+      const steps = [];
+      if(v === 0){
+        steps.push(`0 ÷ ${toBase} = 0 reste 0`);
+      }
+      while(v > 0){
+        const q = Math.floor(v / toBase);
+        const r = v % toBase;
+        steps.push(`${v} ÷ ${toBase} = ${q}  reste ${r.toString(toBase).toUpperCase()}`);
+        v = q;
+      }
+      html += `<div class="sol-steps">${steps.join('<br>')}</div>`;
+      html += `<div class="sol-line">Lecture des restes de bas en haut → <b>${formatInBase(value, toBase)}</b></div>`;
+    } else {
+      html += `<div class="sol-line">Résultat : <b>${value}</b></div>`;
+    }
+    return html;
+  }
+
+  function setBadge(el, base){
+    const sys = SYSTEMS[base];
+    el.textContent = sys.short;
+    el.style.color = `var(${sys.varc})`;
+  }
+
+  function newQuestion(){
+    const enabledArr = Array.from(state.enabled);
+    if(enabledArr.length < 2){
+      feedback.textContent = 'Sélectionnez au moins deux systèmes pour commencer.';
+      feedback.className = 'feedback warn';
+      questionValue.textContent = '—';
+      return;
+    }
+    const [fromBase, toBase] = pickTwoDistinct(enabledArr);
+    const value = Math.floor(Math.random() * (state.maxValue + 1));
+
+    state.current = { value, fromBase, toBase };
+    state.locked = false;
+
+    setBadge(fromBadge, fromBase);
+    setBadge(toBadge, toBase);
+    questionValue.textContent = formatInBase(value, fromBase);
+    questionValue.style.color = `var(${SYSTEMS[fromBase].varc})`;
+
+    answerInput.value = '';
+    answerInput.style.borderColor = '';
+    answerInput.disabled = false;
+    validateBtn.disabled = false;
+    feedback.textContent = '';
+    feedback.className = 'feedback';
+    hintBox.hidden = true;
+    solutionBox.hidden = true;
+    answerInput.focus();
+  }
+
+  function checkAnswer(){
+    if(!state.current || state.locked) return;
+    const { value, toBase } = state.current;
+    const raw = cleanInput(answerInput.value);
+
+    if(raw === ''){
+      feedback.textContent = 'Entrez une réponse avant de valider.';
+      feedback.className = 'feedback warn';
+      return;
+    }
+    if(!isValidForBase(raw, toBase)){
+      feedback.textContent = `Caractères invalides pour une base ${toBase}.`;
+      feedback.className = 'feedback warn';
+      answerInput.style.borderColor = 'var(--dec)';
+      return;
+    }
+
+    const parsed = parseInt(raw, toBase);
+    const isCorrect = parsed === value;
+
+    state.locked = true;
+    answerInput.disabled = true;
+    validateBtn.disabled = true;
+
+    if(isCorrect){
+      state.correct++;
+      state.streak++;
+      feedback.textContent = '✓ Correct !';
+      feedback.className = 'feedback ok';
+      answerInput.style.borderColor = 'var(--oct)';
+    } else {
+      state.wrong++;
+      state.streak = 0;
+      feedback.innerHTML = `✗ Incorrect — réponse attendue : <b>${formatInBase(value, toBase)}</b>`;
+      feedback.className = 'feedback bad';
+      answerInput.style.borderColor = 'var(--bad)';
+    }
+
+    pushHistory(isCorrect);
+    updateStats();
+  }
+
+  function pushHistory(isCorrect){
+    state.history.push(isCorrect);
+    if(state.history.length > 16) state.history.shift();
+    renderHistory();
+  }
+
+  function renderHistory(){
+    if(state.history.length === 0){
+      historyRow.innerHTML = '<span class="hist-empty">Aucune tentative pour l\'instant</span>';
+      return;
+    }
+    historyRow.innerHTML = '';
+    state.history.forEach(c => {
+      const d = document.createElement('div');
+      d.className = 'hist-dot ' + (c ? 'ok' : 'bad');
+      historyRow.appendChild(d);
+    });
+  }
+
+  function updateStats(){
+    statCorrect.textContent = state.correct;
+    statWrong.textContent = state.wrong;
+    statStreak.textContent = state.streak;
+    const total = state.correct + state.wrong;
+    statAccuracy.textContent = total ? Math.round((state.correct / total) * 100) + '%' : '—';
+  }
+
+  function showHint(){
+    if(!state.current) return;
+    hintBox.textContent = getHint(state.current.fromBase, state.current.toBase);
+    hintBox.hidden = false;
+  }
+
+  function showSolution(){
+    if(!state.current) return;
+    solutionBox.innerHTML = buildSolution(state.current.value, state.current.fromBase, state.current.toBase);
+    solutionBox.hidden = false;
+  }
+
+  // ---------- events ----------
+  systemChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      const base = parseInt(chip.dataset.base, 10);
+      const willDisable = state.enabled.has(base);
+      if(willDisable && state.enabled.size <= 2){
+        chip.classList.add('disabled-lock');
+        setTimeout(() => chip.classList.remove('disabled-lock'), 350);
+        return;
+      }
+      if(willDisable){
+        state.enabled.delete(base);
+        chip.classList.remove('active');
+      } else {
+        state.enabled.add(base);
+        chip.classList.add('active');
+      }
+    });
+  });
+
+  difficultyChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      difficultyChips.forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      state.maxValue = parseInt(chip.dataset.max, 10);
+    });
+  });
+
+  validateBtn.addEventListener('click', checkAnswer);
+  nextBtn.addEventListener('click', newQuestion);
+  hintBtn.addEventListener('click', showHint);
+  solutionBtn.addEventListener('click', showSolution);
+
+  answerInput.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      if(state.locked){
+        newQuestion();
+      } else {
+        checkAnswer();
+      }
+    }
+  });
+
+  // ---------- init ----------
+  newQuestion();
+  updateStats();
+})();
+</script>
+</body>
+</html>
+
+System.Text.UTF8Encoding
