@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BSL — Studio 5000</title>
+<meta name="description" content="L'instruction BSL (Bit Shift Left) dans Studio 5000 : Tableau[0], Length 6, LS1 active l'instruction, LS2 est le Source Bit.">
+<style>
+:root{
+  color-scheme: light;
+  --rok:#CD163F; --rok-d:#9E1030; --rok-l:#FBE9ED;
+  --title:#232C35; --title-2:#161D24; --graphite:#333F48;
+  --bg:#F3F4F6; --card:#FFFFFF; --gutter:#ECEEF0; --head:#E9ECEF; --line:#C5CBD1; --line-2:#E1E5E9;
+  --ink:#1D2329; --mute:#5D6873; --faint:#A3ACB5;
+  --on:#1E9E3E; --on-l:#DDF4E3; --on-b:#8FD3A2;
+  --amber:#B45309; --amber-l:#FFF4E5; --amber-b:#F2C27B;
+  --sans:"Segoe UI", Inter, system-ui, -apple-system, Arial, sans-serif;
+  --mono:Consolas, "DejaVu Sans Mono", "Courier New", monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg)}
+body{font-family:var(--sans);color:var(--ink);font-size:15px;line-height:1.45;-webkit-text-size-adjust:100%}
+button{font:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding:16px}
+b{font-weight:700}
+code,.m{font-family:var(--mono);font-weight:700}
+
+/* ---------- en-tête façon fenêtre Studio 5000 ---------- */
+.hd{background:var(--title);color:#fff;border-radius:8px;overflow:hidden}
+.hd .top{display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:space-between;align-items:center;padding:7px 16px;background:var(--title-2);font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:#C3CBD3}
+.hd .top b{color:#fff}
+.mode{display:inline-flex;align-items:center;gap:6px;text-transform:none;letter-spacing:0;font-size:12px;color:#fff;background:#2F3A45;border:1px solid #46525E;border-radius:4px;padding:2px 8px}
+.mode i{width:9px;height:9px;border-radius:50%;background:#3FD16A;box-shadow:0 0 0 2px rgba(63,209,106,.25)}
+.hd .main{display:flex;flex-wrap:wrap;gap:12px 24px;justify-content:space-between;align-items:flex-end;padding:14px 16px 16px;border-bottom:5px solid var(--rok)}
+.hd h1{font-size:clamp(28px,5vw,42px);font-weight:800;line-height:1.02}
+.hd h1 span{color:#FF5A7A;font-weight:600;font-size:.5em;margin-left:.35em;letter-spacing:.01em}
+.hd p{color:#C9D1D8;margin-top:6px;font-size:14.5px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips span{font-family:var(--mono);font-weight:700;font-size:13px;padding:5px 9px;border-radius:4px;background:#2F3A45;border:1px solid #46525E}
+.chips span em{font-style:normal;color:#FF8FA6}
+
+/* ---------- cartes ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:7px;overflow:hidden}
+.card>h2{font-size:14.5px;font-weight:700;background:var(--head);padding:7px 12px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px}
+.card>h2 i{width:10px;height:10px;border-radius:2px;background:var(--rok);flex:none}
+.card>h2 .sub{margin-left:auto;font-weight:500;font-size:12.5px;color:var(--mute)}
+.sec{margin-top:12px}
+
+/* ---------- le barreau ---------- */
+.rung{padding:8px 8px 4px;overflow-x:auto}
+.rung svg{width:100%;height:auto;display:block;max-width:900px;margin:0 auto}
+.scan{display:flex;flex-wrap:wrap;gap:6px 16px;padding:6px 12px 9px;font-size:13px;color:var(--mute);border-top:1px solid var(--line-2)}
+.scan b{color:var(--ink);font-family:var(--mono)}
+
+/* ---------- commandes ---------- */
+.ctl{display:grid;grid-template-columns:1.15fr 1fr;gap:12px;margin-top:12px}
+.sw{display:flex;flex-direction:column;gap:10px;padding:12px}
+.sw-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.tog{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:#fff;border-radius:6px;padding:7px 12px 7px 8px;cursor:pointer;min-height:46px;min-width:205px}
+.tog:hover{border-color:var(--graphite)}
+.tog .kn{width:42px;height:24px;border-radius:12px;background:#C9CFD5;position:relative;flex:none;transition:background .15s}
+.tog .kn::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.3);transition:left .15s}
+.tog[aria-pressed="true"] .kn{background:var(--on)}
+.tog[aria-pressed="true"] .kn::after{left:21px}
+.tog .tx{display:flex;flex-direction:column;line-height:1.15;text-align:left}
+.tog .tx b{font-family:var(--mono);font-size:15px}
+.tog .tx small{font-size:12px;color:var(--mute)}
+.tog .val{margin-left:auto;font-family:var(--mono);font-weight:700;font-size:18px;color:var(--faint)}
+.tog[aria-pressed="true"] .val{color:var(--on)}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+.btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:5px;padding:9px 13px;font-weight:600;font-size:14px;cursor:pointer;min-height:42px}
+.btn:hover{border-color:var(--graphite);background:#F7F8F9}
+.btn.pri{background:var(--rok);border-color:var(--rok);color:#fff}
+.btn.pri:hover{background:var(--rok-d)}
+.btn.on{background:var(--graphite);border-color:var(--graphite);color:#fff}
+.btn:focus-visible,.tog:focus-visible,.bit:focus-visible{outline:3px solid rgba(205,22,63,.35);outline-offset:2px}
+.hint{font-size:12.5px;color:var(--mute)}
+.status{font-size:14px;font-weight:600;border-radius:5px;padding:8px 11px;background:#F1F3F5;border:1px solid var(--line-2)}
+.status.shift{background:var(--rok-l);border-color:#F1B8C5;color:var(--rok-d)}
+.status.hold{background:var(--amber-l);border-color:var(--amber-b);color:#7A3E06}
+
+/* CONTROL */
+.ctrl table{width:100%;border-collapse:collapse;font-size:13.5px}
+.ctrl th{text-align:left;font-size:11.5px;font-weight:600;color:var(--mute);background:#F6F7F8;padding:5px 10px;border-bottom:1px solid var(--line)}
+.ctrl td{padding:6px 10px;border-bottom:1px solid var(--line-2);vertical-align:middle}
+.ctrl tr:last-child td{border-bottom:0}
+.ctrl td.k{font-family:var(--mono);font-weight:700;white-space:nowrap}
+.ctrl td.v{font-family:var(--mono);font-weight:700;font-size:16px;text-align:center;width:52px}
+.ctrl td.v .p{display:inline-block;min-width:30px;border-radius:4px;padding:1px 6px;background:#EEF0F2;color:var(--faint)}
+.ctrl td.v .p.one{background:var(--on-l);color:var(--on);box-shadow:inset 0 0 0 1px var(--on-b)}
+.ctrl td.v .p.num{color:var(--ink)}
+.ctrl td.d{font-size:13px;color:var(--mute)}
+.ctrl tr.flash td{animation:fl 1.1s ease-out}
+@keyframes fl{0%{background:#FFE3EA}100%{background:transparent}}
+
+/* ---------- le registre ---------- */
+.reg{padding:14px 12px 12px}
+.regrow{display:flex;align-items:stretch;justify-content:center;gap:10px;flex-wrap:nowrap}
+.io{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-width:74px}
+.io .lb{font-size:11.5px;color:var(--mute);text-align:center;line-height:1.15}
+.io .bx{font-family:var(--mono);font-weight:800;font-size:22px;width:52px;height:52px;border-radius:7px;display:flex;align-items:center;justify-content:center;border:2px solid var(--line);background:#fff;color:var(--faint)}
+.io .bx.one{color:#fff;background:var(--graphite);border-color:var(--graphite)}
+.io.src .bx.one{background:var(--on);border-color:var(--on)}
+.io .nm{font-family:var(--mono);font-weight:700;font-size:13px}
+.arrow{display:flex;align-items:center;color:var(--rok);font-size:26px;font-weight:800;padding:0 2px}
+.cells{display:flex;gap:6px;padding:8px;border:2px solid var(--rok);border-radius:9px;background:var(--rok-l);position:relative}
+.cells::before{content:"Registre : Length = 6";position:absolute;top:-11px;left:10px;background:var(--rok);color:#fff;font-size:11px;font-weight:700;padding:1px 7px;border-radius:3px}
+.cell{display:flex;flex-direction:column;align-items:center;gap:3px}
+.cell .bx{width:52px;height:52px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:800;font-size:22px;background:#fff;border:2px solid #E7C3CC;color:#B9A2A8}
+.cell .bx.one{background:var(--rok);border-color:var(--rok-d);color:#fff}
+.cell small{font-size:11px;color:var(--mute);font-family:var(--mono)}
+.cells.go .cell .bx{animation:slide .38s ease-out}
+@keyframes slide{0%{transform:translateX(58px);opacity:.35}100%{transform:none;opacity:1}}
+.io.ul.go .bx{animation:pop .5s ease-out}
+@keyframes pop{0%{transform:translateX(58px) scale(.8)}100%{transform:none}}
+.regnote{margin-top:12px;text-align:center;font-size:13.5px;color:var(--mute)}
+
+/* mot complet */
+.word{padding:10px 12px 12px;border-top:1px solid var(--line-2)}
+.word .wt{display:flex;flex-wrap:wrap;gap:4px 14px;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.word .wt b{font-size:14px}
+.word .wt .hexv{font-family:var(--mono);font-weight:700;font-size:15px}
+.word .wt .hexv small{font-family:var(--sans);font-weight:500;color:var(--mute);font-size:12.5px;margin-left:6px}
+.bits32{display:grid;grid-template-columns:repeat(32,minmax(0,1fr));gap:2px}
+.bit{border:1px solid #DCE1E6;background:#F5F6F7;color:#A3ACB5;border-radius:2px;font-family:var(--mono);font-weight:700;font-size:11px;height:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+.bit.one{background:var(--graphite);border-color:var(--graphite);color:#fff}
+.bit.r{border-color:#E7A9B8;background:#FFF6F8;color:#C9A0AA}
+.bit.r.one{background:var(--rok);border-color:var(--rok-d);color:#fff}
+.bit.gp{margin-left:4px}
+.bidx{display:grid;grid-template-columns:repeat(32,minmax(0,1fr));gap:2px;margin-top:2px}
+.bidx span{font-size:9px;color:var(--faint);text-align:center;font-family:var(--mono)}
+.bidx span.gp{margin-left:4px}
+.wleg{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:8px;font-size:12.5px;color:var(--mute)}
+.wleg i{display:inline-block;width:12px;height:12px;border-radius:2px;vertical-align:-2px;margin-right:5px}
+
+/* journal */
+.jr{max-height:330px;overflow:auto}
+.jr table{width:100%;border-collapse:collapse;font-size:13px}
+.jr th{position:sticky;top:0;text-align:left;font-size:11.5px;font-weight:600;color:var(--mute);background:#F6F7F8;padding:5px 9px;border-bottom:1px solid var(--line)}
+.jr td{padding:5px 9px;border-bottom:1px solid var(--line-2);font-family:var(--mono);font-weight:700;white-space:nowrap}
+.jr td:first-child{font-family:var(--sans)}
+.jr tr.ul1 td{background:#FFF0F3}
+.jr .ej{font-family:var(--sans);font-weight:700;color:var(--rok-d);font-size:11.5px;margin-left:4px}
+.empty{padding:12px;font-size:13.5px;color:var(--mute)}
+
+/* ---------- explications ---------- */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.txt{padding:11px 14px 13px}
+.txt p+p,.txt p+ol,.txt ol+p,.txt p+ul{margin-top:8px}
+.txt ol,.txt ul{padding-left:20px}
+.txt li{margin:4px 0}
+.txt li::marker{color:var(--rok);font-weight:700}
+.op table{width:100%;border-collapse:collapse;font-size:14px}
+.op th{text-align:left;font-size:12px;font-weight:600;color:var(--mute);background:#F6F7F8;padding:6px 10px;border-bottom:1px solid var(--line)}
+.op td{padding:8px 10px;border-bottom:1px solid var(--line-2);vertical-align:top}
+.op tr:last-child td{border-bottom:0}
+.op td:first-child{font-weight:700;white-space:nowrap}
+.op td.m{white-space:nowrap;color:var(--rok-d)}
+.steps{counter-reset:s;list-style:none;padding:0 !important}
+.steps li{counter-increment:s;position:relative;padding-left:34px;margin:9px 0}
+.steps li::before{content:counter(s);position:absolute;left:0;top:0;width:24px;height:24px;border-radius:50%;background:var(--rok);color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+.ex table{width:100%;border-collapse:collapse;font-size:13.5px}
+.ex th{text-align:left;font-size:11.5px;font-weight:600;color:var(--mute);background:#F6F7F8;padding:5px 9px;border-bottom:1px solid var(--line)}
+.ex td{padding:5px 9px;border-bottom:1px solid var(--line-2);font-family:var(--mono);font-weight:700;white-space:nowrap}
+.ex td:last-child{font-family:var(--sans);font-weight:500;white-space:normal;color:var(--mute);font-size:13px}
+.ex tr.ul1 td{background:#FFF0F3}
+.ex .rb{letter-spacing:.12em}
+.ex .rb em{font-style:normal;color:var(--rok)}
+.exwrap{overflow-x:auto}
+.warn{background:var(--amber-l);border:1px solid var(--amber-b);border-radius:7px;padding:12px 14px}
+.warn h3{font-size:15px;color:#7A3E06;margin-bottom:6px}
+.warn ul{padding-left:18px}
+.warn li{margin:5px 0;font-size:14px}
+.warn li::marker{color:var(--amber)}
+
+/* ---------- pied ---------- */
+.pied{margin-top:16px;padding-top:10px;border-top:4px solid var(--rok);display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;justify-content:space-between}
+.pied .nom{font-size:21px;font-weight:800;color:var(--title)}
+.pied .nom small{display:block;font-size:13px;font-weight:500;color:var(--mute)}
+.pied svg{width:190px;height:auto;display:block}
+
+@media (max-width:900px){
+  .ctl,.two{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  .wrap{padding:10px}
+  .regrow{gap:4px}
+  .io{min-width:40px}
+  .io .lb{font-size:10px}
+  .io .bx{width:36px;height:36px;font-size:16px}
+  .cell .bx{width:28px;height:36px;font-size:16px}
+  .cell small{font-size:9px}
+  .cells{gap:3px;padding:7px 5px}
+  .arrow{font-size:18px;padding:0}
+  .bit{font-size:8px;height:18px}
+  .bit.gp,.bidx span.gp{margin-left:2px}
+  .bidx span{font-size:7px}
+  .tog{min-width:0;flex:1}
+  .rung svg{min-width:620px}
+  .op table{min-width:540px}
+  .ex table{min-width:620px}
+  .jr table{min-width:470px}
+}
+@media (prefers-reduced-motion:reduce){ .cells.go .cell .bx,.io.ul.go .bx{animation:none} }
+@media print{ .sw,.btns{display:none} body{background:#fff} .card{break-inside:avoid} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hd">
+  <div class="top"><span><b>Studio 5000 Logix Designer</b> · Logique à relais · Instructions de tableau / décalage</span>
+    <span class="mode"><i></i>Rem Run · balayage <span id="scanTop">0</span></span></div>
+  <div class="main">
+    <div>
+      <h1>BSL<span>Bit Shift Left</span></h1>
+      <p>Le registre à décalage vers la gauche, détaillé pas à pas sur un vrai barreau</p>
+    </div>
+    <div class="chips"><span>Array <em>Tableau[0]</em></span><span>Length <em>6</em></span><span>Activation <em>LS1</em></span><span>Source Bit <em>LS2</em></span></div>
+  </div>
+</header>
+
+<!-- le barreau -->
+<section class="card sec">
+  <h2><i></i>Le barreau dans Studio 5000 <span class="sub">les éléments vrais s'allument en vert, comme en ligne</span></h2>
+  <div class="rung" id="rung"></div>
+  <div class="scan"><span>Balayages : <b id="scanN">0</b></span><span>Décalages faits : <b id="shiftN">0</b></span><span id="lastEv"></span></div>
+</section>
+
+<!-- commandes + CONTROL -->
+<div class="ctl">
+  <section class="card">
+    <h2><i></i>Agir sur les entrées</h2>
+    <div class="sw">
+      <div class="sw-row">
+        <button class="tog" id="tLS1" type="button" aria-pressed="false"><span class="kn"></span><span class="tx"><b>LS1</b><small>active l'instruction</small></span><span class="val" id="vLS1">0</span></button>
+        <button class="tog" id="tLS2" type="button" aria-pressed="false"><span class="kn"></span><span class="tx"><b>LS2</b><small>Source Bit</small></span><span class="val" id="vLS2">0</span></button>
+      </div>
+      <div class="btns">
+        <button class="btn pri" id="bPulse" type="button">Impulsion sur LS1</button>
+        <button class="btn" id="bDemo" type="button">▶ Jouer l'exemple</button>
+        <button class="btn" id="bReset" type="button">↺ Recommencer</button>
+      </div>
+      <div class="status" id="status" aria-live="polite"></div>
+      <p class="hint">L'automate balaie le programme sans arrêt (10 fois par seconde ici). Garde LS1 fermé : un seul décalage. Clique un bit du mot Tableau[0] pour le forcer, comme dans la table de surveillance.</p>
+    </div>
+  </section>
+  <section class="card ctrl">
+    <h2><i></i>Le tag CONTROL <span class="sub m">Ctrl_BSL</span></h2>
+    <table>
+      <thead><tr><th>Membre</th><th>Valeur</th><th>Ce que ça veut dire</th></tr></thead>
+      <tbody id="ctrlBody"></tbody>
+    </table>
+  </section>
+</div>
+
+<!-- le registre -->
+<section class="card sec">
+  <h2><i></i>Ce qui se passe dans Tableau[0] <span class="sub">à chaque front montant de LS1</span></h2>
+  <div class="reg">
+    <div class="regrow">
+      <div class="io ul" id="ioUL"><span class="lb">sort vers</span><span class="bx" id="ulBox">0</span><span class="nm">.UL</span></div>
+      <div class="arrow" aria-hidden="true">←</div>
+      <div class="cells" id="cells"></div>
+      <div class="arrow" aria-hidden="true">←</div>
+      <div class="io src"><span class="lb">entre au bit 0</span><span class="bx" id="srcBox">0</span><span class="nm">LS2</span></div>
+    </div>
+    <p class="regnote">Le bit 5 sort dans <b>.UL</b>, les bits 4 à 0 montent d'un rang, et la valeur de <b>LS2</b> entre au bit 0.</p>
+  </div>
+  <div class="word">
+    <div class="wt"><b>Le mot complet Tableau[0] (DINT, 32 bits) — comme dans la table de surveillance</b><span class="hexv" id="hexv"></span></div>
+    <div class="bits32" id="bits32"></div>
+    <div class="bidx" id="bidx"></div>
+    <div class="wleg"><span><i style="background:var(--rok)"></i>bits 0 à 5 : le registre (Length = 6)</span><span><i style="background:var(--graphite)"></i>bits 6 à 31 : hors registre, le BSL n'y touche jamais</span></div>
+  </div>
+</section>
+
+<!-- journal -->
+<section class="card sec">
+  <h2><i></i>Journal des décalages</h2>
+  <div class="jr" id="journal"></div>
+</section>
+
+<!-- explications -->
+<div class="two sec">
+  <section class="card op">
+    <h2><i></i>Les quatre opérandes de la boîte</h2>
+    <div class="exwrap"><table>
+      <thead><tr><th>Opérande</th><th>Ici</th><th>Type</th><th>Rôle</th></tr></thead>
+      <tbody>
+        <tr><td>Array</td><td class="m">Tableau[0]</td><td>DINT[ ]</td><td>Le registre. On donne le <b>premier élément</b> du tableau. Tableau doit être un tableau (DINT[1] suffit ici).</td></tr>
+        <tr><td>Control</td><td class="m">Ctrl_BSL</td><td>CONTROL</td><td>La mémoire de l'instruction. <b>Un tag CONTROL par instruction</b>, jamais partagé.</td></tr>
+        <tr><td>Source Bit</td><td class="m">LS2</td><td>BOOL</td><td>La valeur qui entre au bit 0. Ce doit être un <b>tag BOOL</b>, pas une constante.</td></tr>
+        <tr><td>Length</td><td class="m">6</td><td>DINT</td><td>Le nombre de <b>bits</b> du registre (pas de mots). Ici : bits 0 à 5 de Tableau[0].</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+  <section class="card">
+    <h2><i></i>Le front montant de LS1, étape par étape</h2>
+    <div class="txt">
+      <ol class="steps">
+        <li>Au balayage où LS1 passe de 0 à 1, le barreau devient vrai : <b>.EN passe à 1</b>.</li>
+        <li>Le bit du haut du registre, <b>Tableau[0].5</b>, est copié dans <b>.UL</b>.</li>
+        <li>Les bits 4, 3, 2, 1 et 0 <b>montent d'un rang</b> (4→5, 3→4 … 0→1).</li>
+        <li>La valeur de <b>LS2</b> est écrite dans <b>Tableau[0].0</b>.</li>
+        <li><b>.DN passe à 1</b> : le décalage d'une position est fait. Les bits 6 à 31 n'ont pas bougé.</li>
+      </ol>
+    </div>
+  </section>
+</div>
+
+<div class="two sec">
+  <section class="card">
+    <h2><i></i>Après le front</h2>
+    <div class="txt">
+      <p><b>LS1 reste à 1 :</b> rien ne se passe. BSL est une instruction <b>transitionnelle</b> : comme .EN est déjà à 1, elle attend le prochain front. Un contact tenu fermé ne fait donc qu'un seul décalage.</p>
+      <p><b>LS1 retombe à 0 :</b> .EN, .DN et .ER sont remis à 0. <b>.UL garde sa valeur</b> : il reste égal au dernier bit sorti jusqu'au décalage suivant.</p>
+      <p><b>LS2 ne déclenche rien :</b> on peut le changer autant qu'on veut. Seule sa valeur au moment du front de LS1 compte.</p>
+    </div>
+  </section>
+  <section class="warn">
+    <h3>Pièges et défauts</h3>
+    <ul>
+      <li><b>Length plus grand que le tableau</b> (ex. 40 sur un DINT[1]) : défaut majeur <b>type 4, code 20</b>, l'automate s'arrête.</li>
+      <li><b>Length négatif</b> : .ER passe à 1 et rien ne se décale. Pas d'alarme : le registre reste figé.</li>
+      <li><b>Barreau toujours vrai</b> : un seul décalage. Si la commande est un bit maintenu, mettre un <b>ONS</b> devant le BSL.</li>
+      <li><b>À l'écran</b>, le bit 0 est à <b>droite</b> : les 1 se déplacent vers la gauche alors que, sur la machine, ils « avancent ».</li>
+      <li><b>.POS</b> n'est pas décrit pour le BSL : ne pas s'en servir.</li>
+    </ul>
+  </section>
+</div>
+
+<section class="card sec ex">
+  <h2><i></i>Exemple chiffré : 10 impulsions sur LS1 <span class="sub">c'est ce que joue le bouton « Jouer l'exemple »</span></h2>
+  <div class="exwrap" id="exTable"></div>
+  <div class="txt"><p><b>La règle qui en sort :</b> un 1 qui entre au front <b>n</b> ressort dans .UL au front <b>n + 6</b> (n + Length). Le 1 entré au front 1 sort au front 7, celui du front 3 au front 9, celui du front 4 au front 10.</p></div>
+</section>
+
+<footer class="pied">
+  <div class="nom">Bassam Kattan<small>A34 — Programmation d'un système de contrôle II · Cégep du Vieux Montréal</small></div>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 242 51" role="img" aria-label="Cégep du Vieux Montréal">
+  <title>Cégep du Vieux Montréal</title>
+  <path fill="#E53138" d="M31.19,42.31 L31.19,50.2 L25.45,44.46 L25.45,36.57 L31.19,42.31 Z M41.57,32.96 L47.15,38.53 L39.04,38.53 L33.46,32.96 L41.57,32.96 Z M42.31,19 L50.2,19 L44.46,24.74 L36.57,24.74 L42.31,19 Z M32.96,8.62 L38.53,3.05 L38.53,11.16 L32.96,16.73 L32.96,8.62 Z M19,7.89 L19,3.19744231e-14 L24.74,5.74 L24.74,13.62 L19,7.89 Z M8.62,17.24 L3.04,11.66 L11.15,11.66 L16.73,17.24 L8.62,17.24 Z M7.89,31.19 L3.19744231e-14,31.19 L5.74,25.46 L13.62,25.46 L7.89,31.19 Z M17.24,41.57 L11.66,47.15 L11.66,39.04 L17.24,33.46 L17.24,41.57 Z"/>
+  <path fill="#EF8214" d="M24.74,36.57 L24.74,44.46 L19,50.2 L19,42.31 L24.74,36.57 Z M32.96,33.46 L38.53,39.04 L38.53,47.15 L32.96,41.57 L32.96,33.46 Z M36.57,25.46 L44.46,25.46 L50.2,31.19 L42.31,31.19 L36.57,25.46 Z M33.46,17.24 L39.04,11.66 L47.15,11.66 L41.57,17.24 L33.46,17.24 Z M25.45,13.62 L25.45,5.74 L31.19,2.93098879e-14 L31.19,7.89 L25.45,13.62 Z M17.24,16.73 L11.66,11.16 L11.66,3.05 L17.24,8.62 L17.24,16.73 Z M13.62,24.74 L5.74,24.74 L2.93098879e-14,19 L7.89,19 L13.62,24.74 Z M16.73,32.96 L11.15,38.53 L3.04,38.53 L8.62,32.96 L16.73,32.96 Z"/>
+  <path fill="#000000" d="M69.25,23.2 C67.4495296,23.2871366 65.6962195,22.6085702 64.4235113,21.3320514 C63.150803,20.0555327 62.4774813,18.3002019 62.57,16.5 C62.4706248,14.689105 63.1466512,12.9214968 64.429074,11.639074 C65.7114968,10.3566512 67.479105,9.6806248 69.29,9.78 C70.5341576,9.74830053 71.7670215,10.0230334 72.88,10.58 L73,10.63 L73,14.06 L70.65,14.06 L70.65,12.51 C70.3204867,12.3306724 69.954712,12.2281187 69.58,12.21 L69.34,12.21 C68.2306529,12.2074697 67.1700765,12.6657547 66.4116618,13.4753623 C65.6532471,14.28497 65.265116,15.3731803 65.34,16.48 C65.2592977,17.5901519 65.6448213,18.6837262 66.4038913,19.4978287 C67.1629612,20.3119312 68.2269225,20.7729295 69.34,20.77 C70.7254862,20.8068369 72.0755668,20.3294997 73.13,19.43 L73.13,22.2 C71.9522531,22.881398 70.6103855,23.2272401 69.25,23.2 Z M83.14,5.73 L81.36,8.9 L79.02,8.9 L80.79,5.73 L83.14,5.73 Z M79.17,22.98 L78.48,22.98 L75.23,22.98 L75.23,20.83 L76.48,20.83 L76.48,12.12 L75.23,12.12 L75.23,9.97 L78.22,9.97 L79.17,9.97 L85.04,9.97 L85.04,13.83 L82.7,13.83 L82.7,12.12 L79.17,12.12 L79.17,15.38 L82.77,15.38 L82.77,17.53 L79.17,17.53 L79.17,20.83 L82.83,20.83 L82.83,19.13 L85.17,19.13 L85.17,22.98 L79.17,22.98 Z M104.97,22.98 L104.28,22.98 L101.03,22.98 L101.03,20.83 L102.28,20.83 L102.28,12.12 L101.03,12.12 L101.03,9.97 L104.02,9.97 L104.97,9.97 L110.84,9.97 L110.84,13.83 L108.5,13.83 L108.5,12.12 L104.97,12.12 L104.97,15.38 L108.56,15.38 L108.56,17.53 L104.97,17.53 L104.97,20.83 L108.63,20.83 L108.63,19.13 L110.97,19.13 L110.97,22.98 L104.97,22.98 Z M92.29,39.61 L92.29,37.9 L94.63,37.9 L94.63,41.75 L88.63,41.75 L87.94,41.75 L84.69,41.75 L84.69,39.61 L85.94,39.61 L85.94,30.89 L84.69,30.89 L84.69,28.75 L87.68,28.75 L88.63,28.75 L94.5,28.75 L94.5,32.6 L92.16,32.6 L92.16,30.89 L88.63,30.89 L88.63,34.15 L92.22,34.15 L92.22,36.3 L88.63,36.3 L88.63,39.61 L92.29,39.61 Z M98.07,22.22 C97.2912055,22.6679214 96.4312622,22.9568352 95.54,23.07 C95.3,23.12 95.06,23.18 94.82,23.18 L94.7,23.18 C94.5835575,23.1902279 94.4664425,23.1902279 94.35,23.18 C94.1801443,23.1899057 94.0098557,23.1899057 93.84,23.18 L93.66,23.18 C92.5396454,23.1968828 91.4306246,22.9538566 90.42,22.47 C90.33,22.43 90.24,22.37 90.15,22.32 C88.0620948,21.1410785 86.8310268,18.8731175 86.98,16.48 C86.8806248,14.669105 87.5566512,12.9014968 88.839074,11.619074 C90.1214968,10.3366512 91.889105,9.6606248 93.7,9.76 L93.86,9.76 C94.7332497,9.76604073 95.6002584,9.90773087 96.43,10.18 C96.8685214,10.3134565 97.2884918,10.5016032 97.68,10.74 L97.68,14.04 L95.08,14.04 L95.08,12.49 C94.7465813,12.3114474 94.3777411,12.2089918 94,12.19 L93.67,12.19 C92.5897974,12.1895915 91.5553497,12.6260851 90.8019604,13.4001926 C90.0485711,14.1743001 89.6402943,15.2202058 89.67,16.3 C89.67,16.36 89.67,16.42 89.67,16.48 C89.6672952,16.7947301 89.6907088,17.109142 89.74,17.42 C90.0157861,19.3978601 91.7444368,20.8456051 93.74,20.77 C94.3468879,20.7710455 94.9504221,20.6800096 95.53,20.5 L95.53,18.62 L94.13,18.62 L94.13,16.48 L99.3,16.48 L99.3,18.62 L98.07,18.62 L98.07,22.22 Z M118.18,20.83 L118.19,23 L113,23 L113,20.83 L114.19,20.83 L114.19,12.12 L112.94,12.12 L112.94,9.98 L117.94,9.98 C121.18,9.98 123.3,11.21 123.3,14.38 C123.3,17.55 120.91,18.75 118.05,18.75 L116.93,18.75 L116.93,20.83 L118.18,20.83 Z M116.93,12.12 L116.93,16.61 L117.93,16.61 C119.58,16.61 120.58,15.89 120.58,14.38 C120.58,12.87 119.61,12.12 117.93,12.12 L116.93,12.12 Z M133.4,23 L129.46,23 L129.46,20.85 L130.7,20.85 L130.7,12.14 L129.46,12.14 L129.46,10 L134.54,10 C139.46,10 142.05,12.32 142.05,16.32 C142.05,20.64 139.26,23 134.56,23 L133.4,23 Z M133.4,12.15 L133.4,20.86 L134.67,20.86 C137.45,20.86 139.29,19.42 139.29,16.33 C139.29,13.66 137.6,12.15 134.6,12.15 L133.4,12.15 Z M70.72,30.89 L70.72,28.75 L75.93,28.75 L75.93,30.89 L74.84,30.89 L70.62,41.75 L67.52,41.75 L63.34,30.89 L62.24,30.89 L62.24,28.75 L67.61,28.75 L67.61,30.89 L66.19,30.89 L69.23,38.76 L72.12,30.89 L70.72,30.89 Z M77.44,30.89 L77.44,28.75 L82.64,28.75 L82.64,30.89 L81.39,30.89 L81.39,39.61 L82.64,39.61 L82.64,41.75 L77.44,41.75 L77.44,39.61 L78.69,39.61 L78.69,30.89 L77.44,30.89 Z M104.07,30.89 L104.07,28.75 L109.28,28.75 L109.28,30.89 L108.04,30.89 L108.04,39.32 L109.28,39.1 L109.28,41.27 C107.262861,41.7339482 105.199806,41.9687675 103.13,41.97 C100.04,41.97 97.46,40.88 97.46,37.22 L97.46,30.89 L96.21,30.89 L96.21,28.75 L101.37,28.75 L101.37,30.89 L100.12,30.89 L100.12,36.67 C100.12,39.02 101.26,39.76 103.12,39.76 C103.864021,39.7861473 104.608635,39.7291273 105.34,39.59 L105.34,30.89 L104.07,30.89 Z M118.86,35.1 L122.58,39.61 L123.69,39.61 L123.69,41.75 L118.2,41.75 L118.2,39.61 L119.34,39.61 L117.03,36.81 L114.83,39.61 L116.08,39.61 L116.08,41.75 L110.82,41.75 L110.82,39.61 L111.94,39.61 L115.58,35.04 L112.15,30.89 L111.08,30.89 L111.08,28.75 L116.56,28.75 L116.56,30.89 L115.37,30.89 L117.46,33.42 L119.47,30.89 L118.18,30.89 L118.18,28.75 L123.39,28.75 L123.39,30.89 L122.31,30.89 L118.86,35.1 Z M144.71,30.89 L146.05,39.61 L147.32,39.61 L147.32,41.75 L142.2,41.75 L142.2,39.61 L143.47,39.61 L142.43,33.62 L140.02,39.69 L139.33,41.75 L137.56,41.75 L134.09,33.5 L133.09,39.61 L134.36,39.61 L134.36,41.75 L129.3,41.75 L129.3,39.61 L130.57,39.61 L131.94,30.89 L130.51,30.89 L130.51,28.75 L135.28,28.75 L138.47,36.75 L141.52,28.75 L146.12,28.75 L146.12,30.89 L144.71,30.89 Z M155.23,28.48 C157.032902,28.4555413 158.769126,29.1609502 160.044088,30.4359121 C161.31905,31.710874 162.024459,33.4470975 162,35.25 C161.996658,36.8343235 161.429473,38.365725 160.4,39.57 C160.320732,39.6791616 160.230238,39.7797113 160.13,39.87 L160.13,39.93 C158.845441,41.2423215 157.076024,41.9660093 155.24,41.93 C153.608683,41.9540417 152.024019,41.3855522 150.78,40.33 C150.78,40.33 150.89,40.43 150.78,40.33 C150.67,40.23 150.56,40.13 150.46,40.02 C147.854085,37.2906792 147.880624,32.9869757 150.52,30.29 L150.84,30 C152.075222,28.9859836 153.632218,28.4468869 155.23,28.48 Z M158.23,38.25 L158.23,38.34 C159.594115,36.5726011 159.594115,34.1073989 158.23,32.34 C156.466237,30.9652639 153.993763,30.9652639 152.23,32.34 C150.89804,34.0848583 150.89804,36.5051417 152.23,38.25 C153.988768,39.6391936 156.471232,39.6391936 158.23,38.25 Z M172.2,30.89 L172.2,28.75 L177.41,28.75 L177.41,30.89 L176.14,30.89 L176.14,39.85 L176.14,40.62 L176.14,41.75 L174.26,41.75 L167.61,33.76 L167.61,39.61 L168.87,39.61 L168.87,41.75 L163.69,41.75 L163.69,39.61 L164.93,39.61 L164.93,30.89 L163.69,30.89 L163.69,28.75 L167.1,28.75 L173.47,36.57 L173.47,30.89 L172.2,30.89 Z M185.59,28.75 L185.96,28.75 L190.42,28.75 L190.42,32.73 L188.06,32.73 L188.06,30.89 L185.96,30.89 L185.96,39.61 L187.45,39.61 L187.45,41.75 L181.79,41.75 L181.79,39.61 L183.28,39.61 L183.28,30.89 L181.18,30.89 L181.18,32.73 L178.84,32.73 L178.84,28.75 L183.28,28.75 L183.73,28.75 L185.59,28.75 Z M199.93,37.08 L202.08,39.61 L203.75,39.61 L203.75,41.75 L200.44,41.75 L197,37.53 L196.15,37.53 L196.15,39.61 L197.39,39.61 L197.39,41.76 L192.21,41.76 L192.21,39.62 L193.46,39.62 L193.46,30.9 L192.21,30.9 L192.21,28.76 L197.16,28.76 C200.4,28.76 202.52,30.05 202.52,33.16 C202.63935,34.9011978 201.578483,36.5068342 199.93,37.08 Z M196.13,30.89 L196.13,35.38 L197.13,35.38 C198.78,35.38 199.78,34.66 199.78,33.15 C199.78,31.64 198.81,30.89 197.13,30.89 L196.13,30.89 Z M225.09,28.75 L229.52,39.61 L230.52,39.61 L230.52,41.75 L225.07,41.75 L225.07,39.61 L226.54,39.61 L225.82,37.79 L221.03,37.79 L220.34,39.61 L221.81,39.61 L221.81,41.75 L216.6,41.75 L216.6,39.61 L217.65,39.61 L221.83,28.75 L225.09,28.75 Z M221.81,35.75 L225,35.75 L223.38,31.62 L221.81,35.75 Z M239.63,37.68 L241.97,37.68 L241.97,41.75 L235.97,41.75 L235.65,41.75 L232.03,41.75 L232.03,39.61 L233.28,39.61 L233.28,30.89 L232.03,30.89 L232.03,28.75 L237.22,28.75 L237.22,30.89 L235.97,30.89 L235.97,39.61 L239.63,39.61 L239.63,37.68 Z M213.09,24.5 L211.32,27.67 L208.97,27.67 L210.75,24.5 L213.09,24.5 Z M212.78,39.61 L212.78,37.9 L215.13,37.9 L215.13,41.75 L209.13,41.75 L208.44,41.75 L205.19,41.75 L205.19,39.61 L206.43,39.61 L206.43,30.89 L205.19,30.89 L205.19,28.75 L208.18,28.75 L209.13,28.75 L215,28.75 L215,32.6 L212.65,32.6 L212.65,30.89 L209.13,30.89 L209.13,34.15 L212.72,34.15 L212.72,36.3 L209.13,36.3 L209.13,39.61 L212.78,39.61 Z M144.65,18.45 L144.62,12.14 L143.38,12.14 L143.38,10 L148.57,10 L148.57,12.12 L147.32,12.12 L147.32,17.92 C147.32,20.27 148.47,21.01 150.32,21.01 C151.064021,21.0361473 151.808635,20.9791273 152.54,20.84 L152.54,12.14 L151.27,12.14 L151.27,10 L156.48,10 L156.48,12.12 L155.23,12.12 L155.23,20.55 L156.48,20.33 L156.48,22.5 C154.458471,22.9580592 152.392763,23.1927987 150.32,23.2 C147.24,23.2 144.65,22.1 144.65,18.45 Z"/>
+</svg>
+
+</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var LEN = 6, MASK = (1 << LEN) - 1;
+  var EXEMPLE = [1,0,1,1,0,0,0,0,0,0];       // valeur de LS2 à chaque impulsion
+  var ON = "#1E9E3E", OFF = "#1D2329", ONL = "#DDF4E3";
+  var MONO = "Consolas, 'DejaVu Sans Mono', monospace", SANS = "'Segoe UI', Inter, Arial, sans-serif";
+
+  var S = { LS1:0, LS2:0, arr:0, EN:0, DN:0, ER:0, UL:0, scans:0, shifts:0, lastShift:-99, log:[], anim:false, demo:null, pulseT:null, flash:{} };
+
+  function bit(v, i){ return (v >>> i) & 1; }
+  function hex32(v){ var h = ("0000000" + (v >>> 0).toString(16).toUpperCase()).slice(-8); return "16#" + h.slice(0,4) + "_" + h.slice(4); }
+  function reg6(v){ var s=""; for (var i=LEN-1;i>=0;i--) s += bit(v,i); return s; }
+
+  /* ---------- le moteur : un balayage du barreau  XIC LS1 → BSL ---------- */
+  function shiftOnce(st){                 // utilisé aussi pour l'exemple chiffré
+    var low = st.arr & MASK;
+    st.UL = (low >>> (LEN-1)) & 1;
+    var nlow = ((low << 1) | st.LS2) & MASK;
+    st.arr = ((st.arr & ~MASK) | nlow) >>> 0;
+  }
+  function scan(){
+    S.scans++;
+    var before = {EN:S.EN, DN:S.DN, ER:S.ER, UL:S.UL, arr:S.arr};
+    var rung = S.LS1 === 1;
+    var shifted = false;
+    if (!rung){ S.EN = 0; S.DN = 0; S.ER = 0; }
+    else if (!S.EN){
+      S.EN = 1; S.DN = 0; S.ER = 0;
+      if (LEN < 0) S.ER = 1;
+      else { shiftOnce(S); S.DN = 1; shifted = true; }
+    }
+    if (shifted){
+      S.lastShift = S.scans;
+      S.shifts++;
+      S.log.push({ n:S.shifts, src:S.LS2, arr:S.arr, UL:S.UL });
+      S.anim = true;
+    }
+    ["EN","DN","ER","UL"].forEach(function(k){ if (before[k] !== S[k]) S.flash[k] = 1; });
+    var changed = shifted || before.EN !== S.EN || before.DN !== S.DN || before.ER !== S.ER;
+    document.getElementById("scanN").textContent = S.scans;
+    document.getElementById("scanTop").textContent = S.scans;
+    if (changed) render(shifted ? "shift" : (rung ? "hold" : "off"));
+    else if (rung && S.EN && S.scans - S.lastShift === 10) render("hold");
+  }
+
+  /* ---------- dessin du barreau, façon Studio 5000 ---------- */
+  function rungSVG(){
+    var W = 880, H = 200, gx = 40, LR = gx + 8, RR = W - 12, y = 60;
+    var rung = S.LS1 === 1;
+    var cIn = rung ? ON : OFF;
+    var s = ['<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Barreau 0 : XIC LS1 suivi de BSL Tableau[0], Ctrl_BSL, LS2, longueur 6" xmlns="http://www.w3.org/2000/svg">'];
+    s.push('<rect x="0" y="0" width="'+gx+'" height="'+H+'" fill="#ECEEF0"/>');
+    s.push('<text x="'+(gx/2)+'" y="'+(y+5)+'" text-anchor="middle" font-family="'+SANS+'" font-size="14" font-weight="700" fill="#5D6873">0</text>');
+    s.push('<line x1="'+LR+'" y1="6" x2="'+LR+'" y2="'+(H-6)+'" stroke="'+ON+'" stroke-width="3"/>');
+    s.push('<line x1="'+RR+'" y1="6" x2="'+RR+'" y2="'+(H-6)+'" stroke="'+ON+'" stroke-width="3"/>');
+    // XIC LS1
+    var cx = 120;
+    s.push('<line x1="'+LR+'" y1="'+y+'" x2="'+(cx-9)+'" y2="'+y+'" stroke="'+ON+'" stroke-width="2"/>');
+    if (rung) s.push('<rect x="'+(cx-14)+'" y="'+(y-17)+'" width="28" height="34" rx="2" fill="'+ONL+'"/>');
+    s.push('<line x1="'+(cx-9)+'" y1="'+(y-14)+'" x2="'+(cx-9)+'" y2="'+(y+14)+'" stroke="'+cIn+'" stroke-width="3"/>');
+    s.push('<line x1="'+(cx+9)+'" y1="'+(y-14)+'" x2="'+(cx+9)+'" y2="'+(y+14)+'" stroke="'+cIn+'" stroke-width="3"/>');
+    s.push('<text x="'+cx+'" y="'+(y-24)+'" text-anchor="middle" font-family="'+MONO+'" font-weight="700" font-size="14" fill="#1D2329">LS1</text>');
+    s.push('<text x="'+cx+'" y="'+(y+33)+'" text-anchor="middle" font-family="'+SANS+'" font-size="11" fill="#5D6873">XIC</text>');
+    s.push('<text x="'+cx+'" y="'+(y+50)+'" text-anchor="middle" font-family="'+MONO+'" font-weight="700" font-size="13" fill="'+(rung?ON:"#A3ACB5")+'">'+S.LS1+'</text>');
+    // fil vers la boîte
+    var bx = 210, bw = 420, by = y - 22, bh = 142;
+    s.push('<line x1="'+(cx+9)+'" y1="'+y+'" x2="'+bx+'" y2="'+y+'" stroke="'+cIn+'" stroke-width="2"/>');
+    // boîte BSL
+    s.push('<rect x="'+bx+'" y="'+by+'" width="'+bw+'" height="'+bh+'" fill="#fff" stroke="#1D2329" stroke-width="1.5"/>');
+    s.push('<rect x="'+bx+'" y="'+by+'" width="'+bw+'" height="26" fill="#F3F4F6" stroke="#1D2329" stroke-width="1.5"/>');
+    s.push('<text x="'+(bx+12)+'" y="'+(by+18)+'" font-family="'+SANS+'" font-weight="800" font-size="15" fill="#1D2329">BSL</text>');
+    s.push('<text x="'+(bx+52)+'" y="'+(by+18)+'" font-family="'+SANS+'" font-size="13" fill="#333F48">Bit Shift Left</text>');
+    var rows = [["Array","Tableau[0]",null],["Control","Ctrl_BSL",null],["Source Bit","LS2",S.LS2],["Length","6",null]];
+    rows.forEach(function(r, i){
+      var ry = by + 50 + i*24;
+      s.push('<text x="'+(bx+14)+'" y="'+ry+'" font-family="'+SANS+'" font-size="13.5" fill="#333F48">'+r[0]+'</text>');
+      s.push('<text x="'+(bx+130)+'" y="'+ry+'" font-family="'+MONO+'" font-weight="700" font-size="14" fill="#9E1030">'+r[1]+'</text>');
+      if (r[2] !== null){
+        var on = r[2] === 1;
+        s.push('<rect x="'+(bx+212)+'" y="'+(ry-14)+'" width="22" height="19" rx="3" fill="'+(on?ONL:"#EEF0F2")+'" stroke="'+(on?"#8FD3A2":"#D3D8DD")+'"/>');
+        s.push('<text x="'+(bx+223)+'" y="'+(ry+1)+'" text-anchor="middle" font-family="'+MONO+'" font-weight="700" font-size="13" fill="'+(on?ON:"#A3ACB5")+'">'+r[2]+'</text>');
+      }
+    });
+    // sorties EN / DN / ER
+    var outs = [["EN",S.EN],["DN",S.DN],["ER",S.ER]], ox = bx + bw;
+    outs.forEach(function(o, i){
+      var oy = y + i*30, on = o[1] === 1, col = on ? ON : OFF;
+      s.push('<line x1="'+ox+'" y1="'+oy+'" x2="'+(ox+26)+'" y2="'+oy+'" stroke="'+col+'" stroke-width="2"/>');
+      if (on) s.push('<rect x="'+(ox+26)+'" y="'+(oy-12)+'" width="46" height="24" rx="11" fill="'+ONL+'"/>');
+      s.push('<text x="'+(ox+49)+'" y="'+(oy+5)+'" text-anchor="middle" font-family="'+MONO+'" font-weight="700" font-size="14" fill="'+col+'">('+o[0]+')</text>');
+      if (i === 0) s.push('<line x1="'+(ox+72)+'" y1="'+oy+'" x2="'+RR+'" y2="'+oy+'" stroke="'+col+'" stroke-width="2"/>');
+      else s.push('<line x1="'+(ox+72)+'" y1="'+oy+'" x2="'+(ox+86)+'" y2="'+oy+'" stroke="'+col+'" stroke-width="2"/>');
+    });
+    s.push('<text x="'+(RR-6)+'" y="'+(H-12)+'" text-anchor="end" font-family="'+SANS+'" font-size="11.5" fill="#5D6873">Ctrl_BSL.EN · .DN · .ER</text>');
+    s.push('</svg>');
+    return s.join("");
+  }
+
+  /* ---------- affichage ---------- */
+  var CTRL = [
+    ["EN", "Vrai tant que le barreau est vrai. Sert aussi de mémoire du front."],
+    ["DN", "Vrai quand le décalage d'une position est fait."],
+    ["UL", "Le dernier bit sorti du registre. Garde sa valeur jusqu'au décalage suivant."],
+    ["ER", "Vrai si Length est négatif : rien ne se décale."],
+    ["LEN", "Le nombre de bits du registre (copie de Length)."]
+  ];
+  function render(kind){
+    document.getElementById("rung").innerHTML = rungSVG();
+    // entrées
+    ["LS1","LS2"].forEach(function(k){
+      document.getElementById("t"+k).setAttribute("aria-pressed", S[k] ? "true" : "false");
+      document.getElementById("v"+k).textContent = S[k];
+    });
+    // CONTROL
+    document.getElementById("ctrlBody").innerHTML = CTRL.map(function(c){
+      var k = c[0], v = k === "LEN" ? LEN : S[k];
+      var cls = k === "LEN" ? "p num" : (v ? "p one" : "p");
+      return '<tr'+(S.flash[k]?' class="flash"':'')+'><td class="k">.'+k+'</td><td class="v"><span class="'+cls+'">'+v+'</span></td><td class="d">'+c[1]+'</td></tr>';
+    }).join("");
+    S.flash = {};
+    // registre agrandi
+    var cells = "";
+    for (var i=LEN-1;i>=0;i--){ var b = bit(S.arr,i); cells += '<div class="cell"><span class="bx'+(b?' one':'')+'">'+b+'</span><small>bit '+i+'</small></div>'; }
+    var ce = document.getElementById("cells"); ce.innerHTML = cells;
+    var ul = document.getElementById("ulBox"); ul.textContent = S.UL; ul.className = "bx" + (S.UL ? " one" : "");
+    var sb = document.getElementById("srcBox"); sb.textContent = S.LS2; sb.className = "bx" + (S.LS2 ? " one" : "");
+    var io = document.getElementById("ioUL");
+    ce.classList.remove("go"); io.classList.remove("go");
+    if (S.anim){ void ce.offsetWidth; ce.classList.add("go"); io.classList.add("go"); S.anim = false; }
+    // mot complet
+    var b32 = "", idx = "";
+    for (var j=31;j>=0;j--){
+      var bj = bit(S.arr,j), gp = (j % 8 === 7 && j !== 31) ? " gp" : "";
+      b32 += '<button type="button" class="bit'+(j<LEN?' r':'')+(bj?' one':'')+gp+'" data-b="'+j+'" aria-label="Tableau[0].'+j+' = '+bj+'">'+bj+'</button>';
+      idx += '<span class="'+gp.trim()+'">'+j+'</span>';
+    }
+    document.getElementById("bits32").innerHTML = b32;
+    document.getElementById("bidx").innerHTML = idx;
+    var sv = S.arr | 0;
+    document.getElementById("hexv").innerHTML = hex32(S.arr) + '<small>= ' + sv + ' en décimal</small>';
+    // journal
+    var jr = document.getElementById("journal");
+    if (!S.log.length) jr.innerHTML = '<p class="empty">Aucun décalage pour l\'instant. Donne une impulsion sur LS1.</p>';
+    else {
+      var t = '<table><thead><tr><th>Front n°</th><th>LS2</th><th>Bits 5…0</th><th>Tableau[0]</th><th>.UL</th></tr></thead><tbody>';
+      S.log.slice().reverse().forEach(function(r){
+        t += '<tr'+(r.UL?' class="ul1"':'')+'><td>'+r.n+'</td><td>'+r.src+'</td><td>'+reg6(r.arr)+'</td><td>'+hex32(r.arr)+'</td><td>'+r.UL+(r.UL?'<span class="ej">un 1 est sorti</span>':'')+'</td></tr>';
+      });
+      jr.innerHTML = t + '</tbody></table>';
+    }
+    document.getElementById("shiftN").textContent = S.shifts;
+    // message
+    var st = document.getElementById("status"), msg, cls = "status";
+    if (kind === "shift"){ msg = "Front montant de LS1 : décalage fait. Bit 5 → .UL = " + S.UL + ", LS2 = " + S.LS2 + " entré au bit 0."; cls += " shift"; }
+    else if (S.LS1){ msg = "LS1 reste à 1 : aucun nouveau décalage (.EN est déjà à 1)."; cls += " hold"; }
+    else msg = S.shifts ? "LS1 à 0 : .EN et .DN sont remis à 0, .UL garde " + S.UL + ". En attente du prochain front." : "Prêt. LS1 à 0. Donne une impulsion sur LS1 pour décaler.";
+    st.className = cls; st.textContent = msg;
+    document.getElementById("lastEv").textContent = "";
+  }
+
+  /* ---------- exemple chiffré (calculé, pas tapé) ---------- */
+  function exempleTable(){
+    var st = { arr:0, UL:0, LS2:0 }, t = '<table><thead><tr><th>Front n°</th><th>LS2</th><th>Bits 5…0 après</th><th>Tableau[0]</th><th>.UL</th><th>Ce qui se passe</th></tr></thead><tbody>';
+    var entres = [];
+    EXEMPLE.forEach(function(v, i){
+      st.LS2 = v; shiftOnce(st);
+      if (v) entres.push(i+1);
+      var why = v ? "un 1 entre au bit 0" : "un 0 entre au bit 0";
+      if (st.UL){ var n = entres.shift(); why = "le 1 entré au front " + n + " sort dans .UL"; }
+      var r = reg6(st.arr), rb = "";
+      for (var k=0;k<r.length;k++) rb += r[k] === "1" ? "<em>1</em>" : "0";
+      t += '<tr'+(st.UL?' class="ul1"':'')+'><td>'+(i+1)+'</td><td>'+v+'</td><td class="rb">'+rb+'</td><td>'+hex32(st.arr)+'</td><td>'+st.UL+'</td><td>'+why+'</td></tr>';
+    });
+    document.getElementById("exTable").innerHTML = t + '</tbody></table>';
+  }
+
+  /* ---------- commandes ---------- */
+  function stopDemo(){ if (S.demo){ clearTimeout(S.demo); S.demo = null; document.getElementById("bDemo").textContent = "▶ Jouer l'exemple"; document.getElementById("bDemo").classList.remove("on"); } }
+  function setIn(k, v){ S[k] = v ? 1 : 0; render(null); }
+  function pulse(){
+    if (S.pulseT) return;
+    S.LS1 = 1; render(null);
+    S.pulseT = setTimeout(function(){ S.LS1 = 0; S.pulseT = null; render(null); }, 450);
+  }
+  function reset(){
+    stopDemo(); if (S.pulseT){ clearTimeout(S.pulseT); S.pulseT = null; }
+    S.LS1 = 0; S.LS2 = 0; S.arr = 0; S.EN = 0; S.DN = 0; S.ER = 0; S.UL = 0; S.shifts = 0; S.log = []; S.flash = {};
+    render(null);
+  }
+  function demo(){
+    if (S.demo){ stopDemo(); return; }
+    reset();
+    var b = document.getElementById("bDemo"); b.textContent = "⏸ Arrêter l'exemple"; b.classList.add("on");
+    var i = 0;
+    (function next(){
+      if (i >= EXEMPLE.length){ stopDemo(); return; }
+      S.LS2 = EXEMPLE[i]; render(null);
+      S.demo = setTimeout(function(){
+        pulse(); i++;
+        S.demo = setTimeout(next, 1100);
+      }, 450);
+    })();
+  }
+
+  document.getElementById("tLS1").addEventListener("click", function(){ stopDemo(); setIn("LS1", !S.LS1); });
+  document.getElementById("tLS2").addEventListener("click", function(){ stopDemo(); setIn("LS2", !S.LS2); });
+  document.getElementById("bPulse").addEventListener("click", function(){ stopDemo(); pulse(); });
+  document.getElementById("bDemo").addEventListener("click", demo);
+  document.getElementById("bReset").addEventListener("click", reset);
+  document.getElementById("bits32").addEventListener("click", function(e){
+    var t = e.target.closest(".bit"); if (!t) return;
+    var j = +t.getAttribute("data-b");
+    S.arr = (S.arr ^ (1 << j)) >>> 0; render(null);
+  });
+
+  exempleTable();
+  render(null);
+  setInterval(scan, 100);
+  window.__bsl = { S:S, scan:scan, shiftOnce:shiftOnce, pulse:pulse, reset:reset };
+})();
+</script>
+</body>
+</html>
