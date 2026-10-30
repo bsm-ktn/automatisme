@@ -1,0 +1,755 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Évaluation 1 · Solution du pratique</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600;700&family=IBM+Plex+Serif:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--acc:#EF8214;--sec:#2F7D5B;--ink:#1A1A1A;--mut:#5A5A5A;--paper:#FCFBF8;--rule:#E2DED6;--soft:#FBE9E0;
+--head:#F3ECE7;--zeb:#FAF7F3;--on:#1E9E4A;--onsoft:#DDF3E4;--red:#C0392B;--amb:#E08A00;--blu:#2C6FB7;--cmt:#FFF8D9}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:56px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Serif',Cambria,serif;font-size:16px;line-height:1.5;
+font-variant-numeric:lining-nums tabular-nums;padding-right:360px}
+code,.mono{font-family:'IBM Plex Mono',Consolas,monospace}
+.wrap{max-width:1000px;margin:0 auto;padding:0 18px}
+header.top{background:#fff;border-bottom:3px solid var(--acc)}
+header.top .wrap{padding-top:18px;padding-bottom:14px}
+.kick{font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+h1{font-size:30px;line-height:1.15;margin:4px 0 4px}
+.sub{margin:0 0 10px;color:var(--mut)}
+.sub strong{color:var(--red)}
+.fig{margin:6px 0 0;overflow-x:auto}
+.fig svg{display:block;width:100%;max-width:760px;height:auto}
+.fig figcaption{font-size:13.5px;color:var(--mut);margin-top:2px}
+nav.nav{position:sticky;top:0;z-index:10;background:var(--paper);border-bottom:1px solid var(--rule)}
+nav.nav .wrap{display:flex;gap:18px;overflow-x:auto;padding-top:10px;padding-bottom:10px;white-space:nowrap}
+nav.nav a{font:600 14px 'IBM Plex Sans',sans-serif;color:var(--sec);text-decoration:none}
+nav.nav a:hover{text-decoration:underline}
+section{padding:22px 0 8px}
+h2{font-size:23px;color:var(--acc);border-bottom:1.5px solid var(--rule);padding-bottom:4px;margin:6px 0 12px}
+h3{font-size:17px;color:var(--sec);margin:18px 0 6px}
+p{margin:0 0 10px}
+ul,ol{margin:4px 0 12px;padding-left:22px} li{margin-bottom:4px}
+.note{background:var(--soft);border-left:4px solid var(--sec);padding:10px 14px;margin:10px 0;border-radius:0 6px 6px 0}
+table{border-collapse:collapse;width:100%;margin:8px 0 14px;font-size:14.5px}
+th{background:var(--head);color:var(--mut);font:700 12px 'IBM Plex Sans',sans-serif;text-transform:uppercase;letter-spacing:.04em;text-align:left;padding:7px 8px;border-bottom:1px solid var(--rule)}
+th.nc{text-transform:none;letter-spacing:0;font-size:12.5px}
+td{padding:6px 8px;border-bottom:1px solid var(--rule);vertical-align:middle}
+tr:nth-child(even) td{background:var(--zeb)}
+td.rep{color:var(--red);font-weight:600}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:8px 0 14px}
+.tw table{margin:0}
+.btn{font:600 14px 'IBM Plex Sans',sans-serif;padding:7px 12px;border:1.5px solid var(--sec);background:#fff;color:var(--sec);border-radius:6px;cursor:pointer}
+.btn:hover{background:var(--sec);color:#fff}
+.btn.acc{border-color:var(--acc);color:var(--acc)} .btn.acc:hover{background:var(--acc);color:#fff}
+.btn.sm{padding:3px 9px;font-size:12.5px}
+.ok{color:var(--on);font-weight:700}.ko{color:var(--red);font-weight:700}
+/* lignes ladder */
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font:14px 'IBM Plex Sans',sans-serif;color:var(--mut);margin:6px 0 10px}
+.legend i{display:inline-block;width:26px;height:4px;background:var(--on);vertical-align:middle;margin-right:6px;border-radius:2px}
+.legend em{font-style:normal;color:var(--blu);font-family:'IBM Plex Mono',monospace}
+.task{margin:26px 0 6px;display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.task h3{margin:0;font-size:19px;color:var(--ink)}
+.task span{font:700 14px 'IBM Plex Sans',sans-serif;color:var(--acc)}
+.rung{background:#fff;border:1px solid var(--rule);border-radius:8px;margin:12px 0;padding:10px 12px;break-inside:avoid}
+.rh{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin-bottom:4px}
+.num{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;padding:0 7px;border-radius:14px;background:var(--acc);color:#fff;font:700 13px 'IBM Plex Sans',sans-serif;white-space:nowrap}
+.rh b{font:700 16px 'IBM Plex Sans',sans-serif}
+.bdg{font:600 12px 'IBM Plex Sans',sans-serif;background:var(--soft);color:#8a4a07;border-radius:10px;padding:2px 8px}
+.rh .btn{margin-left:auto}
+.cmt{background:var(--cmt);border:1px solid #E9D98A;border-radius:4px;font:600 13.5px 'IBM Plex Mono',monospace;color:#5b4a00;padding:4px 10px;margin:4px 0 6px;display:inline-block}
+.svgw{overflow-x:auto}
+.svgw svg{display:block;width:100%;height:auto}
+.rung code{display:block;font-size:12.5px;background:var(--zeb);border:1px solid var(--rule);border-radius:5px;padding:6px 8px;margin:6px 0;overflow-wrap:anywhere}
+.rung p{font-size:15px;margin:4px 0 2px}
+.rung p.acc{font-size:14px;color:#7a3d00}
+.rung p.acc b{font-family:'IBM Plex Sans',sans-serif}
+/* grille */
+.gtools{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;background:#fff;border:1px solid var(--rule);border-radius:8px;padding:10px 14px;position:sticky;top:44px;z-index:5}
+.gtools input[type=text]{font:15px 'IBM Plex Sans',sans-serif;padding:6px 8px;border:1px solid var(--rule);border-radius:5px;width:220px;max-width:100%}
+.gtools label{font:600 14px 'IBM Plex Sans',sans-serif}
+.total{margin-left:auto;font:700 20px 'IBM Plex Sans',sans-serif;color:var(--acc)}
+.total small{display:block;font-size:12px;color:var(--mut);font-weight:400;text-align:right}
+.gpart{background:#fff;border:1px solid var(--rule);border-radius:8px;margin:12px 0;overflow:hidden}
+.gpart .gh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;background:var(--head);padding:8px 14px;font:700 15px 'IBM Plex Sans',sans-serif}
+.gpart .gh span{color:var(--acc);white-space:nowrap}
+.gitem{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;padding:8px 14px;border-top:1px solid var(--rule)}
+.gitem .t{font-size:15px}
+.gitem .t small{display:block;color:#7a3d00;font-size:13px;line-height:1.35;margin-top:2px}
+.seg{display:flex;border:1.5px solid var(--sec);border-radius:6px;overflow:hidden;flex-wrap:nowrap}
+.seg button{font:600 13px 'IBM Plex Sans',sans-serif;border:0;background:#fff;color:var(--sec);padding:6px 9px;cursor:pointer;min-width:36px}
+.seg button+button{border-left:1px solid var(--sec)}
+.seg button.on{background:var(--sec);color:#fff}
+.seg button.on.z{background:var(--red)}
+.chk{display:flex;flex-wrap:wrap;gap:4px}
+.chk button{font:600 12.5px 'IBM Plex Sans',sans-serif;width:34px;height:30px;border:1.5px solid var(--sec);background:#fff;color:var(--sec);border-radius:6px;cursor:pointer}
+.chk button.on{background:var(--sec);color:#fff}
+/* pupitre */
+.pupitre{position:fixed;top:0;right:0;width:360px;height:100vh;overflow:auto;background:#fff;border-left:1px solid var(--rule);padding:12px 16px 30px;z-index:30;font-family:'IBM Plex Sans',sans-serif}
+.pupitre h2{font-size:19px;margin:2px 0 2px;border:0;padding:0}
+.pupitre .hint{font-size:13px;color:var(--mut);margin-bottom:4px;line-height:1.35}
+.pupitre h3{font-size:12.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--acc);margin:14px 0 6px;border-top:1px solid var(--rule);padding-top:10px}
+.pup-toggle{display:none}
+.field{display:grid;grid-template-columns:1fr 112px;gap:6px;align-items:center;margin:4px 0}
+.field label{font:600 13px 'IBM Plex Mono',monospace;overflow:hidden;text-overflow:ellipsis}
+.field input{font:600 14px 'IBM Plex Mono',monospace;padding:5px 7px;border:1.5px solid #9AA3AD;border-radius:5px;width:100%;text-align:right}
+.field input:focus{outline:2px solid var(--acc);border-color:var(--acc)}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin:2px 0 6px}
+.chips button{font:600 12px 'IBM Plex Mono',monospace;padding:3px 7px;border:1px solid var(--rule);background:var(--zeb);border-radius:12px;cursor:pointer;color:var(--ink)}
+.chips button:hover{border-color:var(--acc)}
+.bgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.pb{font:600 14px 'IBM Plex Sans',sans-serif;padding:9px 6px;border-radius:7px;border:1.5px solid #20242A;background:#5B6B7F;color:#fff;cursor:pointer;user-select:none;-webkit-user-select:none;line-height:1.15}
+.pb small{display:block;font-weight:400;font-size:11px;opacity:.88}
+.pb.green{background:#2E8540}.pb.light{background:#DCE3EA;color:var(--ink)}
+.pb.wide{grid-column:1/-1}
+.pb.flash{box-shadow:inset 0 0 0 3px #FFD54A;filter:brightness(.9)}
+.pb.tog[aria-pressed=true]{background:var(--red);color:#fff;box-shadow:inset 0 0 0 3px #FFD54A}
+.lamps{display:grid;grid-template-columns:1fr 1fr;gap:5px 8px;font-size:13px}
+.lamp{display:flex;align-items:center;gap:7px;min-width:0}
+.lamp b{width:16px;height:16px;border-radius:50%;border:2px solid #9AA3AD;background:#fff;flex:none}
+.lamp.on b{background:var(--on);border-color:var(--on);box-shadow:0 0 8px var(--on)}
+.lamp.on.r b{background:var(--red);border-color:var(--red);box-shadow:0 0 8px var(--red)}
+.lamp .mono{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vals{width:100%;font-size:13px;margin:4px 0 6px}
+.vals td{padding:3px 4px}
+.vals td:first-child{font-family:'IBM Plex Mono',monospace;font-size:12.5px}
+.vals td:last-child{text-align:right;font:600 13px 'IBM Plex Mono',monospace;color:var(--blu)}
+.colrow{display:flex;gap:14px;align-items:center}
+.colonne{display:flex;flex-direction:column;gap:3px;padding:5px;background:#2b2f35;border-radius:6px;flex:none}
+.colonne i{width:26px;height:20px;border-radius:4px;opacity:.22}
+.colonne i.r{background:#E53935}.colonne i.o{background:#FB8C00}.colonne i.g{background:#2E9E4A}
+.colonne i.on{opacity:1;box-shadow:0 0 10px currentColor}
+.reg{display:grid;grid-template-columns:repeat(8,1fr);gap:3px;text-align:center;font-size:10.5px;color:var(--mut)}
+.reg div b{display:block;border:1.5px solid #9AA3AD;border-radius:4px;padding:3px 0;font:600 14px 'IBM Plex Mono',monospace;color:var(--ink)}
+.reg div.one b{background:var(--red);border-color:var(--red);color:#fff}
+.reg div.ej b{outline:2px solid var(--acc);outline-offset:1px}
+#msg{font-size:13px;color:var(--sec);min-height:18px;margin-top:8px}
+#fault{font-size:12.5px;color:var(--red);font-weight:600}
+footer{color:var(--mut);font-size:13px;text-align:center;padding:30px 0}
+@media (max-width:1150px){
+ body{padding-right:0;padding-bottom:60px}
+ .pupitre{top:auto;bottom:0;left:0;width:auto;height:54px;overflow:hidden;border-left:0;border-top:3px solid var(--acc);padding-top:0;box-shadow:0 -4px 14px rgba(0,0,0,.12)}
+ .pupitre.open{height:74vh;overflow:auto}
+ .pup-toggle{display:block;width:100%;font:700 15px 'IBM Plex Sans',sans-serif;background:#fff;border:0;color:var(--acc);padding:15px 0;cursor:pointer;text-align:left;position:sticky;top:0;z-index:2}
+}
+@media (max-width:600px){.svgw svg{min-width:640px}h1{font-size:24px}.total{margin-left:0}.gitem{grid-template-columns:1fr}.gtools{position:static}.rh .btn{margin-left:0}}
+@media print{.pupitre,nav.nav,.btn,.gtools button{display:none!important}body{padding:0}.gtools{position:static}.rung{page-break-inside:avoid}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+ <div class="kick">243-743-MA · Automatismes avancés · Groupe 25628 · Automne 2026</div>
+ <h1>Évaluation 1 — solution du pratique, en ladder</h1>
+ <p class="sub">Comparaison, mathématiques, logique, BSL et BSR · Partie B sur 60. <strong>Enseignant seulement : ne pas distribuer.</strong> · Bassam Kattan</p>
+ <figure class="fig"><svg role="img" aria-label="La ligne d’embouteillage : remplisseuse, balance, convoyeur à 8 positions, éjecteur à la position 4, colonne lumineuse" xmlns="http://www.w3.org/2000/svg" width="760" height="300" viewBox="0 0 760 300"><rect width="760" height="300" fill="#ffffff"/><g font-family="IBM Plex Serif, serif"><rect x="22" y="52" width="106" height="56" rx="8" fill="#E7F2FB" stroke="#003E7E" stroke-width="1.8"/><text x="75" y="76" font-size="12.5" fill="#003E7E" text-anchor="middle" font-weight="bold">Remplisseuse</text><text x="75" y="94" font-size="10.5" fill="#57616B" text-anchor="middle" font-weight="normal">mot d’état</text><rect x="69" y="108" width="12" height="14" rx="1" fill="#8A99A8" stroke="#8A99A8" stroke-width="1"/><rect x="63" y="144" width="24" height="36" rx="5" fill="#B8701E" stroke="#6E3F0E" stroke-width="1.2"/><rect x="70" y="131" width="10" height="14" rx="2" fill="#B8701E" stroke="#6E3F0E" stroke-width="1.2"/><rect x="68.5" y="126" width="13" height="6" rx="1.5" fill="#003E7E" stroke="#003E7E" stroke-width="1"/><rect x="63" y="154" width="24" height="11" rx="0" fill="#FFF6E5" stroke="#FFF6E5" stroke-width="0"/><line x1="30" y1="180" x2="122" y2="180" stroke="#1A1A1A" stroke-width="3"/><text x="75" y="214" font-size="11" fill="#0079C2" text-anchor="middle" font-weight="bold">Etat_Remplisseuse</text><text x="75" y="229" font-size="10" fill="#57616B" text-anchor="middle" font-weight="normal">(tâche 3)</text><rect x="180" y="140" width="24" height="36" rx="5" fill="#B8701E" stroke="#6E3F0E" stroke-width="1.2"/><rect x="187" y="127" width="10" height="14" rx="2" fill="#B8701E" stroke="#6E3F0E" stroke-width="1.2"/><rect x="185.5" y="122" width="13" height="6" rx="1.5" fill="#003E7E" stroke="#003E7E" stroke-width="1"/><rect x="180" y="150" width="24" height="11" rx="0" fill="#FFF6E5" stroke="#FFF6E5" stroke-width="0"/><rect x="152" y="176" width="80" height="7" rx="2" fill="#8A99A8" stroke="#1A1A1A" stroke-width="1"/><rect x="164" y="183" width="56" height="18" rx="3" fill="#ffffff" stroke="#1A1A1A" stroke-width="1.2"/><text x="192" y="196" font-size="10.5" fill="#1A1A1A" text-anchor="middle" font-weight="bold">660 g</text><text x="192" y="222" font-size="12" fill="#003E7E" text-anchor="middle" font-weight="bold">Balance</text><text x="192" y="238" font-size="11" fill="#0079C2" text-anchor="middle" font-weight="bold">Masse_g</text><text x="192" y="253" font-size="10" fill="#57616B" text-anchor="middle" font-weight="normal">(tâches 1 et 2)</text><rect x="252" y="180" width="496" height="13" rx="6" fill="#DDE6EE" stroke="#1A1A1A" stroke-width="1.4"/><circle cx="259" cy="186.5" r="5" fill="#ffffff" stroke="#1A1A1A" stroke-width="1.2"/><circle cx="741" cy="186.5" r="5" fill="#ffffff" stroke="#1A1A1A" stroke-width="1.2"/><rect x="283" y="144" width="24" height="36" rx="5" fill="#B8701E" stroke="#6E3F0E" stroke-width="1.2"/><rect x="290" y="131" width="10" height="14" rx="2" fill="#B8701E" stroke="#6E3F0E" stroke-width="1.2"/><rect x="288.5" y="126" width="13" height="6" rx="1.5" fill="#003E7E" stroke="#003E7E" stroke-width="1"/><rect x="283" y="154" width="24" height="11" rx="0" fill="#FFF6E5" stroke="#FFF6E5" stroke-width="0"/><rect x="343" y="144" width="24" height="36" rx="5" fill="#B8701E" stroke="#6E3F0E" stroke-width="1.2"/><rect x="350" y="131" width="10" height="14" rx="2" fill="#B8701E" stroke="#6E3F0E" stroke-width="1.2"/><rect x="348.5" y="126" width="13" height="6" rx="1.5" fill="#003E7E" stroke="#003E7E" stroke-width="1"/><rect x="343" y="154" width="24" height="11" rx="0" fill="#FFF6E5" stroke="#FFF6E5" stroke-width="0"/><rect x="403" y="144" width="24" height="36" rx="5" fill="#B8701E" stroke="#6E3F0E" stroke-width="1.2"/><rect x="410" y="131" width="10" height="14" rx="2" fill="#B8701E" stroke="#6E3F0E" stroke-width="1.2"/><rect x="408.5" y="126" width="13" height="6" rx="1.5" fill="#003E7E" stroke="#003E7E" stroke-width="1"/><rect x="403" y="154" width="24" height="11" rx="0" fill="#FFF6E5" stroke="#FFF6E5" stroke-width="0"/><circle cx="415" cy="153" r="21" fill="none" stroke="#B03A2E" stroke-width="2.4" stroke-dasharray="5 3"/><rect x="463" y="144" width="24" height="36" rx="5" fill="#B8701E" stroke="#6E3F0E" stroke-width="1.2"/><rect x="470" y="131" width="10" height="14" rx="2" fill="#B8701E" stroke="#6E3F0E" stroke-width="1.2"/><rect x="468.5" y="126" width="13" height="6" rx="1.5" fill="#003E7E" stroke="#003E7E" stroke-width="1"/><rect x="463" y="154" width="24" height="11" rx="0" fill="#FFF6E5" stroke="#FFF6E5" stroke-width="0"/><rect x="523" y="144" width="24" height="36" rx="5" fill="#B8701E" stroke="#6E3F0E" stroke-width="1.2"/><rect x="530" y="131" width="10" height="14" rx="2" fill="#B8701E" stroke="#6E3F0E" stroke-width="1.2"/><rect x="528.5" y="126" width="13" height="6" rx="1.5" fill="#003E7E" stroke="#003E7E" stroke-width="1"/><rect x="523" y="154" width="24" height="11" rx="0" fill="#FFF6E5" stroke="#FFF6E5" stroke-width="0"/><circle cx="535" cy="153" r="21" fill="none" stroke="#B03A2E" stroke-width="2.4" stroke-dasharray="5 3"/><rect x="583" y="144" width="24" height="36" rx="5" fill="#B8701E" stroke="#6E3F0E" stroke-width="1.2"/><rect x="590" y="131" width="10" height="14" rx="2" fill="#B8701E" stroke="#6E3F0E" stroke-width="1.2"/><rect x="588.5" y="126" width="13" height="6" rx="1.5" fill="#003E7E" stroke="#003E7E" stroke-width="1"/><rect x="583" y="154" width="24" height="11" rx="0" fill="#FFF6E5" stroke="#FFF6E5" stroke-width="0"/><rect x="643" y="144" width="24" height="36" rx="5" fill="#B8701E" stroke="#6E3F0E" stroke-width="1.2"/><rect x="650" y="131" width="10" height="14" rx="2" fill="#B8701E" stroke="#6E3F0E" stroke-width="1.2"/><rect x="648.5" y="126" width="13" height="6" rx="1.5" fill="#003E7E" stroke="#003E7E" stroke-width="1"/><rect x="643" y="154" width="24" height="11" rx="0" fill="#FFF6E5" stroke="#FFF6E5" stroke-width="0"/><rect x="515" y="66" width="40" height="26" rx="4" fill="#E7F2FB" stroke="#003E7E" stroke-width="1.6"/><line x1="535" y1="92" x2="535" y2="112" stroke="#003E7E" stroke-width="5"/><rect x="520" y="112" width="30" height="6" rx="1" fill="#003E7E" stroke="#003E7E" stroke-width="1"/><text x="535" y="58" font-size="11.5" fill="#B03A2E" text-anchor="middle" font-weight="bold">Ejecteur (position 4)</text><rect x="707" y="40" width="22" height="22" rx="3" fill="#B03A2E" stroke="#1A1A1A" stroke-width="1"/><text x="700" y="55" font-size="9.5" fill="#57616B" text-anchor="end" font-weight="normal">bit 2</text><rect x="707" y="62" width="22" height="22" rx="3" fill="#ED820E" stroke="#1A1A1A" stroke-width="1"/><text x="700" y="77" font-size="9.5" fill="#57616B" text-anchor="end" font-weight="normal">bit 1</text><rect x="707" y="84" width="22" height="22" rx="3" fill="#2F7D5B" stroke="#1A1A1A" stroke-width="1"/><text x="700" y="99" font-size="9.5" fill="#57616B" text-anchor="end" font-weight="normal">bit 0</text><line x1="718" y1="106" x2="718" y2="124" stroke="#1A1A1A" stroke-width="3"/><text x="718" y="30" font-size="10.5" fill="#003E7E" text-anchor="end" font-weight="bold">Colonne (tâche 3)</text><text x="258" y="22" font-size="11" fill="#1A1A1A" text-anchor="start" font-weight="normal">Pas_Avance : le convoyeur avance d’une position →</text><text x="258" y="39" font-size="11" fill="#1A1A1A" text-anchor="start" font-weight="normal">Pas_Recul : il recule d’une position ←</text><rect x="271" y="212" width="48" height="24" rx="3" fill="#ffffff" stroke="#0079C2" stroke-width="1.4"/><text x="295" y="229" font-size="13" fill="#0079C2" text-anchor="middle" font-weight="bold">0</text><text x="295" y="252" font-size="10" fill="#57616B" text-anchor="middle" font-weight="normal">bit 0</text><rect x="331" y="212" width="48" height="24" rx="3" fill="#ffffff" stroke="#0079C2" stroke-width="1.4"/><text x="355" y="229" font-size="13" fill="#0079C2" text-anchor="middle" font-weight="bold">0</text><text x="355" y="252" font-size="10" fill="#57616B" text-anchor="middle" font-weight="normal">bit 1</text><rect x="391" y="212" width="48" height="24" rx="3" fill="#B03A2E" stroke="#B03A2E" stroke-width="1.4"/><text x="415" y="229" font-size="13" fill="#ffffff" text-anchor="middle" font-weight="bold">1</text><text x="415" y="252" font-size="10" fill="#57616B" text-anchor="middle" font-weight="normal">bit 2</text><rect x="451" y="212" width="48" height="24" rx="3" fill="#ffffff" stroke="#0079C2" stroke-width="1.4"/><text x="475" y="229" font-size="13" fill="#0079C2" text-anchor="middle" font-weight="bold">0</text><text x="475" y="252" font-size="10" fill="#57616B" text-anchor="middle" font-weight="normal">bit 3</text><rect x="511" y="212" width="48" height="24" rx="3" fill="#B03A2E" stroke="#B03A2E" stroke-width="1.4"/><text x="535" y="229" font-size="13" fill="#ffffff" text-anchor="middle" font-weight="bold">1</text><text x="535" y="252" font-size="10" fill="#B03A2E" text-anchor="middle" font-weight="bold">bit 4</text><rect x="571" y="212" width="48" height="24" rx="3" fill="#ffffff" stroke="#0079C2" stroke-width="1.4"/><text x="595" y="229" font-size="13" fill="#0079C2" text-anchor="middle" font-weight="bold">0</text><text x="595" y="252" font-size="10" fill="#57616B" text-anchor="middle" font-weight="normal">bit 5</text><rect x="631" y="212" width="48" height="24" rx="3" fill="#ffffff" stroke="#0079C2" stroke-width="1.4"/><text x="655" y="229" font-size="13" fill="#0079C2" text-anchor="middle" font-weight="bold">0</text><text x="655" y="252" font-size="10" fill="#57616B" text-anchor="middle" font-weight="normal">bit 6</text><rect x="691" y="212" width="48" height="24" rx="3" fill="#ffffff" stroke="#0079C2" stroke-width="1.4"/><text x="715" y="229" font-size="13" fill="#0079C2" text-anchor="middle" font-weight="bold">0</text><text x="715" y="252" font-size="10" fill="#57616B" text-anchor="middle" font-weight="normal">bit 7</text><text x="505.0" y="276" font-size="11.5" fill="#003E7E" text-anchor="middle" font-weight="bold">Registre Suivi[0] (tâche 4) : un bit par position, 1 = bouteille à rejeter</text></g></svg><figcaption>La ligne d’embouteillage de sirop d’érable. Exemple : bouteilles à rejeter aux positions 2 et 4, donc Suivi[0] = 2#0001_0100.</figcaption></figure>
+</div></header>
+<nav class="nav"><div class="wrap">
+ <a href="#programme">1. Programme en ladder</a><a href="#essais">2. Essais au poste</a><a href="#tags">3. Tags</a><a href="#grille">4. Grille sur 60</a>
+</div></nav>
+<main class="wrap">
+
+<section id="programme">
+ <h2>1. Le programme de référence : 22 lignes</h2>
+ <p>Toute la solution tient dans MainRoutine, lignes 0 à 21, dans l’ordre du corrigé. D’autres solutions sont justes si le comportement l’est : les variantes acceptées sont notées sous chaque ligne.</p>
+ <div class="legend"><span><i></i>fil sous tension</span><span>boîte au titre vert = comparaison vraie</span><span><em>bleu</em> = valeur du tag en ce moment</span></div>
+ <div class="note">Le banc d’essai (à droite, ou en bas sur un petit écran) fait tourner ces 22 lignes comme Monitor Tags : changez Masse_g, Etat_Remplisseuse… et les lignes s’allument comme dans Studio 5000 en ligne.<br>
+ <b>Pour taper une ligne dans Studio 5000 :</b> « Copier le texte », double-clic sur la ligne, coller, Entrée. Avant la v36 : LIMIT → LIM, EQ → EQU, NE → NEQ, LT → LES, GT → GRT, MOVE → MOV.</div>
+ <div id="rungs"></div>
+</section>
+
+<section id="essais">
+ <h2>2. Les essais au poste</h2>
+ <p>Faites ces essais sur le poste de l’étudiant (réponses en rouge). Les boutons <b>Essayer ici</b> font le même essai sur le programme de référence de cette page et mettent ✓ si on obtient la même chose que le corrigé.</p>
+ <p><button class="btn acc" id="toutVerif">Rejouer tous les essais ici</button> <span id="toutRes"></span></p>
+ <div id="essaiBody"></div>
+</section>
+
+<section id="tags">
+ <h2>3. Les tags à créer (portée Controller)</h2>
+ <p>Le critère « Tags : noms et types exacts » se vérifie ici.</p>
+ <div id="tagBody"></div>
+</section>
+
+<section id="grille">
+ <h2>4. La grille de correction — pratique sur 60</h2>
+ <div class="gtools">
+  <label>Étudiant <input type="text" id="etu" placeholder="nom (rien n’est enregistré)"></label>
+  <button class="btn" id="gnew">Nouvel étudiant</button>
+  <div class="total">Total : <span id="gtot">0</span> / 60<small id="gnon"></small></div>
+ </div>
+ <div id="grilleBody"></div>
+</section>
+</main>
+<footer>Bassam Kattan · 243-743-MA · Évaluation 1 · Automne 2026 · Solution du pratique (enseignant)</footer>
+
+<aside class="pupitre" id="pupitre">
+ <button class="pup-toggle" id="pupT">▲ Banc d’essai (programme de référence)</button>
+ <h2>Banc d’essai</h2>
+ <div class="hint">Comme Monitor Tags : tapez une valeur puis Entrée, ou cliquez une valeur des essais. Les 22 lignes tournent à chaque changement.</div>
+
+ <h3>Tâche 1 · Masse</h3>
+ <div class="field"><label for="in_Masse_g">Masse_g</label><input id="in_Masse_g" data-tag="Masse_g" inputmode="numeric"></div>
+ <div class="chips" data-for="Masse_g"><button>0</button><button>640</button><button>650</button><button>662</button><button>670</button><button>671</button></div>
+ <div class="lamps" id="lamps1"></div>
+
+ <h3>Tâche 2 · Calculs</h3>
+ <div class="field"><label for="in_Nb_Bonnes">Nb_Bonnes</label><input id="in_Nb_Bonnes" data-tag="Nb_Bonnes" inputmode="numeric"></div>
+ <div class="field"><label for="in_Nb_Rejets">Nb_Rejets</label><input id="in_Nb_Rejets" data-tag="Nb_Rejets" inputmode="numeric"></div>
+ <table class="vals" id="vals2"></table>
+
+ <h3>Tâche 3 · Mot d’état</h3>
+ <div class="field"><label for="in_Etat_Remplisseuse">Etat_Remplisseuse</label><input id="in_Etat_Remplisseuse" data-tag="Etat_Remplisseuse"></div>
+ <div class="chips" data-for="Etat_Remplisseuse"><button>16#0301</button><button>16#0305</button><button>16#0108</button><button>16#0300</button></div>
+ <div class="field"><label for="in_Colonne">Colonne</label><input id="in_Colonne" data-tag="Colonne"></div>
+ <div class="chips" data-for="Colonne"><button>16#00A0</button><button>16#0000</button></div>
+ <div class="colrow"><div class="colonne" title="Colonne lumineuse : bit 2 rouge, bit 1 orange, bit 0 vert"><i class="r" data-b="2"></i><i class="o" data-b="1"></i><i class="g" data-b="0"></i></div>
+  <div style="flex:1"><div class="lamps" id="lamps3"></div><table class="vals" id="vals3"></table></div></div>
+
+ <h3>Tâche 4 · Suivi des rejets</h3>
+ <div class="bgrid">
+  <button class="pb light tog" data-tag="Defaut" aria-pressed="false">Defaut<small>maintenu · 1 = à rejeter</small></button>
+  <button class="pb green imp" data-tag="Pas_Avance">Avancer<small>impulsion Pas_Avance</small></button>
+  <button class="pb imp" data-tag="Pas_Recul">Reculer<small>impulsion Pas_Recul</small></button>
+  <button class="pb light imp" data-tag="Effacer">Effacer<small>impulsion Effacer</small></button>
+ </div>
+ <div style="font-size:12px;color:var(--mut);margin:8px 0 3px">Suivi[0] dans l’ordre du convoyeur : position 0 (sortie de la balance) à gauche · bit 4 = éjecteur</div>
+ <div class="reg" id="reg"></div>
+ <div class="mono" style="font-size:12px;color:var(--mut);margin-top:4px">bits 7 → 0 : <b id="regbin"></b></div>
+ <div class="lamps" id="lamps4" style="margin-top:6px"></div>
+
+ <p style="margin-top:14px"><button class="btn acc" id="raz" style="width:100%">Tout remettre à zéro (comme un téléchargement)</button></p>
+ <div id="fault"></div>
+ <div id="msg"></div>
+</aside>
+
+<script>
+"use strict";
+/* ============================================================ LES TAGS */
+const TAGS=[
+ ["T1","Masse_g","DINT","Masse nette lue par la balance, en grammes. 0 = pas de bouteille. Changée à la main."],
+ ["T1","Bouteille_Bonne","BOOL","Masse de 650 g à 670 g."],
+ ["T1","Trop_Legere","BOOL","Masse plus petite que 650 g."],
+ ["T1","Trop_Lourde","BOOL","Masse plus grande que 670 g."],
+ ["T1","Rejet","BOOL","La bouteille doit être rejetée."],
+ ["T2","Nb_Bonnes","DINT","Bouteilles bonnes depuis le début du quart. Changé à la main."],
+ ["T2","Nb_Rejets","DINT","Bouteilles rejetées. Changé à la main."],
+ ["T2","Nb_Total","DINT","Toutes les bouteilles."],
+ ["T2","Taux_Rejet","REAL","Pourcentage de bouteilles rejetées."],
+ ["T2","Caisses","DINT","Caisses de 12 bouteilles bonnes déjà pleines."],
+ ["T2","Restantes","DINT","Bouteilles bonnes qui ne remplissent pas encore une caisse."],
+ ["T2","Ecart_g","DINT","Masse_g − 660 (Masse_g vient de la tâche 1)."],
+ ["T2","Ecart_Abs_g","DINT","Ecart_g sans le signe."],
+ ["T3","Etat_Remplisseuse","DINT","Mot d’état de la remplisseuse. Changé à la main, en Hex."],
+ ["T3","Defauts","DINT","Les bits de défaut seulement."],
+ ["T3","Alarme","BOOL","Au moins un défaut."],
+ ["T3","Recette_Foncee","BOOL","La recette en cours est « foncé »."],
+ ["T3","Motif","DINT","Couleur choisie : 1 = vert, 2 = orange, 4 = rouge."],
+ ["T3","Colonne","DINT","Bits 0 à 2 : vert, orange, rouge. Bits 4 à 7 : un autre appareil."],
+ ["T4","Pas_Avance","BOOL","Impulsion : le convoyeur avance d’une position."],
+ ["T4","Pas_Recul","BOOL","Impulsion : le convoyeur recule d’une position (après un blocage)."],
+ ["T4","Defaut","BOOL","1 = la bouteille qui quitte la balance est à rejeter. Changé à la main."],
+ ["T4","Effacer","BOOL","Remet tout le suivi à 0."],
+ ["T4","Bit_Zero","BOOL","Toujours 0."],
+ ["T4","Suivi","DINT[1]","Le registre : bit n = position n."],
+ ["T4","CTL_Avance","CONTROL","CONTROL du BSL."],
+ ["T4","CTL_Recul","CONTROL","CONTROL du BSR."],
+ ["T4","Ejecteur","BOOL","Vérin qui pousse la bouteille hors du convoyeur."]
+];
+const TYPES={}; TAGS.forEach(t=>{ TYPES[t[1]]=t[2]; }); TYPES["Suivi[0]"]="DINT";
+const STYLE={Etat_Remplisseuse:"hex",Defauts:"hex",Colonne:"hex","Suivi[0]":"bin"};
+const TASKS={T1:"Tâche 1 · Contrôle de la masse",T2:"Tâche 2 · Calculs de production",
+ T3:"Tâche 3 · Mot d’état et colonne lumineuse",T4:"Tâche 4 · Suivi des bouteilles rejetées"};
+const TPTS={T1:14,T2:14,T3:10,T4:18};
+
+/* ============================================================ LES 22 LIGNES (texte neutre Studio 5000 v36, comme le corrigé) */
+const PROG_SRC=[
+ {t:"T1",r:["R1"],role:"Bouteille bonne : de 650 à 670 g",txt:"LIMIT(650,Masse_g,670)OTE(Bouteille_Bonne);",
+  why:"Fenêtre normale : Low Limit (650) plus petit que High Limit (670), donc LIMIT est vraie de 650 à 670 g, bornes comprises.",
+  acc:"GE et LE en série au lieu de LIMIT : 1 point sur 3."},
+ {t:"T1",r:["R2"],role:"Trop légère : moins de 650 g, sauf 0 g",txt:"NE(Masse_g,0)LT(Masse_g,650)OTE(Trop_Legere);",
+  why:"NE (Masse_g, 0) écarte la balance vide : 0 g veut dire « pas de bouteille », pas « trop légère ».",
+  acc:"Accepté : GT (Masse_g, 0) à la place de NE, ou LIMIT (1, Masse_g, 649)."},
+ {t:"T1",r:["R3"],role:"Trop lourde : plus de 670 g",txt:"GT(Masse_g,670)OTE(Trop_Lourde);",
+  why:"GT est vraie seulement si Masse_g est strictement plus grand que 670. À 670 g pile, la bouteille est encore bonne."},
+ {t:"T1",r:["R4"],role:"Rejet : une seule LIMIT, bornes inversées",txt:"NE(Masse_g,0)LIMIT(671,Masse_g,649)OTE(Rejet);",
+  why:"Low Limit (671) plus grand que High Limit (649) : LIMIT devient vraie à l’extérieur, soit Masse_g ≥ 671 OU Masse_g ≤ 649. Masse_g est un entier, donc c’est bien « moins de 650 ou plus de 670 g ». Le NE écarte 0 g.",
+  acc:"Fait avec Trop_Legere / Trop_Lourde, ou avec deux instructions : 1 sur 3. Oubli du NE : 2 sur 3 (Rejet = 1 à 0 g)."},
+
+ {t:"T2",r:["R1"],role:"Total des bouteilles",txt:"ADD(Nb_Bonnes,Nb_Rejets,Nb_Total);",
+  why:"Nb_Total = Nb_Bonnes + Nb_Rejets."},
+ {t:"T2",r:["R2"],role:"Taux de rejet, division protégée",txt:"GT(Nb_Total,0)CPT(Taux_Rejet,Nb_Rejets*100.0/Nb_Total);",
+  why:"GT (Nb_Total, 0) : la division se fait seulement s’il y a des bouteilles. Taux_Rejet est un REAL, donc CPT calcule en REAL et garde les décimales : 3 × 100 ÷ 40 = 7,5. Écrire 100 ou 100.0 donne le même résultat.",
+  acc:"Accepté : MUL puis DIV vers des tags REAL. Aucune protection : 2 sur 4 (essai 4 : division par zéro, défaut mineur, Taux_Rejet faux)."},
+ {t:"T2",r:["R2"],role:"Taux à 0 quand il n’y a aucune bouteille",txt:"EQ(Nb_Total,0)MOVE(0.0,Taux_Rejet);",
+  why:"Nb_Total = 0 : aucune division, et Taux_Rejet est remis à 0.0."},
+ {t:"T2",r:["R3"],role:"Caisses pleines (12 bouteilles)",txt:"DIV(Nb_Bonnes,12,Caisses);",
+  why:"DIV entre deux DINT : la partie décimale est coupée. 37 ÷ 12 = 3,08… → 3 caisses.",
+  acc:"Caisses en REAL (3,08…) : 1 sur 2."},
+ {t:"T2",r:["R3"],role:"Bouteilles restantes",txt:"MOD(Nb_Bonnes,12,Restantes);",
+  why:"MOD donne le reste de la division : 37 − 3 × 12 = 1 bouteille."},
+ {t:"T2",r:["R4"],role:"Écart à la masse visée (660 g)",txt:"SUB(Masse_g,660,Ecart_g);",
+  why:"Ecart_g = Masse_g − 660 : négatif quand la bouteille est trop légère."},
+ {t:"T2",r:["R4"],role:"Écart sans le signe",txt:"ABS(Ecart_g,Ecart_Abs_g);",
+  why:"ABS enlève le signe : −20 devient 20.", acc:"NEG au lieu de ABS : 1 sur 2."},
+
+ {t:"T3",r:["R1"],role:"Garder seulement les bits de défaut",txt:"AND(Etat_Remplisseuse,16#000E,Defauts);",
+  why:"Masque 16#000E = 2#1110 : il garde les bits 1, 2 et 3 et met tous les autres à 0 (le bit 0 « en marche » et le code de recette disparaissent).",
+  acc:"Accepté : MVM (Etat_Remplisseuse, 16#000E, Defauts)."},
+ {t:"T3",r:["R1"],role:"Alarme : au moins un défaut",txt:"NE(Defauts,0)OTE(Alarme);",
+  why:"Defauts ≠ 0 : au moins un des bits 1, 2 ou 3 est à 1.", acc:"Accepté : GT (Defauts, 0)."},
+ {t:"T3",r:["R2"],role:"Recette « foncé » : une seule MEQ",txt:"MEQ(Etat_Remplisseuse,16#FF00,16#0300)OTE(Recette_Foncee);",
+  why:"Le masque 16#FF00 garde les bits 8 à 15 (le code de la recette). On compare à 16#0300 : le code 16#03 placé dans l’octet du haut. Les bits 0 à 7 (marche, défauts) n’ont aucun effet.",
+  acc:"AND puis EQ, résultat juste : 1 sur 2 (une seule instruction était demandée)."},
+ {t:"T3",r:["R3"],role:"Vert : pas d’alarme ET en marche",txt:"XIO(Alarme)XIC(Etat_Remplisseuse.0)MOVE(1,Motif);",
+  why:"Motif = 1. Le XIO Alarme fait que cette ligne ne joue que s’il n’y a pas d’alarme."},
+ {t:"T3",r:["R3"],role:"Orange : pas d’alarme ET arrêtée",txt:"XIO(Alarme)XIO(Etat_Remplisseuse.0)MOVE(2,Motif);",
+  why:"Motif = 2 : XIO sur le bit 0, la remplisseuse n’est pas en marche."},
+ {t:"T3",r:["R3"],role:"Rouge : alarme",txt:"XIC(Alarme)MOVE(4,Motif);",
+  why:"Motif = 4. Les deux lignes d’avant ont XIO Alarme : à chaque balayage, une seule des trois lignes écrit Motif."},
+ {t:"T3",r:["R3"],role:"Copier Motif sur la colonne lumineuse",txt:"MVM(Motif,16#0007,Colonne);",
+  why:"MVM avec le masque 16#0007 : seuls les bits 0 à 2 de Colonne prennent ceux de Motif. Les bits 5 et 7 (l’autre appareil) ne bougent pas : 16#00A0 devient 16#00A1.",
+  acc:"MOVE vers Colonne au lieu de MVM : 2 sur 4 (16#0001 au lieu de 16#00A1)."},
+
+ {t:"T4",r:["R1"],role:"Avancer : BSL",txt:"XIC(Pas_Avance)BSL(Suivi[0],CTL_Avance,Defaut,8);",
+  why:"Une impulsion de Pas_Avance = un seul décalage (front montant). Defaut entre au bit 0, chaque bit monte d’une position, le bit 7 sort dans CTL_Avance.UL.",
+  acc:"Un seul CONTROL pour BSL et BSR : 2 points perdus (R1 et R3)."},
+ {t:"T4",r:["R3"],role:"Reculer : BSR",txt:"XIC(Pas_Recul)BSR(Suivi[0],CTL_Recul,Bit_Zero,8);",
+  why:"Un autre CONTROL que celui du BSL. Chaque bit descend d’une position, Bit_Zero (toujours 0) entre au bit 7, le bit 0 sort dans CTL_Recul.UL.",
+  acc:"Source Bit = Defaut au lieu de Bit_Zero : 1 point perdu."},
+ {t:"T4",r:["R2"],role:"Éjecteur à la position 4",txt:"XIC(Suivi[0].4)OTE(Ejecteur);",
+  why:"La bouteille à rejeter est devant l’éjecteur quand le bit 4 de Suivi[0] vaut 1.",
+  acc:"Bit 3 ou 5 au lieu du bit 4 : 0."},
+ {t:"T4",r:["R4"],role:"Effacer le suivi",txt:"XIC(Effacer)MOVE(0,Suivi[0]);",
+  why:"MOVE 0 vers Suivi[0] : toutes les positions reviennent à 0.", acc:"Accepté : CLR (Suivi[0])."}
+];
+
+/* ============================================================ LECTURE DU TEXTE NEUTRE */
+function parseRung(src){
+ const s=src.replace(/;\s*$/,""); let i=0;
+ function series(){
+  const items=[];
+  while(i<s.length){
+   const c=s[i];
+   if(c==="["){ i++; items.push(par()); }
+   else if(c===","||c==="]") break;
+   else if(c===" ") i++;
+   else { const m=/^([A-Z_]+)\(([^)]*)\)/.exec(s.slice(i)); if(!m) throw new Error("lecture : "+s.slice(i));
+     items.push({t:"ins",mn:m[1],args:m[2].split(",").map(x=>x.trim())}); i+=m[0].length; }
+  }
+  return {t:"ser",items};
+ }
+ function par(){ const brs=[series()]; while(s[i]===","){ i++; brs.push(series()); }
+  if(s[i]!=="]") throw new Error("] attendu"); i++; return {t:"par",brs}; }
+ return series();
+}
+
+/* ============================================================ MOTEUR (un balayage = les 22 lignes, dans l'ordre) */
+let T;
+function resetTags(){
+ T={v:{},ctl:{CTL_Avance:{EN:0,DN:0,UL:0},CTL_Recul:{EN:0,DN:0,UL:0}},fault:""};
+ for(const k in TYPES){ if(TYPES[k]==="BOOL"||TYPES[k]==="DINT"||TYPES[k]==="REAL") T.v[k]=0; }
+ delete T.v.Suivi;
+}
+function lit(s){
+ let m;
+ if(/^[-+]?\d+$/.test(s)) return {v:parseInt(s,10),real:false};
+ if(/^[-+]?\d*\.\d+$/.test(s)) return {v:parseFloat(s),real:true};
+ if((m=/^16#([0-9A-Fa-f_]+)$/.exec(s))) return {v:parseInt(m[1].replace(/_/g,""),16)|0,real:false};
+ if((m=/^2#([01_]+)$/.exec(s))) return {v:parseInt(m[1].replace(/_/g,""),2)|0,real:false};
+ return null;
+}
+const isLit=s=>lit(s)!==null;
+function rd(s){
+ const L=lit(s); if(L) return L;
+ let m=/^(.+)\.(\d+)$/.exec(s);
+ if(m&&TYPES[m[1]]==="DINT") return {v:(T.v[m[1]]>>>(+m[2]))&1,real:false};
+ m=/^(\w+)\.(EN|DN|UL)$/.exec(s);
+ if(m&&T.ctl[m[1]]) return {v:T.ctl[m[1]][m[2]],real:false};
+ return {v:T.v[s]||0,real:TYPES[s]==="REAL"};
+}
+const rv=s=>rd(s).v;
+function rhe(x){ const f=Math.floor(x), d=x-f; if(d>0.5) return f+1; if(d<0.5) return f; return (f%2===0)?f:f+1; }
+function wr(name,val,real){
+ const t=TYPES[name];
+ if(t==="REAL") T.v[name]=+val;
+ else if(t==="BOOL") T.v[name]=val?1:0;
+ else T.v[name]=(real?rhe(val):Math.trunc(val))|0;
+}
+function fault(txt){ T.fault=txt; }
+/* CPT : + - * / et parenthèses ; calcul en REAL si un opérande ou la Dest est REAL */
+function cpt(dest,expr){
+ const toks=expr.match(/16#[0-9A-Fa-f_]+|2#[01_]+|\d*\.\d+|\d+|[A-Za-z_][\w\[\]\.]*|[-+*/()]/g)||[];
+ let real=TYPES[dest]==="REAL";
+ for(const k of toks){ if(/^[A-Za-z_]/.test(k)&&TYPES[k]==="REAL") real=true; if(/^\d*\.\d+$/.test(k)) real=true; }
+ let p=0, bad=false;
+ const prim=()=>{ const k=toks[p++];
+  if(k==="("){ const v=sum(); p++; return v; }
+  if(k==="-") return -prim();
+  return rd(k).v; };
+ const prod=()=>{ let v=prim(); while(toks[p]==="*"||toks[p]==="/"){ const o=toks[p++], b=prim();
+  if(o==="*") v=real?v*b:Math.imul(v,b); else { if(b===0){ bad=true; v=real?Infinity:v; } else v=real?v/b:Math.trunc(v/b); } } return v; };
+ const sum=()=>{ let v=prod(); while(toks[p]==="+"||toks[p]==="-"){ const o=toks[p++], b=prod(); v=o==="+"?v+b:v-b; if(!real) v|=0; } return v; };
+ const r=sum(); if(bad){ fault("Défaut mineur : division par zéro dans CPT (type 4, code 4)."); return; }
+ wr(dest,r,real);
+}
+function exec(n,rin){
+ n.rin=rin;
+ if(n.t==="ser"){ let r=rin; for(const it of n.items) r=exec(it,r); return n.out=r; }
+ if(n.t==="par"){ let any=false; for(const b of n.brs){ if(exec(b,rin)) any=true; } return n.out=any; }
+ const a=n.args; let ok=true, out=rin;
+ const A=()=>rd(a[0]), B=()=>rd(a[1]);
+ switch(n.mn){
+  case "XIC": ok=rv(a[0])===1; out=rin&&ok; break;
+  case "XIO": ok=rv(a[0])===0; out=rin&&ok; break;
+  case "OTE": wr(a[0],rin?1:0); break;
+  case "EQ": ok=A().v===B().v; out=rin&&ok; break;
+  case "NE": ok=A().v!==B().v; out=rin&&ok; break;
+  case "LT": ok=A().v<B().v; out=rin&&ok; break;
+  case "GT": ok=A().v>B().v; out=rin&&ok; break;
+  case "LE": ok=A().v<=B().v; out=rin&&ok; break;
+  case "GE": ok=A().v>=B().v; out=rin&&ok; break;
+  case "LIMIT": { const lo=rv(a[0]), t=rv(a[1]), hi=rv(a[2]);
+   ok=lo<=hi?(t>=lo&&t<=hi):(t>=lo||t<=hi); out=rin&&ok; break; }
+  case "MEQ": { const s=rv(a[0]), m=rv(a[1]), c=rv(a[2]); ok=((s&m)|0)===((c&m)|0); out=rin&&ok; break; }
+  default:
+   if(!rin) break;
+   switch(n.mn){
+    case "MOVE": { const s=rd(a[0]); wr(a[1],s.v,s.real); break; }
+    case "ADD": case "SUB": { const x=A(), y=B(), re=x.real||y.real; let v=n.mn==="ADD"?x.v+y.v:x.v-y.v; if(!re) v|=0; wr(a[2],v,re); break; }
+    case "DIV": case "MOD": { const x=A(), y=B(), re=x.real||y.real;
+     if(!re&&y.v===0){ fault("Défaut mineur : division par zéro (type 4, code 4)."); wr(a[2],x.v,false); break; }
+     if(n.mn==="DIV") wr(a[2],re?x.v/y.v:Math.trunc(x.v/y.v),re);
+     else wr(a[2],x.v-Math.trunc(x.v/y.v)*y.v,re); break; }
+    case "ABS": { const s=A(); wr(a[1],Math.abs(s.v),s.real); break; }
+    case "AND": wr(a[2],(rv(a[0])&rv(a[1]))|0,false); break;
+    case "MVM": { const s=rv(a[0]), m=rv(a[1]), d=T.v[a[2]]|0; wr(a[2],((d&~m)|(s&m))|0,false); break; }
+    case "CPT": cpt(a[0],a[1]); break;
+   }
+ }
+ if(n.mn==="BSL"||n.mn==="BSR"){
+  const ct=T.ctl[a[1]], len=+a[3], mask=len>=32?-1:((1<<len)-1), w=T.v[a[0]]|0;
+  if(rin&&!ct.EN){
+   const src=rv(a[2]), lo=w&mask, hi=w&~mask;
+   let nl;
+   if(n.mn==="BSL"){ ct.UL=(lo>>>(len-1))&1; nl=((lo<<1)&mask)|src; }
+   else { ct.UL=lo&1; nl=(lo>>>1)|(src<<(len-1)); }
+   T.v[a[0]]=(hi|(nl&mask))|0; ct.DN=1;
+  }
+  ct.EN=rin?1:0; if(!rin) ct.DN=0;
+ }
+ n.ok=ok; return n.out=out;
+}
+let PROG=[];
+function scan(){ for(const r of PROG) exec(r.tree,true); }
+function settle(){ scan(); scan(); }
+function setTag(name,v){ wr(name,v,TYPES[name]==="REAL"); }
+function pulse(tag){ T.v[tag]=1; scan(); T.v[tag]=0; scan(); }
+
+/* ============================================================ FORMATS */
+const nbfr=x=>String(x).replace(".",",").replace("-","−");
+function fmtReal(v){ return Number.isInteger(v)?v.toFixed(1):String(+v.toFixed(6)); }
+function hex4(v){ const u=(v>>>0).toString(16).toUpperCase(); return "16#"+u.padStart(4,"0"); }
+function bin8(v){ const b=((v>>>0)&255).toString(2).padStart(8,"0"); return "2#"+b.slice(0,4)+"_"+b.slice(4); }
+function fmtTag(name){
+ const v=T.v[name]; if(v===undefined) return "";
+ if(TYPES[name]==="REAL") return fmtReal(v);
+ if(STYLE[name]==="hex") return hex4(v);
+ if(STYLE[name]==="bin") return bin8(v);
+ return String(v);
+}
+function parseIn(name,s){
+ s=String(s).trim().replace(/\s/g,"").replace(",",".");
+ if(/^0x[0-9a-f]+$/i.test(s)) s="16#"+s.slice(2);
+ if(STYLE[name]==="hex"&&/^[0-9A-Fa-f]+$/.test(s)&&!/^16#/.test(s)&&/[A-Fa-f]/.test(s)) s="16#"+s;
+ const L=lit(s); return L?L.v:null;
+}
+</script>
+
+<script>
+"use strict";
+/* ============================================================ DESSIN LADDER (SVG) */
+const ON="#1E9E4A", OFF="#1A1A1A", MUTC="#6A6A6A", VALC="#2C6FB7", PAD=18;
+const MONO="IBM Plex Mono, Consolas, monospace", SANS="IBM Plex Sans, Arial, sans-serif";
+const BOXDEF={
+ EQ:["Equal",["Source A","Source B"],1], NE:["Not Equal",["Source A","Source B"],1],
+ LT:["Less Than (A<B)",["Source A","Source B"],1], GT:["Greater Than (A>B)",["Source A","Source B"],1],
+ LE:["Less Than or Eql (A<=B)",["Source A","Source B"],1], GE:["Grtr Than or Eql (A>=B)",["Source A","Source B"],1],
+ LIMIT:["Limit Test",["Low Limit","Test","High Limit"],1], MEQ:["Mask Equal",["Source","Mask","Compare"],1],
+ ADD:["Add",["Source A","Source B","Dest"]], SUB:["Subtract",["Source A","Source B","Dest"]],
+ DIV:["Divide",["Source A","Source B","Dest"]], MOD:["Modulo",["Source A","Source B","Dest"]],
+ ABS:["Absolute Value",["Source","Dest"]], MOVE:["Move",["Source","Dest"]],
+ AND:["Bitwise AND",["Source A","Source B","Dest"]], MVM:["Masked Move",["Source","Mask","Dest"]],
+ CPT:["Compute",["Dest","Expression"]],
+ BSL:["Bit Shift Left",["Array","Control","Source Bit","Length"]], BSR:["Bit Shift Right",["Array","Control","Source Bit","Length"]]
+};
+const ROWH=30, HEADH=26, CH=7.6;
+let GW=780;
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const isBox=mn=>mn in BOXDEF;
+function L_(x1,y1,x2,y2,on){return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${on?ON:OFF}" stroke-width="${on?3.4:1.8}" stroke-linecap="round"/>`;}
+function TX(x,y,s,o={}){return `<text x="${x}" y="${y}" font-size="${o.size||12.5}" fill="${o.fill||OFF}" text-anchor="${o.anchor||"middle"}" font-family="${o.font||MONO}" font-weight="${o.weight||400}">${esc(s)}</text>`;}
+function opVal(arg,n){
+ if(isLit(arg)) return "";
+ if(n.mn==="BSL"||n.mn==="BSR"){ if(arg===n.args[1]) return ""; }
+ if(/^\w+\.\d+$|^.+\]\.\d+$/.test(arg)) return String(rv(arg));
+ return fmtTag(arg);
+}
+function cellW(label){ return Math.max(104,Math.ceil(label.length*CH)+22); }
+function boxW(n){
+ let px=214; n.args.forEach((a,i)=>{
+  if(n.mn==="CPT"&&i===1) px=Math.max(px,Math.ceil(24+a.length*6.9));
+  else px=Math.max(px,Math.ceil(96+Math.max(a.length,opVal(a,n).length)*7.2)); });
+ return px;
+}
+function meas(n){
+ if(n.t==="ser"){let w=0,up=0,dn=0; for(const it of n.items){const m=meas(it); w+=m.w; up=Math.max(up,m.up); dn=Math.max(dn,m.dn);} return n.m={w,up,dn};}
+ if(n.t==="par"){const ms=n.brs.map(meas); const offs=[0]; let y=0;
+  for(let k=1;k<ms.length;k++){y+=ms[k-1].dn+ms[k].up+8; offs.push(y);} n.offs=offs;
+  return n.m={w:Math.max(...ms.map(m=>m.w))+2*PAD, up:ms[0].up, dn:y+ms[ms.length-1].dn};}
+ if(isBox(n.mn)){ const rows=BOXDEF[n.mn][1].length, bits=(n.mn==="BSL"||n.mn==="BSR")?22:6;
+  const h=HEADH+rows*ROWH+bits+(n.mn==="CPT"?6:0); return n.m={w:boxW(n)+24,up:16,dn:h-14+8}; }
+ return n.m={w:cellW(n.args[0]),up:38,dn:36};
+}
+function draw(n,x,y){
+ if(n.t==="ser"){let s="",xx=x; for(const it of n.items){s+=draw(it,xx,y); xx+=it.m.w;} return s;}
+ if(n.t==="par"){
+  const xl=x+6, xr=x+n.m.w-6, yl=y+n.offs[n.offs.length-1];
+  let s=L_(x,y,xl,y,n.rin)+L_(xl,y,xl,yl,n.rin)+L_(xr,y,xr,yl,n.out)+L_(xr,y,x+n.m.w,y,n.out);
+  n.brs.forEach((b,k)=>{const yk=y+n.offs[k]; s+=L_(xl,yk,x+PAD,yk,n.rin)+draw(b,x+PAD,yk)+L_(x+PAD+b.m.w,yk,xr,yk,b.out);});
+  return s;
+ }
+ const a=n.args, W=n.m.w, cx=x+W/2;
+ if(n.mn==="XIC"||n.mn==="XIO"){
+  const col=n.ok?ON:OFF;
+  let s=L_(x,y,cx-11,y,n.rin)+L_(cx+11,y,x+W,y,n.out);
+  if(n.ok) s+=`<rect x="${cx-16}" y="${y-17}" width="32" height="34" rx="5" fill="#DDF3E4"/>`;
+  s+=`<line x1="${cx-11}" y1="${y-14}" x2="${cx-11}" y2="${y+14}" stroke="${col}" stroke-width="2.8"/>`;
+  s+=`<line x1="${cx+11}" y1="${y-14}" x2="${cx+11}" y2="${y+14}" stroke="${col}" stroke-width="2.8"/>`;
+  if(n.mn==="XIO") s+=`<line x1="${cx-8}" y1="${y+11}" x2="${cx+8}" y2="${y-11}" stroke="${col}" stroke-width="2.2"/>`;
+  return s+TX(cx,y-23,a[0])+TX(cx,y+31,n.mn,{size:10.5,font:SANS,fill:MUTC});
+ }
+ if(n.mn==="OTE"){
+  const on=rv(a[0])===1, col=on?ON:OFF, wd=15;
+  let s=L_(x,y,cx-wd,y,n.rin)+L_(cx+wd,y,x+W,y,n.out);
+  if(on) s+=`<ellipse cx="${cx}" cy="${y}" rx="${wd+6}" ry="17" fill="#DDF3E4"/>`;
+  s+=`<path d="M${cx-wd+5},${y-14} Q${cx-wd-5},${y} ${cx-wd+5},${y+14}" fill="none" stroke="${col}" stroke-width="2.6"/>`;
+  s+=`<path d="M${cx+wd-5},${y-14} Q${cx+wd+5},${y} ${cx+wd-5},${y+14}" fill="none" stroke="${col}" stroke-width="2.6"/>`;
+  return s+TX(cx,y-23,a[0])+TX(cx,y+31,n.mn,{size:10.5,font:SANS,fill:MUTC});
+ }
+ /* boîte */
+ const D=BOXDEF[n.mn], cmp=!!D[2], hot=cmp?(n.rin&&n.ok):n.rin;
+ const x0=x+12, w0=W-24, top=y-14, nb=(n.mn==="BSL"||n.mn==="BSR");
+ const h=HEADH+D[1].length*ROWH+(nb?22:6)+(n.mn==="CPT"?6:0);
+ const sc=hot?ON:OFF, sw=hot?2.4:1.5;
+ let s=L_(x,y,x0,y,n.rin)+L_(x0+w0,y,x+W,y,n.out);
+ s+=`<rect x="${x0}" y="${top}" width="${w0}" height="${h}" fill="#fff" stroke="${sc}" stroke-width="${sw}"/>`;
+ s+=`<rect x="${x0}" y="${top}" width="${w0}" height="${HEADH}" fill="${cmp&&hot?"#DDF3E4":"#FBE9E0"}" stroke="${sc}" stroke-width="${sw}"/>`;
+ s+=TX(x0+8,top+18,n.mn,{anchor:"start",weight:700,size:13.5})+TX(x0+w0-7,top+17,D[0],{anchor:"end",size:9.5,font:SANS,fill:MUTC});
+ D[1].forEach((lab,i)=>{
+  const yy=top+HEADH+14+ROWH*i, arg=a[i];
+  s+=TX(x0+8,yy,lab,{anchor:"start",size:10.5,font:SANS,fill:MUTC});
+  if(n.mn==="CPT"&&i===1){ s+=TX(x0+8,yy+15,arg,{anchor:"start",size:11.5,weight:600}); }
+  else { s+=TX(x0+w0-8,yy,arg,{anchor:"end",size:12,weight:600});
+   const v=opVal(arg,n); if(v!=="") s+=TX(x0+w0-8,yy+13,v,{anchor:"end",size:11,fill:VALC}); }
+ });
+ if(nb){ const ct=T.ctl[a[1]], yb=top+HEADH+D[1].length*ROWH+12;
+  [["EN",ct.EN],["DN",ct.DN],["UL",ct.UL]].forEach((bt,i)=>{const bx=x0+14+i*48;
+   s+=`<circle cx="${bx}" cy="${yb-4}" r="5.5" fill="${bt[1]?ON:"#fff"}" stroke="${bt[1]?ON:"#9AA3AD"}" stroke-width="1.6"/>`+
+      TX(bx+9,yb,bt[0],{anchor:"start",size:10.5,font:SANS,weight:600,fill:bt[1]?ON:MUTC});}); }
+ return s;
+}
+function renderRung(p,idx){
+ const m=p.tree.m, y0=14+m.up, H=y0+m.dn+12, W=GW;
+ return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ligne ${idx} : ${esc(p.txt)}">`+
+  `<text x="2" y="${y0+4}" font-size="12" font-family="${SANS}" font-weight="700" fill="${MUTC}">${idx}</text>`+
+  `<line x1="22" y1="4" x2="22" y2="${H-4}" stroke="${OFF}" stroke-width="3.2"/><line x1="${W-12}" y1="4" x2="${W-12}" y2="${H-4}" stroke="${OFF}" stroke-width="3.2"/>`+
+  draw(p.tree,22,y0)+L_(22+m.w,y0,W-12,y0,p.tree.out)+`</svg>`;
+}
+</script>
+
+<script>
+"use strict";
+/* ============================================================ LES ESSAIS (valeurs du corrigé) */
+const E1=[[0,0,0,0,0],[640,0,1,0,1],[650,1,0,0,0],[662,1,0,0,0],[670,1,0,0,0],[671,0,0,1,1]];
+const O1=["Bouteille_Bonne","Trop_Legere","Trop_Lourde","Rejet"];
+const E2={inp:[[37,3,662],[24,0,640],[100,25,671],[0,0,0]],
+ out:[[40,7.5,3,1,2,2],[24,0,2,0,-20,20],[125,20,8,4,11,11],[0,0,0,0,-660,660]]};
+const I2=["Nb_Bonnes","Nb_Rejets","Masse_g"], O2=["Nb_Total","Taux_Rejet","Caisses","Restantes","Ecart_g","Ecart_Abs_g"];
+const E3=[[0x0301,0x0000,0,1,0x00A1],[0x0305,0x0004,1,1,0x00A4],[0x0108,0x0008,1,0,0x00A4],[0x0300,0x0000,0,1,0x00A2]];
+const E4=[["Defaut = 1, impulsion Pas_Avance",1,"A","00000001",0],["Defaut = 0, impulsion Pas_Avance",0,"A","00000010",0],
+ ["Defaut = 1, impulsion Pas_Avance",1,"A","00000101",0],["Defaut = 0, impulsion Pas_Avance",0,"A","00001010",0],
+ ["Defaut = 0, impulsion Pas_Avance",0,"A","00010100",1],["Impulsion Pas_Recul",null,"R","00001010",0],
+ ["Defaut = 0, impulsion Pas_Avance",0,"A","00010100",1],["Defaut = 0, impulsion Pas_Avance",0,"A","00101000",0],
+ ["Defaut = 0, impulsion Pas_Avance",0,"A","01010000",1],["Effacer à 1, puis à 0",null,"E","00000000",0]];
+const fb=b=>"2#"+b.slice(0,4)+"_"+b.slice(4);
+const frv=v=>Number.isInteger(v)?nbfr(v.toFixed(1)):nbfr(v);
+
+function run1(i){ setTag("Masse_g",E1[i][0]); settle(); return O1.every((t,k)=>rv(t)===E1[i][k+1]); }
+function run2(i){ I2.forEach((t,k)=>setTag(t,E2.inp[i][k])); settle(); return O2.every((t,k)=>Math.abs(T.v[t]-E2.out[i][k])<1e-9); }
+function run3(i){ setTag("Colonne",0x00A0); setTag("Etat_Remplisseuse",E3[i][0]); settle();
+ const r=E3[i]; return T.v.Defauts===r[1]&&rv("Alarme")===r[2]&&rv("Recette_Foncee")===r[3]&&T.v.Colonne===r[4]; }
+function prep4(){ pulse("Effacer"); T.v.Defaut=0; settle(); }
+function run4(i){ const r=E4[i];
+ if(r[2]==="A"){ T.v.Defaut=r[1]; scan(); pulse("Pas_Avance"); }
+ else if(r[2]==="R") pulse("Pas_Recul"); else pulse("Effacer");
+ settle(); return bin8(T.v["Suivi[0]"])===fb(r[3])&&rv("Ejecteur")===r[4]; }
+const mark=(id,ok)=>{ const c=document.getElementById(id); if(c) c.innerHTML=ok?'<span class="ok">✓ pareil</span>':'<span class="ko">✗ différent</span>'; };
+
+function renderEssais(){
+ let h=`<h3>${TASKS.T1} · 3 points (0,5 par ligne)</h3><div class="tw"><table><thead><tr><th class="nc">Masse_g</th>${O1.map(t=>`<th class="nc">${t}</th>`).join("")}<th></th><th>Ici</th></tr></thead><tbody>`+
+  E1.map((r,i)=>`<tr><td class="mono">${r[0]}</td>${r.slice(1).map(x=>`<td class="mono rep">${x}</td>`).join("")}<td><button class="btn sm" data-e="1" data-i="${i}">Essayer ici</button></td><td id="r1_${i}"></td></tr>`).join("")+`</tbody></table></div>`;
+ h+=`<h3>${TASKS.T2} · 4 points (1 par essai, si toute la colonne est juste)</h3><p>Dans l’ordre : entrer les trois premières lignes, lire les six autres.</p><div class="tw"><table><thead><tr><th class="nc">Tag</th>${[1,2,3,4].map(k=>`<th class="nc">Essai ${k} <button class="btn sm" data-e="2" data-i="${k-1}">Essayer ici</button></th>`).join("")}</tr></thead><tbody>`+
+  I2.map((t,k)=>`<tr><td class="mono">${t} (entrée)</td>${E2.inp.map(r=>`<td class="mono">${r[k]}</td>`).join("")}</tr>`).join("")+
+  O2.map((t,k)=>`<tr><td class="mono">${t}</td>${E2.out.map(r=>`<td class="mono rep">${t==="Taux_Rejet"?frv(r[k]):nbfr(r[k])}</td>`).join("")}</tr>`).join("")+
+  `<tr><td>Ici</td>${[0,1,2,3].map(i=>`<td id="r2_${i}"></td>`).join("")}</tr></tbody></table></div>`;
+ h+=`<h3>${TASKS.T3} · 2 points (0,5 par ligne)</h3><p>Avant les essais : Colonne = 16#00A0 (bits 5 et 7 : l’autre appareil).</p><div class="tw"><table><thead><tr><th class="nc">Etat_Remplisseuse</th><th class="nc">Defauts (Hex)</th><th class="nc">Alarme</th><th class="nc">Recette_Foncee</th><th class="nc">Colonne (Hex)</th><th></th><th>Ici</th></tr></thead><tbody>`+
+  E3.map((r,i)=>`<tr><td class="mono">${hex4(r[0])}</td><td class="mono rep">${hex4(r[1])}</td><td class="mono rep">${r[2]}</td><td class="mono rep">${r[3]}</td><td class="mono rep">${hex4(r[4])}</td><td><button class="btn sm" data-e="3" data-i="${i}">Essayer ici</button></td><td id="r3_${i}"></td></tr>`).join("")+`</tbody></table></div>`;
+ h+=`<h3>${TASKS.T4} · 5 points (0,5 par ligne)</h3><p>Départ : Effacer à 1, puis à 0. Ensuite, les essais dans l’ordre. <button class="btn acc sm" id="prep4">Préparer ici (Effacer)</button></p><div class="tw"><table><thead><tr><th>Essai</th><th>Action</th><th class="nc">Suivi[0] (bits 7 à 0)</th><th class="nc">Ejecteur</th><th></th><th>Ici</th></tr></thead><tbody>`+
+  E4.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r[0])}</td><td class="mono rep">${fb(r[3])}</td><td class="mono rep">${r[4]}</td><td><button class="btn sm" data-e="4" data-i="${i}">Faire ce pas</button></td><td id="r4_${i}"></td></tr>`).join("")+`</tbody></table></div>`;
+ h+=`<p>Essai 6 : le BSR fait reculer le registre ; à l’essai 7, la même bouteille revient devant l’éjecteur.</p>`;
+ document.getElementById("essaiBody").innerHTML=h;
+}
+function runAll(){
+ resetTags(); let n=0, ok=0;
+ E1.forEach((_,i)=>{ const r=run1(i); mark("r1_"+i,r); n++; if(r) ok++; });
+ E2.inp.forEach((_,i)=>{ const r=run2(i); mark("r2_"+i,r); n++; if(r) ok++; });
+ E3.forEach((_,i)=>{ const r=run3(i); mark("r3_"+i,r); n++; if(r) ok++; });
+ prep4(); E4.forEach((_,i)=>{ const r=run4(i); mark("r4_"+i,r); n++; if(r) ok++; });
+ return {n,ok};
+}
+
+/* ============================================================ TAGS ET GRILLE */
+function renderTags(){
+ document.getElementById("tagBody").innerHTML=["T1","T2","T3","T4"].map(k=>`<h3>${TASKS[k]}</h3><div class="tw"><table><thead><tr><th class="nc">Tag</th><th class="nc">Type</th><th>Rôle</th></tr></thead><tbody>`+
+  TAGS.filter(t=>t[0]===k).map(t=>`<tr><td class="mono">${t[1]}</td><td class="mono">${t[2]}</td><td>${esc(t[3])}</td></tr>`).join("")+`</tbody></table></div>`).join("");
+}
+const GRILLE=[
+ {p:"T1",t:TASKS.T1,pts:14,it:[
+  ["R1","Bouteille_Bonne : une LIMIT de 650 à 670",3,"GE et LE en série au lieu de LIMIT : 1."],
+  ["R2","Trop_Legere : moins de 650, sauf 0 g",3,"Accepté : GT (Masse_g, 0) au lieu de NE, ou LIMIT (1, Masse_g, 649)."],
+  ["R3","Trop_Lourde : plus de 670",2,""],
+  ["R4","Rejet : une seule LIMIT (bornes inversées), sauf 0 g, sans Trop_Legere ni Trop_Lourde",3,"Avec Trop_Legere / Trop_Lourde ou deux instructions : 1. Oubli du NE : 2."],
+  ["E","6 lignes",3,0.5,6]]},
+ {p:"T2",t:TASKS.T2,pts:14,it:[
+  ["R1","Nb_Total = Nb_Bonnes + Nb_Rejets",2,""],
+  ["R2","Taux_Rejet en REAL (7,5), pas de division si Nb_Total = 0, et alors Taux_Rejet = 0",4,"MUL puis DIV vers des REAL : accepté. Aucune protection : 2."],
+  ["R3","Caisses (DIV) et Restantes (MOD)",2,"Caisses en REAL (3,08…) : 1."],
+  ["R4","Ecart_g (SUB), puis Ecart_Abs_g (ABS)",2,"NEG au lieu de ABS : 1."],
+  ["E","4 colonnes, 1 point si toute la colonne est juste",4,1,4]]},
+ {p:"T3",t:TASKS.T3,pts:10,it:[
+  ["R1","Defauts = bits 1, 2 et 3 (AND 16#000E) ; Alarme si Defauts ≠ 0",2,"Accepté : MVM pour Defauts ; GT (Defauts, 0) pour Alarme."],
+  ["R2","Recette_Foncee : une seule instruction (MEQ)",2,"AND puis EQ, résultat juste : 1."],
+  ["R3","Motif 4 / 1 / 2, puis MVM sur les bits 0 à 2 de Colonne",4,"MOVE vers Colonne au lieu de MVM : 2 (16#0001 au lieu de 16#00A1)."],
+  ["E","4 lignes",2,0.5,4]]},
+ {p:"T4",t:TASKS.T4,pts:18,it:[
+  ["R1","BSL sur Pas_Avance : Suivi[0], Length 8, Source Bit Defaut, CTL_Avance",4,"Un seul CONTROL pour BSL et BSR : 2 points perdus (R1 et R3)."],
+  ["R2","Ejecteur sur Suivi[0].4",3,"Bit 3 ou 5 au lieu du bit 4 : 0."],
+  ["R3","BSR sur Pas_Recul : Suivi[0], Length 8, Source Bit Bit_Zero, CTL_Recul",4,"Source Bit = Defaut au lieu de Bit_Zero : 1 point perdu."],
+  ["R4","Effacer = 1 : Suivi[0] = 0",2,"Accepté : CLR (Suivi[0])."],
+  ["E","10 lignes",5,0.5,10]]},
+ {p:"Q",t:"Qualité et remise",pts:4,it:[
+  ["Q1","Tags : noms et types exacts",1,""],["Q2","Un commentaire sur la première ligne de chaque tâche",1,""],
+  ["Q3","Projet vérifié sans erreur (Verify Controller), en mode Run",1,""],["Q4","Projet enregistré sous Eval_Nom_Prenom.ACD et remis",1,""]]}
+];
+let SC={}, CK={};
+function renderGrille(){
+ let h="";
+ for(const g of GRILLE){
+  h+=`<div class="gpart"><div class="gh">${esc(g.t)}<span data-sub="${g.p}"></span></div>`;
+  for(const it of g.it){
+   const key=g.p+"."+it[0];
+   if(it[0]==="E"){
+    h+=`<div class="gitem"><div class="t"><b>Essais</b> · ${esc(it[1])}<small>${nbfr(it[3])} point par case cochée (une case = un essai juste)</small></div><div class="chk" data-key="${key}" data-val="${it[3]}">`+
+     Array.from({length:it[4]},(_,k)=>`<button type="button" data-k="${k}" class="${CK[key+"."+k]?"on":""}">${k+1}</button>`).join("")+`</div></div>`;
+   } else {
+    h+=`<div class="gitem"><div class="t"><b>${it[0]}</b> · ${esc(it[1])}${it[3]?`<small>${esc(it[3])}</small>`:""}</div><div class="seg" data-key="${key}">`+
+     Array.from({length:it[2]+1},(_,v)=>`<button type="button" data-v="${v}" class="${SC[key]===v?"on":""}${v===0?" z":""}">${v}</button>`).join("")+`</div></div>`;
+   }
+  }
+  h+=`</div>`;
+ }
+ document.getElementById("grilleBody").innerHTML=h; totals();
+}
+function totals(){
+ let tot=0, non=0;
+ for(const g of GRILLE){ let sub=0, nonp=0;
+  for(const it of g.it){ const key=g.p+"."+it[0];
+   if(it[0]==="E"){ for(let k=0;k<it[4];k++) if(CK[key+"."+k]) sub+=it[3]; }
+   else { const v=SC[key]; if(v==null){ non++; nonp++; } else sub+=v; } }
+  tot+=sub; const el=document.querySelector(`[data-sub="${g.p}"]`); if(el) el.textContent=`${nbfr(sub)} / ${g.pts}`+(nonp?" · à noter":"");
+ }
+ document.getElementById("gtot").textContent=nbfr(Math.round(tot*2)/2);
+ document.getElementById("gnon").textContent=non?`${non} critère${non>1?"s":""} pas encore noté${non>1?"s":""}`:"tout est noté";
+}
+
+/* ============================================================ PAGE ET BANC D'ESSAI */
+const $=s=>document.querySelector(s);
+function msg(s){ $("#msg").innerHTML=s; }
+const LAMPS1=[["Bouteille_Bonne",""],["Trop_Legere","r"],["Trop_Lourde","r"],["Rejet","r"]];
+const LAMPS3=[["Alarme","r"],["Recette_Foncee",""]];
+function lampHtml(list){ return list.map(([t,c])=>`<div class="lamp ${c}" data-tag="${t}"><b></b><span class="mono">${t}</span></div>`).join(""); }
+function renderLive(){
+ for(const p of PROG){ const h=renderRung(p,p.idx); if(h!==p.last){ p.el.innerHTML=h; p.last=h; } }
+ document.querySelectorAll(".lamp").forEach(el=>el.classList.toggle("on",rv(el.dataset.tag)===1));
+ document.querySelectorAll(".field input").forEach(inp=>{ if(document.activeElement!==inp) inp.value=fmtTag(inp.dataset.tag); });
+ const v2=O2.map(t=>`<tr><td>${t}</td><td>${fmtTag(t)}</td></tr>`).join(""); if($("#vals2")._h!==v2){ $("#vals2").innerHTML=v2; $("#vals2")._h=v2; }
+ const v3=["Defauts","Motif"].map(t=>`<tr><td>${t}</td><td>${fmtTag(t)}</td></tr>`).join(""); if($("#vals3")._h!==v3){ $("#vals3").innerHTML=v3; $("#vals3")._h=v3; }
+ document.querySelectorAll(".colonne i").forEach(el=>el.classList.toggle("on",!!((T.v.Colonne>>>(+el.dataset.b))&1)));
+ const s=T.v["Suivi[0]"]; $("#regbin").textContent=bin8(s).slice(2);
+ document.querySelectorAll("#reg div").forEach(el=>{ const i=+el.dataset.b, v=(s>>>i)&1; el.classList.toggle("one",!!v); el.querySelector("b").textContent=v; });
+ document.querySelectorAll(".pb.tog").forEach(el=>el.setAttribute("aria-pressed",rv(el.dataset.tag)?"true":"false"));
+ $("#fault").textContent=T.fault;
+}
+function build(){
+ PROG=PROG_SRC.map((p,i)=>Object.assign({},p,{idx:i,tree:parseRung(p.txt)}));
+ resetTags(); settle();
+ PROG.forEach(p=>meas(p.tree));
+ GW=Math.max(780,...PROG.map(p=>p.tree.m.w+50));
+ let h="", cur="";
+ PROG.forEach((p,i)=>{
+  if(p.t!==cur){ cur=p.t; h+=`<div class="task"><h3>${TASKS[p.t]}</h3><span>${TPTS[p.t]} points</span></div>`; }
+  const first=i===0||PROG[i-1].t!==p.t;
+  h+=`<div class="rung"><div class="rh"><span class="num">Ligne ${i}</span><b>${esc(p.role)}</b>${p.r.map(x=>`<span class="bdg">${p.t} · ${x}</span>`).join("")}<button class="btn sm" data-copy="${i}">Copier le texte</button></div>`+
+   (first?`<div class="cmt">Commentaire : « ${TASKS[p.t].split(" · ")[0]} »</div>`:"")+
+   `<div class="svgw" id="rg${i}"></div><code>${esc(p.txt)}</code><p>${esc(p.why)}</p>${p.acc?`<p class="acc"><b>Barème :</b> ${esc(p.acc)}</p>`:""}</div>`;
+ });
+ $("#rungs").innerHTML=h;
+ PROG.forEach((p,i)=>{ p.el=document.getElementById("rg"+i); p.last=""; });
+ $("#lamps1").innerHTML=lampHtml(LAMPS1); $("#lamps3").innerHTML=lampHtml(LAMPS3); $("#lamps4").innerHTML=lampHtml([["Ejecteur","r"]]);
+ $("#reg").innerHTML=[0,1,2,3,4,5,6,7].map(i=>`<div class="${i===4?"ej":""}" data-b="${i}">b${i}<b>0</b></div>`).join("");
+ renderEssais(); renderTags(); renderGrille();
+ setTag("Colonne",0x00A0); settle(); renderLive();
+}
+function applyInput(inp){
+ const t=inp.dataset.tag, v=parseIn(t,inp.value);
+ if(v===null){ msg(`<span class="ko">Valeur non lue pour ${t}.</span> Exemples : 662, 16#0301.`); inp.value=fmtTag(t); return; }
+ setTag(t,v); settle(); renderLive(); msg(`${t} = ${fmtTag(t)}`);
+}
+document.addEventListener("keydown",e=>{ if(e.target.matches&&e.target.matches(".field input")&&e.key==="Enter"){ e.preventDefault(); applyInput(e.target); e.target.select(); } });
+document.addEventListener("change",e=>{ if(e.target.matches&&e.target.matches(".field input")) applyInput(e.target); });
+document.addEventListener("click",e=>{
+ const chip=e.target.closest(".chips button"); if(chip){ const t=chip.parentElement.dataset.for, v=parseIn(t,chip.textContent); setTag(t,v); settle(); renderLive(); msg(`${t} = ${fmtTag(t)}`); return; }
+ const im=e.target.closest(".pb.imp"); if(im){ pulse(im.dataset.tag); settle(); renderLive(); im.classList.add("flash"); setTimeout(()=>im.classList.remove("flash"),180);
+  msg(`Impulsion ${im.dataset.tag} : Suivi[0] = ${bin8(T.v["Suivi[0]"])}`); return; }
+ const tg=e.target.closest(".pb.tog"); if(tg){ const t=tg.dataset.tag; T.v[t]=T.v[t]?0:1; settle(); renderLive(); return; }
+ const cp=e.target.closest("[data-copy]"); if(cp){ const t=PROG[+cp.dataset.copy].txt;
+  try{ navigator.clipboard.writeText(t).then(()=>{cp.textContent="Copié ✓"; setTimeout(()=>cp.textContent="Copier le texte",1200);}); }catch(_){} return; }
+ const es=e.target.closest("[data-e]"); if(es){ const k=es.dataset.e, i=+es.dataset.i; let ok;
+  if(k==="1") ok=run1(i); else if(k==="2") ok=run2(i); else if(k==="3") ok=run3(i); else ok=run4(i);
+  mark(`r${k}_${i}`,ok); renderLive(); msg(ok?"Même résultat que le corrigé ✓":"Résultat différent du corrigé"); return; }
+ if(e.target.id==="prep4"){ prep4(); renderLive(); document.querySelectorAll("[id^=r4_]").forEach(c=>c.innerHTML=""); msg("Suivi[0] effacé. Faites les pas dans l’ordre."); return; }
+ if(e.target.id==="toutVerif"){ const r=runAll(); renderLive(); $("#toutRes").innerHTML=r.ok===r.n?`<span class="ok">✓ ${r.ok} essais sur ${r.n} : pareil au corrigé</span>`:`<span class="ko">${r.ok} sur ${r.n}</span>`; return; }
+ if(e.target.id==="raz"){ resetTags(); setTag("Colonne",0x00A0); settle(); renderLive(); msg("Tout est remis à zéro (Colonne = 16#00A0)."); return; }
+ const sg=e.target.closest(".seg button"); if(sg){ const seg=sg.parentElement; SC[seg.dataset.key]=+sg.dataset.v; seg.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===sg)); totals(); return; }
+ const ck=e.target.closest(".chk button"); if(ck){ const key=ck.parentElement.dataset.key+"."+ck.dataset.k; CK[key]=!CK[key]; ck.classList.toggle("on",CK[key]); totals(); return; }
+ if(e.target.id==="gnew"){ SC={}; CK={}; $("#etu").value=""; renderGrille(); window.scrollTo({top:$("#grille").offsetTop-10}); return; }
+ if(e.target.id==="pupT"){ $("#pupitre").classList.toggle("open"); return; }
+});
+window.SIM={build,resetTags,setTag,scan,settle,pulse,rv,T:()=>T,PROG:()=>PROG,runAll,bin8,hex4};
+build();
+</script>
+</body>
+</html>
