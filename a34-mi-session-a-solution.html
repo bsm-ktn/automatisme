@@ -1,0 +1,693 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A34 · Mi-session A · Solution du pratique</title>
+<meta name="description" content="Solution du pratique de la mi-session A34, version A (poste de tri de colis) : configuration, programme en ladder ligne par ligne, écran FactoryTalk View ME et essai au poste.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--acc:#EF8214;--sec:#2F7D5B;--ink:#1A1A1A;--mut:#5A5A5A;--paper:#FCFBF8;--rule:#E2DED6;--soft:#FBE9E0;
+--head:#F3ECE7;--zeb:#FAF7F3;--on:#1E9E4A;--onsoft:#DDF3E4;--red:#C0392B;--amb:#D99A00;--blu:#2C6FB7}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:56px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Serif',Cambria,serif;font-size:16px;line-height:1.55;
+font-variant-numeric:lining-nums tabular-nums;padding-right:350px}
+code,.mono{font-family:'IBM Plex Mono',Consolas,monospace}
+.wrap{max-width:1000px;margin:0 auto;padding:0 18px}
+header.top{background:#fff;border-bottom:3px solid var(--acc)}
+header.top .wrap{padding-top:18px;padding-bottom:16px}
+.kick{font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+h1{font-size:30px;line-height:1.15;margin:4px 0 6px}
+.sub{margin:0 0 12px;color:var(--mut)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:13px 'IBM Plex Sans',sans-serif;background:var(--soft);border-left:4px solid var(--sec);padding:4px 10px;border-radius:0 4px 4px 0}
+.chip b{font-weight:700;color:var(--sec);text-transform:uppercase;font-size:11.5px;letter-spacing:.05em;margin-right:4px}
+nav.nav{position:sticky;top:0;z-index:10;background:var(--paper);border-bottom:1px solid var(--rule)}
+nav.nav .wrap{display:flex;gap:18px;overflow-x:auto;padding-top:10px;padding-bottom:10px;white-space:nowrap}
+nav.nav a{font:600 14px 'IBM Plex Sans',sans-serif;color:var(--sec);text-decoration:none}
+nav.nav a:hover{text-decoration:underline}
+section{padding:22px 0 8px}
+h2{font-size:23px;color:var(--acc);border-bottom:1.5px solid var(--rule);padding-bottom:4px;margin:6px 0 12px}
+h2 small{font-size:15px;color:var(--mut);font-weight:400}
+h3{font-size:17.5px;color:var(--sec);margin:20px 0 6px}
+h4{font:700 15px 'IBM Plex Sans',sans-serif;margin:14px 0 4px}
+p{margin:0 0 10px}
+ul,ol{margin:4px 0 12px;padding-left:22px} li{margin-bottom:5px}
+.note{background:var(--soft);border-left:4px solid var(--sec);padding:10px 14px;margin:10px 0;border-radius:0 6px 6px 0}
+.warn{background:#FDECEA;border-left:4px solid var(--red);padding:10px 14px;margin:10px 0;border-radius:0 6px 6px 0}
+.tip{background:#EEF4FB;border-left:4px solid var(--blu);padding:10px 14px;margin:10px 0;border-radius:0 6px 6px 0}
+.note b:first-child,.warn b:first-child,.tip b:first-child{font-family:'IBM Plex Sans',sans-serif}
+table{border-collapse:collapse;width:100%;margin:8px 0 14px;font-size:14.5px}
+th{background:var(--head);color:var(--mut);font:700 12px 'IBM Plex Sans',sans-serif;text-transform:uppercase;letter-spacing:.04em;text-align:left;padding:7px 8px;border-bottom:1px solid var(--rule)}
+td{padding:6px 8px;border-bottom:1px solid var(--rule);vertical-align:top}
+tr:nth-child(even) td{background:var(--zeb)}
+td.tag,td .tag{font-family:'IBM Plex Mono',monospace;font-weight:600;color:#B35F0A;white-space:nowrap}
+td.adr{font-family:'IBM Plex Mono',monospace;white-space:nowrap}
+td.c{text-align:center}
+#essai th,.regbox th{text-transform:none;letter-spacing:0;font-size:12.5px}
+td .lbl{font:600 12px 'IBM Plex Sans',sans-serif;color:var(--mut)}
+td code{font-size:13px;white-space:nowrap}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:8px 0 14px}
+.tw table{margin:0}
+.fig{background:#fff;border:1px solid var(--rule);border-radius:8px;padding:10px;margin:10px 0 6px}
+.fig svg{display:block;width:100%;height:auto}
+.cap{font-size:13.5px;color:var(--mut);font-style:italic;text-align:center;margin:0 0 14px}
+.steps{counter-reset:st;list-style:none;padding-left:0}
+.steps>li{counter-increment:st;position:relative;padding-left:40px;margin-bottom:10px}
+.steps>li::before{content:counter(st);position:absolute;left:0;top:0;width:28px;height:28px;border-radius:50%;background:var(--sec);color:#fff;display:grid;place-items:center;font:700 14px 'IBM Plex Sans',sans-serif}
+.path{font:600 13.5px 'IBM Plex Sans',sans-serif;background:#fff;border:1px solid var(--rule);border-radius:4px;padding:1px 6px;white-space:nowrap}
+.btn{font:600 14px 'IBM Plex Sans',sans-serif;padding:7px 12px;border:1.5px solid var(--sec);background:#fff;color:var(--sec);border-radius:6px;cursor:pointer}
+.btn:hover{background:var(--sec);color:#fff}
+.btn.acc{border-color:var(--acc);color:var(--acc)} .btn.acc:hover{background:var(--acc);color:#fff}
+.btn.sm{padding:3px 9px;font-size:12.5px}
+/* barème */
+.pts{font:700 14px 'IBM Plex Sans',sans-serif;color:var(--acc);white-space:nowrap}
+/* registre explicatif */
+.regx{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font:13px 'IBM Plex Sans',sans-serif;margin:6px 0 4px}
+.regx .cells{display:grid;grid-template-columns:repeat(8,34px);gap:3px}
+.regx .cells span{border:1.5px solid #9AA3AD;border-radius:4px;text-align:center;font:600 13px 'IBM Plex Mono',monospace;padding:3px 0;background:#fff}
+.regx .cells span.b4{outline:2px solid var(--acc);outline-offset:1px}
+.regx .cells span.one{background:var(--red);border-color:var(--red);color:#fff}
+.regx .lab{display:grid;grid-template-columns:repeat(8,34px);gap:3px;font-size:10.5px;color:var(--mut);text-align:center}
+.regx .in{font:600 13px 'IBM Plex Mono',monospace;color:var(--sec);white-space:nowrap}
+.regx .out{font:600 13px 'IBM Plex Mono',monospace;color:var(--mut);white-space:nowrap}
+.regx .arw{font:700 18px 'IBM Plex Sans',sans-serif;color:var(--sec)}
+.regbox{background:#fff;border:1px solid var(--rule);border-radius:8px;padding:10px 14px;margin:10px 0}
+.regbox h4{margin-top:2px}
+/* lignes ladder */
+.grp{margin:26px 0 6px;padding:10px 14px;background:#fff;border:1.5px solid var(--acc);border-radius:8px}
+.grp h3{margin:0 0 4px;color:var(--acc);font-size:19px}
+.grp p{margin:0;font-size:15px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font:14px 'IBM Plex Sans',sans-serif;color:var(--mut);margin:6px 0 10px}
+.legend i{display:inline-block;width:26px;height:4px;background:var(--on);vertical-align:middle;margin-right:6px;border-radius:2px}
+.rung{background:#fff;border:1px solid var(--rule);border-radius:8px;margin:12px 0;padding:10px 12px}
+.rh{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin-bottom:4px}
+.num{display:inline-grid;place-items:center;min-width:30px;height:28px;padding:0 6px;border-radius:14px;background:var(--acc);color:#fff;font:700 13px 'IBM Plex Sans',sans-serif}
+.rh b{font:700 16px 'IBM Plex Sans',sans-serif}
+.bdg{font:600 12px 'IBM Plex Sans',sans-serif;background:var(--soft);color:#8a4a07;border-radius:10px;padding:2px 8px}
+.rh .btn{margin-left:auto}
+.svgw{overflow-x:auto}
+.svgw svg{display:block;width:100%;height:auto}
+.rung code{display:block;font-size:12.5px;background:var(--zeb);border:1px solid var(--rule);border-radius:5px;padding:6px 8px;margin:6px 0;overflow-wrap:anywhere}
+.rung p{font-size:15px;margin:4px 0 2px}
+/* pupitre */
+.pupitre{position:fixed;top:0;right:0;width:350px;height:100vh;overflow:auto;background:#fff;border-left:1px solid var(--rule);padding:12px 16px 30px;z-index:30;font-family:'IBM Plex Sans',sans-serif}
+.pupitre h2{font-size:19px;margin:2px 0 4px;border:0;padding:0}
+.pupitre .hint{font-size:13px;color:var(--mut);margin-bottom:6px}
+.pupitre h3{font-size:12.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);margin:12px 0 6px}
+.pup-toggle{display:none}
+.bgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.pb{font:600 14px 'IBM Plex Sans',sans-serif;padding:9px 6px;border-radius:7px;border:1.5px solid #20242A;background:#5B6B7F;color:#fff;cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none;line-height:1.15}
+.pb small{display:block;font-weight:400;font-size:11px;opacity:.88}
+.pb.green{background:#2E8540}.pb.red{background:var(--red)}.pb.light{background:#DCE3EA;color:var(--ink)}
+.pb.down{box-shadow:inset 0 0 0 3px #FFD54A;filter:brightness(.9)}
+.pb.tog[aria-pressed=true]{background:var(--on);color:#fff;box-shadow:inset 0 0 0 3px #FFD54A}
+.lamps{display:grid;grid-template-columns:1fr 1fr;gap:5px 8px;font-size:13px}
+.lamp{display:flex;align-items:center;gap:7px;min-width:0}
+.lamp b{width:16px;height:16px;border-radius:50%;border:2px solid #9AA3AD;background:#fff;flex:none}
+.lamp.on b{background:var(--on);border-color:var(--on);box-shadow:0 0 8px var(--on)}
+.lamp.on.r b{background:var(--red);border-color:var(--red);box-shadow:0 0 8px var(--red)}
+.lamp.on.a b{background:var(--amb);border-color:var(--amb);box-shadow:0 0 8px var(--amb)}
+.lamp .mono{font-size:11.5px;overflow:hidden;text-overflow:ellipsis}
+.reg{display:grid;grid-template-columns:repeat(8,1fr);gap:3px;text-align:center;font-size:10.5px;color:var(--mut)}
+.reg div b{display:block;border:1.5px solid #9AA3AD;border-radius:4px;padding:3px 0;font:600 14px 'IBM Plex Mono',monospace;color:var(--ink)}
+.reg div.one b{background:var(--red);border-color:var(--red);color:#fff}
+.reg div.ej b{outline:2px solid var(--acc);outline-offset:1px}
+.vals{width:100%;font-size:13px;margin:4px 0 10px}
+.vals td{padding:3px 4px}
+.vals td:last-child{text-align:right;font:600 13px 'IBM Plex Mono',monospace}
+#msg{font-size:13px;color:var(--sec);min-height:18px;margin-top:6px}
+.ok{color:var(--on);font-weight:700}.ko{color:var(--red);font-weight:700}
+main a{color:var(--sec);text-decoration:none} main a:hover{text-decoration:underline}
+footer{color:var(--mut);font-size:13px;text-align:center;padding:30px 0}
+@media (max-width:1100px){
+ body{padding-right:0;padding-bottom:60px}
+ .pupitre{top:auto;bottom:0;left:0;width:auto;height:54px;overflow:hidden;border-left:0;border-top:3px solid var(--acc);padding-top:0;box-shadow:0 -4px 14px rgba(0,0,0,.12)}
+ .pupitre.open{height:72vh;overflow:auto}
+ .pup-toggle{display:block;width:100%;font:700 15px 'IBM Plex Sans',sans-serif;background:#fff;border:0;color:var(--acc);padding:15px 0;cursor:pointer;text-align:left;position:sticky;top:0;z-index:2}
+}
+@media (max-width:600px){.svgw svg{min-width:640px}h1{font-size:24px}.regx .cells,.regx .lab{grid-template-columns:repeat(8,28px)}}
+@media print{.pupitre,nav.nav,.btn{display:none!important}body{padding:0}.rung,.grp,.fig{break-inside:avoid}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+ <div class="kick">243-A34-VM · Programmation d’un système de contrôle II · Automne 2026</div>
+ <h1>Mi-session — Version A · Tri de colis<br>La solution du pratique</h1>
+ <p class="sub">Bassam Kattan · la configuration, le programme ligne par ligne, l’écran et l’essai au poste.</p>
+ <div class="chips">
+  <span class="chip"><b>Pratique</b>60 points</span>
+  <span class="chip"><b>Programme</b>16 lignes (0 à 15)</span>
+  <span class="chip"><b>Instructions</b>XIC · XIO · OTE · OTL · OTU · TON · BSL · BSR · CTU · CTD · RES</span>
+ </div>
+</div></header>
+<nav class="nav"><div class="wrap">
+ <a href="#station">1. La station</a><a href="#b1">2. Configuration (B1)</a><a href="#programme">3. Programme (B2 à B5)</a>
+ <a href="#b6">4. Écran (B6)</a><a href="#essai">5. Essai au poste</a><a href="#erreurs">6. Erreurs fréquentes</a><a href="#remise">7. À remettre</a>
+</div></nav>
+<main class="wrap">
+
+<!-- =============================================================== 1. STATION -->
+<section id="station">
+ <h2>1. La station et le barème</h2>
+ <div class="fig"><svg role="img" aria-label="Poste de tri de colis, vue de côté" xmlns="http://www.w3.org/2000/svg" width="700" height="272" viewBox="0 0 700 272"><rect width="700" height="272" fill="#ffffff"/><g font-family="IBM Plex Serif, serif"><text x="20.0" y="22.0" font-size="13" fill="#EF8214" text-anchor="start" font-weight="bold">Version A — Poste de tri de colis</text><text x="20.0" y="39.0" font-size="9.5" fill="#5A5A5A" text-anchor="start" font-weight="normal">Vue de côté. Les colis avancent de gauche à droite, un pas à la fois.</text><rect x="136.0" y="150.0" width="428.0" height="16.0" rx="8" fill="#E9E6E0" stroke="#1A1A1A" stroke-width="1.3"/><circle cx="144.0" cy="158.0" r="6.5" fill="#ffffff" stroke="#1A1A1A" stroke-width="1.3"/><circle cx="556.0" cy="158.0" r="6.5" fill="#ffffff" stroke="#1A1A1A" stroke-width="1.3"/><line x1="200.0" y1="120.0" x2="200.0" y2="150.0" stroke="#C9C3B8" stroke-width="0.8" stroke-dasharray="3,3"/><line x1="250.0" y1="120.0" x2="250.0" y2="150.0" stroke="#C9C3B8" stroke-width="0.8" stroke-dasharray="3,3"/><line x1="300.0" y1="120.0" x2="300.0" y2="150.0" stroke="#C9C3B8" stroke-width="0.8" stroke-dasharray="3,3"/><line x1="350.0" y1="120.0" x2="350.0" y2="150.0" stroke="#C9C3B8" stroke-width="0.8" stroke-dasharray="3,3"/><line x1="400.0" y1="120.0" x2="400.0" y2="150.0" stroke="#C9C3B8" stroke-width="0.8" stroke-dasharray="3,3"/><line x1="450.0" y1="120.0" x2="450.0" y2="150.0" stroke="#C9C3B8" stroke-width="0.8" stroke-dasharray="3,3"/><line x1="500.0" y1="120.0" x2="500.0" y2="150.0" stroke="#C9C3B8" stroke-width="0.8" stroke-dasharray="3,3"/><text x="175.0" y="182.0" font-size="9.5" fill="#5A5A5A" text-anchor="middle" font-weight="normal" font-family="IBM Plex Mono, monospace">bit 0</text><text x="225.0" y="182.0" font-size="9.5" fill="#5A5A5A" text-anchor="middle" font-weight="normal" font-family="IBM Plex Mono, monospace">bit 1</text><text x="275.0" y="182.0" font-size="9.5" fill="#5A5A5A" text-anchor="middle" font-weight="normal" font-family="IBM Plex Mono, monospace">bit 2</text><text x="325.0" y="182.0" font-size="9.5" fill="#5A5A5A" text-anchor="middle" font-weight="normal" font-family="IBM Plex Mono, monospace">bit 3</text><text x="375.0" y="182.0" font-size="9.5" fill="#5A5A5A" text-anchor="middle" font-weight="normal" font-family="IBM Plex Mono, monospace">bit 4</text><text x="425.0" y="182.0" font-size="9.5" fill="#EF8214" text-anchor="middle" font-weight="bold" font-family="IBM Plex Mono, monospace">bit 5</text><text x="475.0" y="182.0" font-size="9.5" fill="#5A5A5A" text-anchor="middle" font-weight="normal" font-family="IBM Plex Mono, monospace">bit 6</text><text x="525.0" y="182.0" font-size="9.5" fill="#5A5A5A" text-anchor="middle" font-weight="normal" font-family="IBM Plex Mono, monospace">bit 7</text><text x="142.0" y="182.0" font-size="9.5" fill="#1A1A1A" text-anchor="end" font-weight="bold" font-family="IBM Plex Mono, monospace">Suivi[0]</text><rect x="210.0" y="124.0" width="30.0" height="26.0" rx="2" fill="#D7B98A" stroke="#1A1A1A" stroke-width="1.1"/><line x1="210.0" y1="131.0" x2="240.0" y2="131.0" stroke="#1A1A1A" stroke-width="0.7"/><rect x="260.0" y="110.0" width="30.0" height="40.0" rx="2" fill="#C0392B" stroke="#1A1A1A" stroke-width="1.1"/><line x1="260.0" y1="117.0" x2="290.0" y2="117.0" stroke="#1A1A1A" stroke-width="0.7"/><text x="275.0" y="103.0" font-size="8.5" fill="#C0392B" text-anchor="middle" font-weight="bold">à rejeter</text><rect x="360.0" y="124.0" width="30.0" height="26.0" rx="2" fill="#D7B98A" stroke="#1A1A1A" stroke-width="1.1"/><line x1="360.0" y1="131.0" x2="390.0" y2="131.0" stroke="#1A1A1A" stroke-width="0.7"/><rect x="460.0" y="124.0" width="30.0" height="26.0" rx="2" fill="#D7B98A" stroke="#1A1A1A" stroke-width="1.1"/><line x1="460.0" y1="131.0" x2="490.0" y2="131.0" stroke="#1A1A1A" stroke-width="0.7"/><rect x="22.0" y="146.0" width="88.0" height="10.0" rx="0" fill="#ffffff" stroke="#1A1A1A" stroke-width="1.3"/><line x1="34.0" y1="70.0" x2="34.0" y2="146.0" stroke="#1A1A1A" stroke-width="2"/><line x1="98.0" y1="70.0" x2="98.0" y2="146.0" stroke="#1A1A1A" stroke-width="2"/><rect x="30.0" y="62.0" width="72.0" height="12.0" rx="0" fill="#DCE3EA" stroke="#1A1A1A" stroke-width="1.2"/><line x1="34.0" y1="114.0" x2="98.0" y2="114.0" stroke="#C0392B" stroke-width="1.2" stroke-dasharray="3,3"/><line x1="34.0" y1="136.0" x2="98.0" y2="136.0" stroke="#2C6FB7" stroke-width="1.2" stroke-dasharray="3,3"/><rect x="51.0" y="120.0" width="30.0" height="26.0" rx="2" fill="#D7B98A" stroke="#1A1A1A" stroke-width="1.1"/><text x="66.0" y="56.0" font-size="10" fill="#1A1A1A" text-anchor="middle" font-weight="bold">Contrôle</text><text x="66.0" y="200.0" font-size="9.5" fill="#EF8214" text-anchor="middle" font-weight="normal" font-family="IBM Plex Mono, monospace">S_Colis</text><text x="66.0" y="213.0" font-size="9.5" fill="#EF8214" text-anchor="middle" font-weight="normal" font-family="IBM Plex Mono, monospace">S_TropHaut</text><text x="66.0" y="226.0" font-size="8.5" fill="#5A5A5A" text-anchor="middle" font-weight="normal" font-style="italic">(boutons à l’écran)</text><rect x="412.0" y="52.0" width="26.0" height="34.0" rx="0" fill="#DCE3EA" stroke="#1A1A1A" stroke-width="1.2"/><rect x="422.0" y="86.0" width="6.0" height="22.0" rx="0" fill="#B9C3CE" stroke="#1A1A1A" stroke-width="1"/><rect x="413.0" y="108.0" width="24.0" height="5.0" rx="0" fill="#8A939E" stroke="#1A1A1A" stroke-width="1"/><text x="445.0" y="64.0" font-size="10" fill="#EF8214" text-anchor="start" font-weight="bold" font-family="IBM Plex Mono, monospace">YV_Ejecteur</text><text x="445.0" y="78.0" font-size="9" fill="#5A5A5A" text-anchor="start" font-weight="normal">éjecteur au bit 5</text><text x="445.0" y="91.0" font-size="9" fill="#5A5A5A" text-anchor="start" font-weight="normal">(rejet vers le bac)</text><circle cx="156.0" cy="212.0" r="13" fill="#ffffff" stroke="#1A1A1A" stroke-width="1.3"/><text x="156.0" y="217.0" font-size="12" fill="#1A1A1A" text-anchor="middle" font-weight="bold">M</text><line x1="156.0" y1="164.0" x2="156.0" y2="199.0" stroke="#1A1A1A" stroke-width="1"/><text x="176.0" y="216.0" font-size="9.5" fill="#EF8214" text-anchor="start" font-weight="normal" font-family="IBM Plex Mono, monospace">KM_Convoyeur</text><path d="M310,206 L320,206 L332,198 L332,226 L320,218 L310,218 Z" fill="#FFE7B3" stroke="#1A1A1A" stroke-width="1.1" stroke-linejoin="round"/><text x="340.0" y="216.0" font-size="9.5" fill="#EF8214" text-anchor="start" font-weight="normal" font-family="IBM Plex Mono, monospace">H_Klaxon</text><text x="308.0" y="246.0" font-size="9" fill="#5A5A5A" text-anchor="start" font-weight="normal">Voyants :</text><text x="360.0" y="246.0" font-size="9" fill="#EF8214" text-anchor="start" font-weight="normal" font-family="IBM Plex Mono, monospace">H_Bon · H_Rejet</text><line x1="150.0" y1="66.0" x2="186.0" y2="66.0" stroke="#2F7D5B" stroke-width="1.6"/><polygon points="194.0,66.0 186.0,62.4 186.0,69.6" fill="#2F7D5B"/><text x="202.0" y="70.0" font-size="9.5" fill="#2F7D5B" text-anchor="start" font-weight="bold">BP_Avance → BSL</text><line x1="194.0" y1="88.0" x2="158.0" y2="88.0" stroke="#2C6FB7" stroke-width="1.6"/><polygon points="150.0,88.0 158.0,91.6 158.0,84.4" fill="#2C6FB7"/><text x="202.0" y="92.0" font-size="9.5" fill="#2C6FB7" text-anchor="start" font-weight="bold">BP_Recul → BSR</text><path d="M572,154 L592,154 L598,186 L686,186" fill="none" stroke="#1A1A1A" stroke-width="1.4" stroke-linejoin="round"/><rect x="596.0" y="166.0" width="19.0" height="18.0" rx="2" fill="#D7B98A" stroke="#1A1A1A" stroke-width="1"/><rect x="618.0" y="166.0" width="19.0" height="18.0" rx="2" fill="#D7B98A" stroke="#1A1A1A" stroke-width="1"/><rect x="640.0" y="166.0" width="19.0" height="18.0" rx="2" fill="#D7B98A" stroke="#1A1A1A" stroke-width="1"/><text x="574.0" y="110.0" font-size="9.5" fill="#1A1A1A" text-anchor="start" font-weight="bold">Zone d’accumulation</text><text x="574.0" y="123.0" font-size="9" fill="#5A5A5A" text-anchor="start" font-weight="normal">pleine à 6 colis</text><text x="574.0" y="136.0" font-size="9.5" fill="#EF8214" text-anchor="start" font-weight="normal" font-family="IBM Plex Mono, monospace">C_Zone</text><circle cx="584.0" cy="208.0" r="7" fill="#FFE7B3" stroke="#1A1A1A" stroke-width="1"/><text x="596.0" y="212.0" font-size="8.5" fill="#EF8214" text-anchor="start" font-weight="normal" font-family="IBM Plex Mono, monospace">H_ZonePleine</text><text x="574.0" y="230.0" font-size="8.5" fill="#5A5A5A" text-anchor="start" font-weight="normal">BP_Retrait : on retire</text><text x="574.0" y="242.0" font-size="8.5" fill="#5A5A5A" text-anchor="start" font-weight="normal">un colis</text></g></svg></div>
+ <p class="cap">Une case du convoyeur = un bit du registre Suivi[0]. L’éjecteur est devant le bit 5.</p>
+ <p>Au contrôle, une cellule dit s’il y a un colis (<code>S_Colis</code>) et une barrière dit s’il est trop haut (<code>S_TropHaut</code>). Chaque appui sur <code>BP_Avance</code> fait avancer les colis d’une case ; <code>BP_Recul</code> les fait reculer d’une case. Un colis trop haut est suivi dans le registre jusqu’au bit 5, où l’éjecteur le pousse dans le bac de rejets. Les bons colis sont comptés dans la zone d’accumulation (pleine à 6).</p>
+ <div class="tw"><table>
+  <thead><tr><th>Partie</th><th>Points</th><th>Ce qui donne les points</th></tr></thead>
+  <tbody>
+   <tr><td><a href="#b1"><b>B1</b> · Configuration du poste</a></td><td class="pts">10</td><td>contrôleur 3 · modules d’E/S 3 · alias et adresses notées 2 · raccourci PLC_Exam 2</td></tr>
+   <tr><td><a href="#b2"><b>B2</b> · Marche, arrêt et avertisseur</a></td><td class="pts">12</td><td>OTL sur Marche 3 · OTU par l’arrêt NF (XIO) 3 · klaxon pendant le TON 3 · convoyeur après le klaxon 3</td></tr>
+   <tr><td><a href="#b3"><b>B3</b> · Bon ou à rejeter</a></td><td class="pts">6</td><td>Defaut 2 · Bon 2 · voyants 2</td></tr>
+   <tr><td><a href="#b4"><b>B4</b> · Avancer et reculer</a></td><td class="pts">14</td><td>BSL sur BP_Avance 5 · BSR sur BP_Recul 5 · éjecteur au bit 5 2 · rien ne bouge convoyeur arrêté 2</td></tr>
+   <tr><td><a href="#b5"><b>B5</b> · Compter les bons</a></td><td class="pts">10</td><td>CTU des bons 4 · CTD 2 · voyant « pleine » par le .DN 2 · RES 2</td></tr>
+   <tr><td><a href="#b6"><b>B6</b> · Écran FactoryTalk View ME</a></td><td class="pts">8</td><td>deux boutons maintenus 2 · Numeric Display 2 · huit voyants du registre 4</td></tr>
+   <tr><td><b>Total du pratique</b></td><td class="pts">60</td><td>Au poste, vous devez pouvoir expliquer chacune de vos lignes.</td></tr>
+  </tbody>
+ </table></div>
+</section>
+
+<!-- =============================================================== 2. B1 -->
+<section id="b1">
+ <h2>2. B1 · Configuration du poste <small>· 10 points</small></h2>
+
+ <h3>B1.1 · Le projet et le contrôleur (3 pts)</h3>
+ <ol class="steps">
+  <li><span class="path">File → New</span> : choisissez le contrôleur de votre poste et nommez le projet <code>A34_MiSession_A_VotreNom</code> (pas d’espace : des traits de soulignement).</li>
+  <li>Le bon modèle et la bonne révision. La révision du projet doit être celle du firmware de l’automate (elle s’affiche dans <span class="path">Who Active</span> quand on clique sur l’automate), sinon le téléchargement est refusé.</li>
+  <li>L’adresse IP de l’étiquette : <span class="path">Controller Properties → Internet Protocol</span>, puis le chemin de téléchargement par <span class="path">Communications → Who Active</span>.</li>
+ </ol>
+ <div class="tw"><table>
+  <thead><tr><th>Poste</th><th>Contrôleur</th><th>Révision</th><th>Adresse IP</th></tr></thead>
+  <tbody>
+   <tr><td>Poste 1 (GuardLogix)</td><td>Compact GuardLogix 5380 · <span class="mono">5069-L306ERMS2</span></td><td>celle du firmware de l’automate</td><td class="adr">172.23.83.14</td></tr>
+   <tr><td>Postes CompactLogix</td><td>le modèle écrit sur l’étiquette du poste</td><td>celle de l’automate</td><td>celle de l’étiquette</td></tr>
+  </tbody>
+ </table></div>
+
+ <h3>B1.2 · Les modules d’entrées et de sorties (3 pts)</h3>
+ <p><b>Poste 1 (GuardLogix).</b> Les boutons et les voyants sont sur les cartes 1756 du châssis. Le GuardLogix les atteint par le module Ethernet du slot 8, qu’on nomme <code>CLX</code>.</p>
+ <ol class="steps">
+  <li><span class="path">I/O Configuration → Ethernet → New Module</span> : le module Ethernet 1756 du slot 8 (son modèle est écrit sur la carte). Nom <code>CLX</code>, adresse <span class="mono">172.23.83.10</span>, châssis de 10 slots, slot 8. Connexion : <b>None</b>.</li>
+  <li>Sous le fond de panier de <code>CLX</code> : <span class="path">New Module</span> → la carte d’entrées 16 points dans le <b>slot 0</b>, puis la carte de sorties 16 points dans le <b>slot 1</b> (modèles écrits sur les cartes).</li>
+  <li>Studio 5000 crée les tags des cartes : <code>CLX:0:I.Data</code> (entrées) et <code>CLX:1:O.Data</code> (sorties). Un bouton = un bit : <code>CLX:0:I.Data.2</code>, par exemple.</li>
+ </ol>
+ <div class="tip"><b>Pourquoi « None » ?</b> Chaque carte a alors sa propre connexion et ses propres tags <code>CLX:0:I</code> et <code>CLX:1:O</code>, comme le demande l’énoncé. Avec « Rack Optimization », les données passeraient par <code>CLX:I.Data[0]</code> à la place.</div>
+ <p><b>Postes CompactLogix.</b> Les cartes sont à côté de l’automate : leurs tags s’appellent <code>Local:1:I.Data</code>, <code>Local:2:O.Data</code>… (le numéro = la position de la carte sur votre poste).</p>
+
+ <h3>B1.3 · Les tags alias, et les adresses notées sur l’énoncé (2 pts)</h3>
+ <p><span class="path">New Tag</span> → Type <b>Alias</b> → <b>Alias For</b> : l’adresse du bouton ou du voyant → portée <b>contrôleur</b>. Écrivez la même adresse dans la première colonne de l’énoncé.</p>
+ <div class="warn"><b>Ces adresses sont un exemple.</b> La bonne adresse est celle du bouton ou du voyant câblé sur <i>votre</i> poste : suivez le fil, ou appuyez sur le bouton et regardez quel bit change dans Monitor Tags.</div>
+ <div class="tw"><table>
+  <thead><tr><th>Adresse (exemple au poste 1)</th><th>Tag (alias)</th><th>Description</th><th>Type</th></tr></thead>
+  <tbody>
+   <tr><td class="adr">CLX:0:I.Data.0</td><td class="tag">BP_Marche</td><td>Bouton de marche (NO)</td><td>BOOL</td></tr>
+   <tr><td class="adr">CLX:0:I.Data.1</td><td class="tag">BP_Arret</td><td>Bouton d’arrêt (<b>NF</b> : vaut 1 au repos)</td><td>BOOL</td></tr>
+   <tr><td class="adr">CLX:0:I.Data.2</td><td class="tag">BP_Avance</td><td>Le convoyeur avance d’un pas (NO)</td><td>BOOL</td></tr>
+   <tr><td class="adr">CLX:0:I.Data.3</td><td class="tag">BP_Recul</td><td>Le convoyeur recule d’un pas (NO)</td><td>BOOL</td></tr>
+   <tr><td class="adr">CLX:0:I.Data.4</td><td class="tag">BP_Retrait</td><td>On retire un colis de la zone d’accumulation (NO)</td><td>BOOL</td></tr>
+   <tr><td class="adr">CLX:0:I.Data.5</td><td class="tag">BP_RAZ</td><td>Remise à zéro du compteur (NO)</td><td>BOOL</td></tr>
+   <tr><td class="adr">CLX:1:O.Data.0</td><td class="tag">KM_Convoyeur</td><td>Contacteur du moteur du convoyeur</td><td>BOOL</td></tr>
+   <tr><td class="adr">CLX:1:O.Data.1</td><td class="tag">H_Klaxon</td><td>Klaxon d’avertissement</td><td>BOOL</td></tr>
+   <tr><td class="adr">CLX:1:O.Data.2</td><td class="tag">H_Bon</td><td>Voyant : colis bon</td><td>BOOL</td></tr>
+   <tr><td class="adr">CLX:1:O.Data.3</td><td class="tag">H_Rejet</td><td>Voyant : colis à rejeter</td><td>BOOL</td></tr>
+   <tr><td class="adr">CLX:1:O.Data.4</td><td class="tag">YV_Ejecteur</td><td>Électrovanne de l’éjecteur</td><td>BOOL</td></tr>
+   <tr><td class="adr">CLX:1:O.Data.5</td><td class="tag">H_ZonePleine</td><td>Voyant : zone d’accumulation pleine</td><td>BOOL</td></tr>
+  </tbody>
+ </table></div>
+ <p>Sur un CompactLogix, c’est pareil avec <code>Local:1:I.Data.0</code>, <code>Local:2:O.Data.0</code>… <b>Jamais</b> de <code>CLX_IN0</code> ni de <code>CLX_OUT1</code> : ces noms n’existent pas.</p>
+
+ <h4>Les tags internes (tags de base, portée contrôleur)</h4>
+ <div class="tw"><table>
+  <thead><tr><th>Tag</th><th>Type</th><th>Rôle</th></tr></thead>
+  <tbody>
+   <tr><td class="tag">S_Colis · S_TropHaut</td><td>BOOL</td><td>Capteurs simulés par les boutons maintenus de l’écran</td></tr>
+   <tr><td class="tag">Marche</td><td>BOOL</td><td>Mémoire de marche (OTL / OTU)</td></tr>
+   <tr><td class="tag">Defaut · Bon</td><td>BOOL</td><td>Résultat du contrôle du colis</td></tr>
+   <tr><td class="tag">T_Klaxon</td><td>TIMER</td><td>Klaxon d’avertissement, Preset 3000 ms</td></tr>
+   <tr><td class="tag">C_Zone</td><td>COUNTER</td><td>Colis bons dans la zone d’accumulation, Preset 6 (le même tag pour le CTU et le CTD)</td></tr>
+   <tr><td class="tag">Suivi</td><td>DINT[1]</td><td>Tableau d’un seul DINT : on travaille sur <code>Suivi[0]</code>, ses bits 0 à 7</td></tr>
+   <tr><td class="tag">CTL_Avance · CTL_Recul</td><td>CONTROL</td><td>Un tag CONTROL par instruction de décalage, jamais le même</td></tr>
+   <tr><td class="tag">Zero_Bit</td><td>BOOL</td><td>Toujours à 0 : aucune ligne ne l’écrit</td></tr>
+  </tbody>
+ </table></div>
+ <p>Portée <b>contrôleur</b> pour tous : l’écran FactoryTalk View ne voit que les tags du contrôleur.</p>
+
+ <h3>B1.4 · Le raccourci PLC_Exam dans FactoryTalk View ME (2 pts)</h3>
+ <ol class="steps">
+  <li>Dans FactoryTalk View Studio, application <code>A34_MiSession_A_VotreNom</code> : <span class="path">RSLinx Enterprise → Communication Setup</span>.</li>
+  <li><span class="path">Add</span> → nommez le raccourci <code>PLC_Exam</code>.</li>
+  <li>Onglet <b>Design (Local)</b> : déroulez le réseau Ethernet et cliquez sur <i>votre</i> automate (poste 1 : le 5069-L306ERMS2 à 172.23.83.14) → <span class="path">Apply</span>.</li>
+  <li><span class="path">Copy from Design to Runtime</span> → <span class="path">OK</span>. Les tags s’écrivent ensuite <code>{::[PLC_Exam]NomDuTag}</code>.</li>
+ </ol>
+</section>
+
+<!-- =============================================================== 3. PROGRAMME -->
+<section id="programme">
+ <h2>3. Le programme, ligne par ligne (B2 à B5)</h2>
+ <p>Seize lignes dans la routine principale, numérotées <b>0 à 15 comme dans Studio 5000</b>. D’autres solutions sont justes si le comportement est le même et si les instructions demandées sont utilisées.</p>
+ <div class="legend"><span><i></i>fil sous tension</span><span>contact ou bobine en vert = instruction vraie</span><span>( L ) OTL · ( U ) OTU</span></div>
+ <div class="note"><b>Le pupitre fait tourner ce programme.</b> Il est à droite (ou en bas sur un petit écran) : appuyez sur ses boutons et les lignes s’allument comme dans Studio 5000 en ligne.</div>
+ <div class="tip"><b>Astuce Studio 5000 :</b> double-cliquez sur le numéro d’une ligne pour taper son texte. Le bouton « Copier le texte » de chaque ligne vous le donne prêt à coller. <button class="btn sm" id="copyAll">Copier les 16 lignes</button></div>
+ <div id="rungs"></div>
+</section>
+
+<!-- =============================================================== 4. B6 -->
+<section id="b6">
+ <h2>4. B6 · L’écran FactoryTalk View ME <small>· 8 points</small></h2>
+ <div class="fig"><svg role="img" aria-label="Maquette de l'écran FactoryTalk View ME" xmlns="http://www.w3.org/2000/svg" width="700" height="270" viewBox="0 0 700 270"><rect width="700" height="270" fill="#ffffff"/><g font-family="IBM Plex Serif, serif"><rect x="8.0" y="8.0" width="684.0" height="254.0" rx="12" fill="#3B4048" stroke="#1A1A1A" stroke-width="1.5"/><rect x="26.0" y="26.0" width="648.0" height="218.0" rx="3" fill="#F7F8FA" stroke="#20242A" stroke-width="1.2"/><rect x="26.0" y="26.0" width="648.0" height="30.0" rx="0" fill="#EF8214" stroke="#EF8214" stroke-width="0"/><text x="38.0" y="46.0" font-size="12" fill="#ffffff" text-anchor="start" font-weight="bold">A34 · Mi-session · Version A — Poste de tri de colis</text><text x="40.0" y="78.0" font-size="9" fill="#5A5A5A" text-anchor="start" font-weight="bold" font-family="IBM Plex Sans, sans-serif">CAPTEURS SIMULÉS</text><rect x="42.0" y="89.0" width="130.0" height="30.0" rx="6" fill="#C9CDD3" stroke="#C9CDD3" stroke-width="0"/><rect x="40.0" y="86.0" width="130.0" height="30.0" rx="6" fill="#DCE3EA" stroke="#20242A" stroke-width="1.2"/><text x="105.0" y="106.0" font-size="11" fill="#1A1A1A" text-anchor="middle" font-weight="bold">Colis présent</text><text x="105.0" y="130.0" font-size="8.5" fill="#1A1A1A" text-anchor="middle" font-weight="normal" font-family="IBM Plex Mono, monospace">S_Colis</text><text x="105.0" y="142.0" font-size="8.5" fill="#2C6FB7" text-anchor="middle" font-weight="normal" font-style="italic">maintenu</text><rect x="186.0" y="89.0" width="130.0" height="30.0" rx="6" fill="#C9CDD3" stroke="#C9CDD3" stroke-width="0"/><rect x="184.0" y="86.0" width="130.0" height="30.0" rx="6" fill="#DCE3EA" stroke="#20242A" stroke-width="1.2"/><text x="249.0" y="106.0" font-size="11" fill="#1A1A1A" text-anchor="middle" font-weight="bold">Trop haut</text><text x="249.0" y="130.0" font-size="8.5" fill="#1A1A1A" text-anchor="middle" font-weight="normal" font-family="IBM Plex Mono, monospace">S_TropHaut</text><text x="249.0" y="142.0" font-size="8.5" fill="#2C6FB7" text-anchor="middle" font-weight="normal" font-style="italic">maintenu</text><text x="378.0" y="78.0" font-size="9" fill="#5A5A5A" text-anchor="start" font-weight="bold" font-family="IBM Plex Sans, sans-serif">COMPTEUR</text><text x="378.0" y="98.0" font-size="10" fill="#1A1A1A" text-anchor="start" font-weight="normal">Colis dans la zone</text><rect x="378.0" y="104.0" width="80.0" height="24.0" rx="2" fill="#E9ECF0" stroke="#9AA3AD" stroke-width="1.2"/><text x="450.0" y="121.0" font-size="12" fill="#1A1A1A" text-anchor="end" font-weight="normal" font-family="IBM Plex Mono, monospace">0</text><text x="466.0" y="121.0" font-size="8.5" fill="#5A5A5A" text-anchor="start" font-weight="normal" font-family="IBM Plex Mono, monospace">C_Zone.ACC</text><text x="378.0" y="142.0" font-size="8.5" fill="#2C6FB7" text-anchor="start" font-weight="normal" font-style="italic">Numeric Display</text><text x="40.0" y="178.0" font-size="9" fill="#5A5A5A" text-anchor="start" font-weight="bold" font-family="IBM Plex Sans, sans-serif">REGISTRE Suivi[0]</text><circle cx="200.0" cy="192.0" r="11" fill="#ffffff" stroke="#8A939E" stroke-width="2"/><text x="200.0" y="218.0" font-size="9" fill="#8A939E" text-anchor="middle" font-weight="normal" font-family="IBM Plex Mono, monospace">bit 0</text><circle cx="252.0" cy="192.0" r="11" fill="#ffffff" stroke="#8A939E" stroke-width="2"/><text x="252.0" y="218.0" font-size="9" fill="#8A939E" text-anchor="middle" font-weight="normal" font-family="IBM Plex Mono, monospace">bit 1</text><circle cx="304.0" cy="192.0" r="11" fill="#ffffff" stroke="#8A939E" stroke-width="2"/><text x="304.0" y="218.0" font-size="9" fill="#8A939E" text-anchor="middle" font-weight="normal" font-family="IBM Plex Mono, monospace">bit 2</text><circle cx="356.0" cy="192.0" r="11" fill="#ffffff" stroke="#8A939E" stroke-width="2"/><text x="356.0" y="218.0" font-size="9" fill="#8A939E" text-anchor="middle" font-weight="normal" font-family="IBM Plex Mono, monospace">bit 3</text><circle cx="408.0" cy="192.0" r="11" fill="#ffffff" stroke="#8A939E" stroke-width="2"/><text x="408.0" y="218.0" font-size="9" fill="#8A939E" text-anchor="middle" font-weight="normal" font-family="IBM Plex Mono, monospace">bit 4</text><circle cx="460.0" cy="192.0" r="11" fill="#ffffff" stroke="#EF8214" stroke-width="2"/><text x="460.0" y="218.0" font-size="9" fill="#EF8214" text-anchor="middle" font-weight="bold" font-family="IBM Plex Mono, monospace">bit 5</text><circle cx="512.0" cy="192.0" r="11" fill="#ffffff" stroke="#8A939E" stroke-width="2"/><text x="512.0" y="218.0" font-size="9" fill="#8A939E" text-anchor="middle" font-weight="normal" font-family="IBM Plex Mono, monospace">bit 6</text><circle cx="564.0" cy="192.0" r="11" fill="#ffffff" stroke="#8A939E" stroke-width="2"/><text x="564.0" y="218.0" font-size="9" fill="#8A939E" text-anchor="middle" font-weight="normal" font-family="IBM Plex Mono, monospace">bit 7</text><text x="460.0" y="168.0" font-size="8.5" fill="#EF8214" text-anchor="middle" font-weight="normal">éjecteur</text></g></svg></div>
+ <p class="cap">La maquette. La disposition et les couleurs sont libres ; le contenu est imposé.</p>
+ <div class="tw"><table>
+  <thead><tr><th>Objet</th><th>Où le prendre</th><th>Connexion</th><th>Réglages</th><th>Pts</th></tr></thead>
+  <tbody>
+   <tr><td><b>Colis présent</b></td><td><span class="path">Objects → Push Button → Maintained</span></td><td><span class="lbl">Value et Indicator</span><br><code>{::[PLC_Exam]S_Colis}</code></td><td>Un clic l’enfonce (1), le clic suivant le relâche (0).</td><td class="pts" rowspan="2">2</td></tr>
+   <tr><td><b>Trop haut</b></td><td>le même</td><td><span class="lbl">Value et Indicator</span><br><code>{::[PLC_Exam]S_TropHaut}</code></td><td>Même réglage.</td></tr>
+   <tr><td><b>Colis dans la zone</b></td><td><span class="path">Objects → Numeric and String → Numeric Display</span></td><td><span class="lbl">Value</span><br><code>{::[PLC_Exam]C_Zone.ACC}</code></td><td>Entier, 0 décimale. Un affichage : l’opérateur ne l’écrit pas.</td><td class="pts">2</td></tr>
+   <tr><td><b>Huit voyants du registre</b></td><td><span class="path">Objects → Indicator → Multistate Indicator</span> (×8)</td><td><span class="lbl">Indicator</span><br><code>{::[PLC_Exam]Suivi[0].0}</code><br>…<br><code>{::[PLC_Exam]Suivi[0].7}</code></td><td>Deux états : 0 = gris (case sans rejet), 1 = rouge (colis à rejeter). Le voyant du bit 5 = l’éjecteur.</td><td class="pts">4</td></tr>
+  </tbody>
+ </table></div>
+ <div class="tip"><b>Pour ne pas se tromper d’adresse :</b> prenez le tag avec le bouton « … » (Tag Browser) plutôt que de le taper. Pour copier un voyant, faites Copier / Coller, puis changez seulement le numéro du bit.</div>
+ <p>Ensuite : cet écran comme écran de démarrage (<span class="path">Project Settings → Runtime → Initial graphic</span>), puis l’essai avec <span class="path">Application → Test Application</span>.</p>
+</section>
+
+<!-- =============================================================== 5. ESSAI -->
+<section id="essai">
+ <h2>5. L’essai au poste</h2>
+ <div id="essaiBody"></div>
+</section>
+
+<!-- =============================================================== 6. ERREURS -->
+<section id="erreurs">
+ <h2>6. Les erreurs qui coûtent des points</h2>
+ <div id="errBody"></div>
+</section>
+
+<!-- =============================================================== 7. REMISE -->
+<section id="remise">
+ <h2>7. À remettre</h2>
+ <ul>
+  <li><b>Sur LÉA :</b> le projet Studio 5000 (<code>.ACD</code>), l’application FactoryTalk View exportée (<code>.apa</code>) et le PDF de votre routine.</li>
+  <li><b>Sur papier :</b> l’énoncé, avec la colonne des adresses remplie.</li>
+ </ul>
+ <h3>Imprimer la routine en PDF</h3>
+ <p><span class="path">File → Print → Routine</span> → imprimante <b>Microsoft Print to PDF</b>.</p>
+ <h3>Exporter l’application en .apa</h3>
+ <p>Dans <b>FactoryTalk View Application Manager</b> : Machine Edition → <span class="path">Archive an application</span> → choisir <code>A34_MiSession_A_VotreNom</code> → enregistrer le fichier <code>.apa</code>.</p>
+</section>
+</main>
+<footer>Bassam Kattan · 243-A34-VM · Mi-session Automne 2026 · Version A — solution du pratique</footer>
+
+<aside class="pupitre" id="pupitre">
+ <button class="pup-toggle" id="pupT">▲ Pupitre d’essai (le programme tourne ici)</button>
+ <h2>Pupitre d’essai</h2>
+ <div class="hint">Version A · Tri de colis — le programme de la solution tourne ici.</div>
+ <h3>Boutons du poste</h3>
+ <div class="bgrid">
+  <button class="pb green mom" data-tag="BP_Marche">Marche<small>BP_Marche · NO</small></button>
+  <button class="pb red mom" data-tag="BP_Arret">Arrêt<small>BP_Arret · NF (appui = 0)</small></button>
+  <button class="pb mom" data-tag="BP_Avance">Avancer<small>BP_Avance · un pas</small></button>
+  <button class="pb mom" data-tag="BP_Recul">Reculer<small>BP_Recul · un pas</small></button>
+  <button class="pb mom" data-tag="BP_Retrait">Retrait<small>BP_Retrait</small></button>
+  <button class="pb light mom" data-tag="BP_RAZ">RAZ<small>BP_RAZ</small></button>
+ </div>
+ <h3>Écran : capteurs simulés</h3>
+ <div class="bgrid">
+  <button class="pb light tog" data-tag="S_Colis" aria-pressed="false">Colis présent<small>S_Colis · maintenu</small></button>
+  <button class="pb light tog" data-tag="S_TropHaut" aria-pressed="false">Trop haut<small>S_TropHaut · maintenu</small></button>
+ </div>
+ <h3>Sorties</h3>
+ <div class="lamps" id="lamps"></div>
+ <h3>Registre Suivi[0] (bit 0 = première case)</h3>
+ <div class="reg" id="reg"></div>
+ <div class="mono" style="font-size:12px;color:var(--mut);margin-top:4px">bit 7 → bit 0 : <b id="regbin"></b></div>
+ <h3>Valeurs</h3>
+ <table class="vals" id="vals"></table>
+ <button class="btn acc" id="raz" style="width:100%">Tout remettre à zéro (comme un téléchargement)</button>
+ <div id="msg"></div>
+</aside>
+
+<script>
+"use strict";
+/* ================================================================ DONNEES DE LA VERSION A
+   Sequence d'essai : valeurs du corrige (data.py, calculees a part) ;
+   le ✓ de la page confirme que le programme donne les memes. */
+const V = {cap:["S_Colis","S_TropHaut"], avert:"H_Klaxon", tav:"T_Klaxon", pre:3000, cpt:"C_Zone", cptPre:6,
+ plein:"H_ZonePleine", eject:"YV_Ejecteur", bit:5, ok:[1,0],
+ essais:[[0,1,0,0],[1,0,0,1],[1,1,1,0],[0,0,0,0]],
+ seq:[["+",[1,0],"00000000",0,1],["+",[1,1],"00000001",0,1],["+",[1,0],"00000010",0,2],
+      ["+",[1,1],"00000101",0,2],["-",null,"00000010",0,2],["+",[1,1],"00000101",0,2],
+      ["+",[1,0],"00001010",0,3],["+",[0,0],"00010100",0,3],["+",[0,0],"00101000",1,3],
+      ["+",[0,0],"01010000",0,3],["+",[0,0],"10100000",1,3],["+",[0,0],"01000000",0,3]]};
+
+const GROUPES = {
+ B2:{id:"b2", t:"B2 · Marche, arrêt et avertisseur", pts:12,
+  p:"Une OTL met Marche à 1, une OTU la remet à 0. Le TON fait sonner le klaxon 3 s ; à la fin, le convoyeur démarre."},
+ B3:{id:"b3", t:"B3 · Bon ou à rejeter", pts:6,
+  p:"Seulement XIC, XIO et OTE. Deux contacts en série = un ET."},
+ B4:{id:"b4", t:"B4 · Avancer et reculer", pts:14,
+  p:"Le registre Suivi[0] suit les colis : un bit = une case, un 1 = un colis à rejeter dans cette case."},
+ B5:{id:"b5", t:"B5 · Compter les bons", pts:10,
+  p:"Un seul tag COUNTER, C_Zone, pour le CTU et le CTD."}
+};
+
+const PROGRAMME = [
+ {g:"B2", role:"Marche", b:["B2.1 · 3 pts"], txt:"XIC(BP_Marche)OTL(Marche);",
+  why:"Un appui sur BP_Marche met Marche à 1 avec une OTL. Pas d’auto-maintien : quand on relâche le bouton, Marche reste à 1 tout seul. C’est le travail de l’OTL."},
+ {g:"B2", role:"Arrêt", b:["B2.2 · 3 pts"], txt:"XIO(BP_Arret)OTU(Marche);",
+  why:"BP_Arret est câblé NF : il vaut 1 au repos et 0 quand on appuie. On le lit donc avec XIO, qui est vrai quand le bit vaut 0, c’est-à-dire pendant l’appui. Cette ligne est après celle de l’OTL : si on appuie sur les deux boutons, l’arrêt gagne."},
+ {g:"B2", role:"Klaxon : le temps", b:["B2.3 · 3 pts"], txt:"XIC(Marche)TON(T_Klaxon,3000,0);",
+  why:"Le TON compte 3 s (Preset 3000 ms) dès que Marche vaut 1. À l’arrêt, sa ligne devient fausse : ACC et DN reviennent à 0, prêts pour le prochain démarrage."},
+ {g:"B2", role:"Klaxon : la sortie", b:["B2.3"], txt:"XIC(Marche)XIO(T_Klaxon.DN)OTE(H_Klaxon);",
+  why:"Le klaxon sonne pendant que le TON compte : Marche ET pas encore DN. Variante juste : XIC(T_Klaxon.TT)OTE(H_Klaxon)."},
+ {g:"B2", role:"Convoyeur", b:["B2.4 · 3 pts"], txt:"XIC(Marche)XIC(T_Klaxon.DN)OTE(KM_Convoyeur);",
+  why:"À la fin des 3 s, DN passe à 1 : le klaxon se tait (ligne 3) et le convoyeur démarre. Il tourne jusqu’à l’arrêt, car DN reste à 1 tant que la ligne du TON est vraie."},
+ {g:"B3", role:"Défaut", b:["B3.1 · 2 pts"], txt:"XIC(S_Colis)XIC(S_TropHaut)OTE(Defaut);",
+  why:"Colis présent ET trop haut. Sans XIC S_Colis, la barrière seule (S_TropHaut = 1, aucun colis) deviendrait un défaut."},
+ {g:"B3", role:"Bon", b:["B3.2 · 2 pts"], txt:"XIC(S_Colis)XIO(S_TropHaut)OTE(Bon);",
+  why:"Colis présent ET pas trop haut : XIO sur S_TropHaut, vrai quand S_TropHaut vaut 0. Variante juste : XIC(S_Colis)XIO(Defaut)."},
+ {g:"B3", role:"Voyant rejet", b:["B3.3 · 2 pts"], txt:"XIC(Defaut)OTE(H_Rejet);", why:"H_Rejet montre Defaut."},
+ {g:"B3", role:"Voyant bon", b:["B3.3"], txt:"XIC(Bon)OTE(H_Bon);", why:"H_Bon montre Bon."},
+ {g:"B4", role:"Avancer : BSL", b:["B4.1 · 5 pts","B4.4"], txt:"XIC(BP_Avance)XIC(KM_Convoyeur)BSL(Suivi[0],CTL_Avance,Defaut,8);",
+  why:"Un appui sur BP_Avance, convoyeur en marche : le BSL décale Suivi[0] d’une case vers l’éjecteur. Defaut entre au bit 0 ; le bit 7 sort dans CTL_Avance.UL. Le BSL ne décale qu’au front montant de sa ligne : un appui = un pas, même si on garde le doigt sur le bouton. Pas besoin d’ONS."},
+ {g:"B4", role:"Reculer : BSR", b:["B4.2 · 5 pts","B4.4"], txt:"XIC(BP_Recul)XIC(KM_Convoyeur)BSR(Suivi[0],CTL_Recul,Zero_Bit,8);",
+  why:"Un appui sur BP_Recul, convoyeur en marche : le BSR décale d’une case vers le contrôle. Zero_Bit (toujours 0) entre au bit 7 ; le bit 0 sort dans CTL_Recul.UL. Son propre tag CONTROL : partager CTL_Avance avec le BSL ferait perdre des pas. Rien n’est compté en reculant."},
+ {g:"B4", role:"Éjecteur", b:["B4.3 · 2 pts"], txt:"XIC(Suivi[0].5)OTE(YV_Ejecteur);",
+  why:"Le bit 5 vaut 1 : le colis à rejeter est devant l’éjecteur, qui le pousse dans le bac de rejets."},
+ {g:"B5", role:"Compter les bons : CTU", b:["B5.1 · 4 pts"], txt:"XIC(BP_Avance)XIC(KM_Convoyeur)XIC(Bon)CTU(C_Zone,6,0);",
+  why:"La même condition que le BSL, plus XIC Bon : on compte seulement les colis bons qui avancent. Le CTU compte lui aussi au front montant."},
+ {g:"B5", role:"Retrait : CTD", b:["B5.2 · 2 pts"], txt:"XIC(BP_Retrait)CTD(C_Zone,6,0);",
+  why:"Le même tag COUNTER que le CTU : chaque appui retire 1 à C_Zone.ACC. ACC peut descendre sous 0 : l’empêcher n’était pas demandé."},
+ {g:"B5", role:"Zone pleine", b:["B5.3 · 2 pts"], txt:"XIC(C_Zone.DN)OTE(H_ZonePleine);",
+  why:".DN vaut 1 quand ACC ≥ Preset (6). Le convoyeur continue : seul le voyant s’allume. Un retrait (ACC = 5) l’éteint."},
+ {g:"B5", role:"Remise à zéro", b:["B5.4 · 2 pts"], txt:"XIC(BP_RAZ)RES(C_Zone);", why:"RES remet C_Zone.ACC à 0, et le bit .DN avec."}
+];
+
+/* Encadres d'explication places APRES une ligne (index) */
+const APRES = {
+ 1:`<div class="regbox"><h4>Le bouton NF, en clair</h4><div class="tw"><table>
+   <thead><tr><th></th><th>Bouton relâché</th><th>Bouton appuyé</th></tr></thead><tbody>
+   <tr><td>Contact NF</td><td>fermé</td><td>ouvert</td></tr>
+   <tr><td>Bit BP_Arret</td><td class="mono">1</td><td class="mono">0</td></tr>
+   <tr><td>XIC BP_Arret</td><td>vrai</td><td>faux</td></tr>
+   <tr><td>XIO BP_Arret</td><td>faux</td><td><b>vrai → OTU Marche</b></td></tr></tbody></table></div>
+   <p>Bonus de sécurité : si le fil se coupe, BP_Arret tombe à 0, comme un appui. Le convoyeur s’arrête.</p></div>`,
+ 4:`<div class="tip"><b>À savoir (pas noté) :</b> une OTL garde son bit. Si l’automate repasse en Run avec Marche = 1, le klaxon sonne 3 s et le convoyeur repart tout seul. En usine, on ajoute une ligne <code>XIC(S:FS)OTU(Marche);</code> : au premier balayage, Marche revient à 0.</div>`,
+ 8:`<div class="regbox"><h4>Les quatre cas à essayer</h4><div class="tw"><table>
+   <thead><tr><th>S_Colis</th><th>S_TropHaut</th><th>Defaut</th><th>Bon</th><th>Ce que ça veut dire</th></tr></thead><tbody>
+   <tr><td class="mono">0</td><td class="mono">1</td><td class="mono">0</td><td class="mono">0</td><td>barrière coupée sans colis : on l’ignore</td></tr>
+   <tr><td class="mono">1</td><td class="mono">0</td><td class="mono">0</td><td class="mono">1</td><td>colis bon</td></tr>
+   <tr><td class="mono">1</td><td class="mono">1</td><td class="mono">1</td><td class="mono">0</td><td>colis trop haut : à rejeter</td></tr>
+   <tr><td class="mono">0</td><td class="mono">0</td><td class="mono">0</td><td class="mono">0</td><td>rien devant le contrôle</td></tr></tbody></table></div></div>`,
+ 11:`<div class="regbox"><h4>BSL et BSR sur Suivi[0], Length 8</h4>
+   <p style="margin:2px 0 0"><b>BSL</b> (BP_Avance) : tout avance d’une case vers l’éjecteur.</p>
+   <div class="regx"><span class="in">Defaut</span><span class="arw">→</span><div><div class="lab"><span>b0</span><span>b1</span><span>b2</span><span>b3</span><span>b4</span><span>b5</span><span>b6</span><span>b7</span></div>
+   <div class="cells"><span>·</span><span>·</span><span>·</span><span>·</span><span>·</span><span class="b4">·</span><span>·</span><span>·</span></div></div><span class="arw">→</span><span class="out">CTL_Avance.UL</span></div>
+   <p style="margin:8px 0 0"><b>BSR</b> (BP_Recul) : tout recule d’une case vers le contrôle.</p>
+   <div class="regx"><span class="out">CTL_Recul.UL</span><span class="arw">←</span><div><div class="lab"><span>b0</span><span>b1</span><span>b2</span><span>b3</span><span>b4</span><span>b5</span><span>b6</span><span>b7</span></div>
+   <div class="cells"><span>·</span><span>·</span><span>·</span><span>·</span><span>·</span><span class="b4">·</span><span>·</span><span>·</span></div></div><span class="arw">←</span><span class="in">Zero_Bit</span></div>
+   <p style="margin:8px 0 0">Le contour orange = le bit 5, devant l’éjecteur. Les deux décalages ne marchent que si <code>KM_Convoyeur</code> vaut 1 : convoyeur arrêté, BP_Avance et BP_Recul n’ont aucun effet (B4.4).</p></div>`
+};
+
+/* ================================================================ ANALYSE DU TEXTE NEUTRE */
+function parseRung(src){
+ const s=src.replace(/;\s*$/,""); let i=0;
+ function series(){
+  const items=[];
+  while(i<s.length){
+   const c=s[i];
+   if(c==="["){ i++; items.push(par()); }
+   else if(c===","||c==="]") break;
+   else if(c===" ") i++;
+   else { const m=/^([A-Z]+)\(([^)]*)\)/.exec(s.slice(i)); if(!m) throw new Error("lecture : "+s.slice(i));
+     items.push({t:"ins",mn:m[1],args:m[2].split(",").map(x=>x.trim())}); i+=m[0].length; }
+  }
+  return {t:"ser",items};
+ }
+ function par(){ const brs=[series()]; while(s[i]===","){ i++; brs.push(series()); }
+  if(s[i]!=="]") throw new Error("] attendu"); i++; return {t:"par",brs}; }
+ return series();
+}
+
+/* ================================================================ MOTEUR (un balayage = toutes les lignes, dans l'ordre) */
+let T;
+function resetTags(){ T={bits:{BP_Arret:1,Zero_Bit:0}, timers:{}, counters:{}, controls:{}, suivi:0}; }
+function get(name){
+ let m=/^Suivi\[0\]\.(\d+)$/.exec(name); if(m) return (T.suivi>>(+m[1]))&1;
+ m=/^(\w+)\.(\w+)$/.exec(name);
+ if(m){ const o=T.timers[m[1]]||T.counters[m[1]]||T.controls[m[1]]; return o&&o[m[2]]?1:0; }
+ return T.bits[name]?1:0;
+}
+function setb(n,v){ T.bits[n]=v?1:0; }
+function ctr(n,pre){ return T.counters[n]||(T.counters[n]={PRE:pre,ACC:0,CU:0,CD:0,DN:0}); }
+function exec(n,rin,dt){
+ n.rin=rin;
+ if(n.t==="ser"){ let r=rin; for(const it of n.items) r=exec(it,r,dt); return n.out=r; }
+ if(n.t==="par"){ let any=false; for(const b of n.brs){ if(exec(b,rin,dt)) any=true; } return n.out=any; }
+ const a=n.args; let out=rin, ok=rin;
+ switch(n.mn){
+  case "XIC": ok=get(a[0])===1; out=rin&&ok; break;
+  case "XIO": ok=get(a[0])===0; out=rin&&ok; break;
+  case "OTE": setb(a[0],rin); break;
+  case "OTL": if(rin) setb(a[0],1); break;
+  case "OTU": if(rin) setb(a[0],0); break;
+  case "TON": { const tm=T.timers[a[0]]||(T.timers[a[0]]={PRE:+a[1],ACC:0,EN:0,TT:0,DN:0});
+   if(rin){ tm.EN=1; if(!tm.DN){ tm.ACC=Math.min(tm.PRE,tm.ACC+dt); if(tm.ACC>=tm.PRE) tm.DN=1; } tm.TT=tm.DN?0:1; }
+   else { tm.EN=0; tm.TT=0; tm.DN=0; tm.ACC=0; } break; }
+  case "CTU": case "CTD": { const c=ctr(a[0],+a[1]); const k=n.mn==="CTU"?"CU":"CD";
+   if(rin&&!c[k]) c.ACC+=(k==="CU"?1:-1); c[k]=rin?1:0; c.DN=c.ACC>=c.PRE?1:0; break; }
+  case "RES": { if(rin){ const c=T.counters[a[0]]; if(c){c.ACC=0;c.DN=0;}
+   const tm=T.timers[a[0]]; if(tm){tm.ACC=0;tm.DN=0;tm.TT=0;tm.EN=0;} } break; }
+  case "BSL": case "BSR": { const ct=T.controls[a[1]]||(T.controls[a[1]]={EN:0,DN:0,UL:0}); const len=+a[3];
+   if(rin&&!ct.EN){ const src=get(a[2]); const mask=(1<<len)-1;
+    if(n.mn==="BSL"){ ct.UL=(T.suivi>>(len-1))&1; T.suivi=((T.suivi<<1)&mask)|src; }
+    else { ct.UL=T.suivi&1; T.suivi=(T.suivi>>1)|(src<<(len-1)); }
+    ct.DN=1; }
+   ct.EN=rin?1:0; if(!rin) ct.DN=0; break; }
+ }
+ n.ok=ok; return n.out=out;
+}
+let PROG=[];
+function scan(dt){ for(const r of PROG) exec(r.tree,true,dt); }
+</script>
+
+<script>
+"use strict";
+/* ================================================================ DESSIN LADDER (SVG) */
+const CW=112, BW=216, PAD=18, ON="#1E9E4A", OFF="#1A1A1A", MUTC="#6A6A6A";
+const MONO="IBM Plex Mono, Consolas, monospace", SANS="IBM Plex Sans, Arial, sans-serif";
+const BOXD={TON:"Timer On Delay",CTU:"Count Up",CTD:"Count Down",BSL:"Bit Shift Left",BSR:"Bit Shift Right"};
+let GW=780;
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const isBox=mn=>mn in BOXD;
+function L_(x1,y1,x2,y2,on){return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${on?ON:OFF}" stroke-width="${on?3.4:1.8}" stroke-linecap="round"/>`;}
+function TX(x,y,s,o={}){return `<text x="${x}" y="${y}" font-size="${o.size||12.5}" fill="${o.fill||OFF}" text-anchor="${o.anchor||"middle"}" font-family="${o.font||MONO}" font-weight="${o.weight||400}">${esc(s)}</text>`;}
+function boxRows(n){
+ const a=n.args;
+ if(n.mn==="TON"){const tm=T.timers[a[0]]; return [["Timer",a[0]],["Preset",a[1]],["Accum",tm?String(Math.round(tm.ACC)):"0"]];}
+ if(n.mn==="CTU"||n.mn==="CTD"){const c=T.counters[a[0]]; return [["Counter",a[0]],["Preset",a[1]],["Accum",c?String(c.ACC):"0"]];}
+ return [["Array",a[0]],["Control",a[1]],["Source Bit",a[2]+" ("+get(a[2])+")"],["Length",a[3]]];
+}
+function boxBits(n){
+ const a=n.args;
+ if(n.mn==="TON"){const t=T.timers[a[0]]||{}; return [["EN",t.EN],["TT",t.TT],["DN",t.DN]];}
+ if(n.mn==="CTU"){const c=T.counters[a[0]]||{}; return [["CU",c.CU],["DN",c.DN]];}
+ if(n.mn==="CTD"){const c=T.counters[a[0]]||{}; return [["CD",c.CD],["DN",c.DN]];}
+ const ct=T.controls[a[1]]||{}; return [["EN",ct.EN],["DN",ct.DN],["UL",ct.UL]];
+}
+function meas(n){
+ if(n.t==="ser"){let w=0,up=0,dn=0; for(const it of n.items){const m=meas(it); w+=m.w; up=Math.max(up,m.up); dn=Math.max(dn,m.dn);} return n.m={w,up,dn};}
+ if(n.t==="par"){const ms=n.brs.map(meas); const offs=[0]; let y=0;
+  for(let k=1;k<ms.length;k++){y+=ms[k-1].dn+ms[k].up+8; offs.push(y);} n.offs=offs;
+  return n.m={w:Math.max(...ms.map(m=>m.w))+2*PAD, up:ms[0].up, dn:y+ms[ms.length-1].dn};}
+ if(isBox(n.mn)){const rows=n.mn[0]==="B"?4:3; const h=24+rows*16+26; return n.m={w:BW,up:16,dn:h-12+6};}
+ return n.m={w:CW,up:38,dn:36};
+}
+function draw(n,x,y){
+ if(n.t==="ser"){let s="",xx=x; for(const it of n.items){s+=draw(it,xx,y); xx+=it.m.w;} return s;}
+ if(n.t==="par"){
+  const xl=x+6, xr=x+n.m.w-6, yl=y+n.offs[n.offs.length-1];
+  let s=L_(x,y,xl,y,n.rin)+L_(xl,y,xl,yl,n.rin)+L_(xr,y,xr,yl,n.out)+L_(xr,y,x+n.m.w,y,n.out);
+  n.brs.forEach((b,k)=>{const yk=y+n.offs[k]; s+=L_(xl,yk,x+PAD,yk,n.rin)+draw(b,x+PAD,yk)+L_(x+PAD+b.m.w,yk,xr,yk,b.out);});
+  return s;
+ }
+ const cx=x+CW/2, a=n.args;
+ if(n.mn==="XIC"||n.mn==="XIO"){
+  const col=n.ok?ON:OFF;
+  let s=L_(x,y,cx-11,y,n.rin)+L_(cx+11,y,x+CW,y,n.out);
+  if(n.ok) s+=`<rect x="${cx-16}" y="${y-17}" width="32" height="34" rx="5" fill="#DDF3E4"/>`;
+  s+=`<line x1="${cx-11}" y1="${y-14}" x2="${cx-11}" y2="${y+14}" stroke="${col}" stroke-width="2.8"/>`;
+  s+=`<line x1="${cx+11}" y1="${y-14}" x2="${cx+11}" y2="${y+14}" stroke="${col}" stroke-width="2.8"/>`;
+  if(n.mn==="XIO") s+=`<line x1="${cx-8}" y1="${y+11}" x2="${cx+8}" y2="${y-11}" stroke="${col}" stroke-width="2.2"/>`;
+  return s+TX(cx,y-23,a[0])+TX(cx,y+31,n.mn,{size:10.5,font:SANS,fill:MUTC});
+ }
+ if(n.mn==="OTE"||n.mn==="OTL"||n.mn==="OTU"||n.mn==="RES"){
+  const res=n.mn==="RES", wd=res?24:15, on=res?n.rin:get(a[0])===1, col=on?ON:OFF;
+  let s=L_(x,y,cx-wd,y,n.rin)+L_(cx+wd,y,x+CW,y,n.out);
+  if(on) s+=`<ellipse cx="${cx}" cy="${y}" rx="${wd+6}" ry="17" fill="#DDF3E4"/>`;
+  s+=`<path d="M${cx-wd+5},${y-14} Q${cx-wd-5},${y} ${cx-wd+5},${y+14}" fill="none" stroke="${col}" stroke-width="2.6"/>`;
+  s+=`<path d="M${cx+wd-5},${y-14} Q${cx+wd+5},${y} ${cx+wd-5},${y+14}" fill="none" stroke="${col}" stroke-width="2.6"/>`;
+  const inner=n.mn==="OTL"?"L":n.mn==="OTU"?"U":res?"RES":"";
+  if(inner) s+=TX(cx,y+4.5,inner,{size:res?11:13,weight:700,fill:col});
+  return s+TX(cx,y-23,a[0])+TX(cx,y+31,n.mn,{size:10.5,font:SANS,fill:MUTC});
+ }
+ // boite
+ const x0=x+12, w0=BW-36, top=y-12, rows=boxRows(n), bits=boxBits(n), h=24+rows.length*16+26;
+ let s=L_(x,y,x0,y,n.rin)+L_(x0+w0,y,x+BW,y,n.out);
+ s+=`<rect x="${x0}" y="${top}" width="${w0}" height="${h}" fill="#fff" stroke="${n.rin?ON:OFF}" stroke-width="${n.rin?2.4:1.5}"/>`;
+ s+=`<rect x="${x0}" y="${top}" width="${w0}" height="24" fill="#FBE9E0" stroke="${n.rin?ON:OFF}" stroke-width="${n.rin?2.4:1.5}"/>`;
+ s+=TX(x0+8,top+17,n.mn,{anchor:"start",weight:700,size:13.5})+TX(x0+w0-7,top+16,BOXD[n.mn],{anchor:"end",size:9.5,font:SANS,fill:MUTC});
+ rows.forEach((r,i)=>{const yy=top+24+13+16*i; s+=TX(x0+8,yy,r[0],{anchor:"start",size:10.5,font:SANS,fill:MUTC})+TX(x0+w0-8,yy,r[1],{anchor:"end",size:11.5,weight:600});});
+ const yb=top+24+rows.length*16+16;
+ bits.forEach((bt,i)=>{const bx=x0+14+i*46; s+=`<circle cx="${bx}" cy="${yb-4}" r="5.5" fill="${bt[1]?ON:"#fff"}" stroke="${bt[1]?ON:"#9AA3AD"}" stroke-width="1.6"/>`+TX(bx+9,yb,bt[0],{anchor:"start",size:10.5,font:SANS,weight:600,fill:bt[1]?ON:MUTC});});
+ return s;
+}
+function renderRung(p){
+ const m=p.tree.m, y0=12+m.up, H=y0+m.dn+12, W=GW;
+ return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ligne ${p.i} : ${esc(p.txt)}">`+
+  `<line x1="14" y1="4" x2="14" y2="${H-4}" stroke="${OFF}" stroke-width="3.2"/><line x1="${W-14}" y1="4" x2="${W-14}" y2="${H-4}" stroke="${OFF}" stroke-width="3.2"/>`+
+  draw(p.tree,14,y0)+L_(14+m.w,y0,W-14,y0,p.tree.out)+`</svg>`;
+}
+
+/* ================================================================ PUPITRE */
+const $=s=>document.querySelector(s);
+const PRESS={};
+const rest=t=>t==="BP_Arret"?1:0;
+function press(t){ T.bits[t]=t==="BP_Arret"?0:1; PRESS[t]=performance.now(); }
+function release(t){ const el=performance.now()-(PRESS[t]||0); setTimeout(()=>{T.bits[t]=rest(t);},Math.max(0,170-el)); }
+function pulse(t,ms){ press(t); setTimeout(()=>release(t),ms||180); }
+function msg(s){ $("#msg").innerHTML=s; }
+const bin=x=>x.toString(2).padStart(8,"0");
+const fmtBin=b=>b.slice(0,4)+" "+b.slice(4);
+const LAMPES=[["KM_Convoyeur","Convoyeur",""],["H_Klaxon","Klaxon","a"],["H_Bon","Bon",""],["H_Rejet","Rejet","r"],
+ ["YV_Ejecteur","Éjecteur","r"],["H_ZonePleine","Pleine","a"]];
+function renderLive(){
+ for(const p of PROG){ const h=renderRung(p); if(h!==p.last){ p.el.innerHTML=h; p.last=h; } }
+ document.querySelectorAll("#lamps .lamp").forEach(el=>el.classList.toggle("on",get(el.dataset.tag)===1));
+ document.querySelectorAll(".pb.tog").forEach(el=>el.setAttribute("aria-pressed",get(el.dataset.tag)?"true":"false"));
+ $("#regbin").textContent=fmtBin(bin(T.suivi));
+ document.querySelectorAll("#reg div").forEach((el,i)=>{ const v=(T.suivi>>i)&1; el.classList.toggle("one",!!v); el.querySelector("b").textContent=v; });
+ const tm=T.timers.T_Klaxon||{ACC:0}, c=T.counters.C_Zone||{ACC:0,DN:0};
+ const rows=[["T_Klaxon.ACC",Math.round(tm.ACC)+" ms"],["C_Zone.ACC",c.ACC+(c.DN?" · DN":"")],
+  ["Marche",get("Marche")],["Defaut",get("Defaut")],["Bon",get("Bon")],["BP_Arret (NF)",get("BP_Arret")]];
+ const h=rows.map(x=>`<tr><td>${esc(x[0])}</td><td>${esc(x[1])}</td></tr>`).join("");
+ const vt=$("#vals"); if(vt._h!==h){ vt.innerHTML=h; vt._h=h; }
+}
+document.addEventListener("pointerdown",e=>{ const b=e.target.closest(".pb.mom"); if(!b) return; e.preventDefault();
+ try{b.setPointerCapture(e.pointerId);}catch(_){} b.classList.add("down"); press(b.dataset.tag); });
+const up=e=>{ const b=e.target.closest(".pb.mom"); if(!b||!b.classList.contains("down")) return; b.classList.remove("down"); release(b.dataset.tag); };
+document.addEventListener("pointerup",up); document.addEventListener("pointercancel",up);
+document.addEventListener("keydown",e=>{ const b=e.target.closest&&e.target.closest(".pb.mom"); if(!b||e.repeat||(e.key!=="Enter"&&e.key!==" ")) return; e.preventDefault(); b.classList.add("down"); press(b.dataset.tag); });
+document.addEventListener("keyup",e=>{ const b=e.target.closest&&e.target.closest(".pb.mom"); if(!b||(e.key!=="Enter"&&e.key!==" ")) return; b.classList.remove("down"); release(b.dataset.tag); });
+document.addEventListener("click",e=>{ const b=e.target.closest(".pb.tog"); if(b){ const t=b.dataset.tag; setb(t,!get(t)); } });
+</script>
+
+<script>
+"use strict";
+/* ================================================================ ESSAI + ERREURS */
+function renderEssai(){
+ let h=`<p>Faites ces essais sur votre poste. Les boutons <b>Essayer ici</b> et <b>Faire ce pas</b> font la même chose sur le programme de cette page : vous comparez.</p>`;
+ h+=`<h3>1. Marche, arrêt et klaxon (B2)</h3><ol>
+  <li>BP_Marche : H_Klaxon sonne 3 s, puis KM_Convoyeur démarre et reste en marche.</li>
+  <li>BP_Arret, en marche ou pendant le klaxon : tout s’arrête tout de suite.</li>
+  <li>BP_Marche et BP_Arret ensemble : rien ne démarre (l’arrêt gagne). Relâchez BP_Marche en premier.</li></ol>`;
+ h+=`<h3>2. Bon ou à rejeter (B3) — régler les deux boutons de l’écran</h3><div class="tw"><table><thead><tr><th>S_Colis</th><th>S_TropHaut</th><th>Defaut</th><th>Bon</th><th></th></tr></thead><tbody>`+
+  V.essais.map((r,i)=>`<tr>${r.map(x=>`<td class="mono">${x}</td>`).join("")}<td><button class="btn sm" data-essai="${i}">Essayer ici</button></td></tr>`).join("")+`</tbody></table></div>`;
+ h+=`<h3>3. Avancer, reculer et compter (B4, B5)</h3>
+  <p>D’abord, convoyeur arrêté : BP_Avance et BP_Recul ne doivent rien changer (B4.4). <button class="btn sm" id="arrete">Vérifier ici</button></p>
+  <p>Ensuite : remise à zéro, convoyeur en marche. À chaque ligne du tableau, réglez S_Colis et S_TropHaut (« vide » = les deux à 0), puis un appui sur le bouton indiqué.</p>
+  <p><button class="btn acc" id="prep">Préparer ici : tout remettre à zéro et démarrer</button></p>
+  <div class="tw"><table><thead><tr><th>Pas</th><th>Bouton</th><th>S_Colis / S_TropHaut</th><th>Suivi[0] après (bit 7 → bit 0)</th><th>YV_Ejecteur</th><th>C_Zone.ACC</th><th></th><th>Ici</th></tr></thead><tbody>`+
+  V.seq.map((r,i)=>`<tr><td>${i+1}</td><td class="mono">${r[0]==="+"?"BP_Avance":"BP_Recul"}</td><td class="mono">${r[1]?(r[1].join("")==="00"?"vide":r[1].join(" / ")):"— (recul)"}</td>
+   <td class="mono">${fmtBin(r[2])}</td><td class="mono">${r[3]}</td><td class="mono">${r[4]}</td>
+   <td><button class="btn sm" data-pas="${i}">Faire ce pas</button></td><td data-res="${i}"></td></tr>`).join("")+`</tbody></table></div>`;
+ const fin=V.seq[V.seq.length-1], reste=V.cptPre-fin[4];
+ h+=`<p>À la fin : C_Zone.ACC = ${fin[4]}. Après le recul (pas 5), le colis à rejeter revient au contrôle : on le renvoie, il n’est pas compté. Les deux rejets passent devant l’éjecteur à deux pas d’écart (pas 9 et 11).</p>`;
+ h+=`<h3>4. Pleine, retrait et remise à zéro (B5)</h3><ol>
+  <li>Envoyer encore ${reste} colis bons : à 6, H_ZonePleine s’allume (le convoyeur continue). <button class="btn sm" id="envoi">Envoyer un colis bon ici</button></li>
+  <li>Un appui sur BP_Retrait : C_Zone.ACC = 5, H_ZonePleine s’éteint.</li>
+  <li>BP_RAZ : C_Zone.ACC revient à 0.</li></ol>`;
+ $("#essaiBody").innerHTML=h;
+}
+function renderErr(){
+ const E=[["B2",["XIC BP_Arret devant l’OTU : le bouton NF vaut 1 au repos, Marche est remis à 0 à chaque balayage et rien ne démarre.",
+   "Un auto-maintien (XIC Marche en parallèle de BP_Marche) au lieu d’une OTL : ça marche, mais ce n’est pas ce qui était demandé.",
+   "H_Klaxon sans XIO T_Klaxon.DN : le klaxon ne se tait jamais.",
+   "KM_Convoyeur sur Marche seul : le convoyeur démarre sans attendre la fin du klaxon."]],
+  ["B3",["Oublier XIC S_Colis : une case vide devient un défaut ou un colis bon.",
+   "Defaut ou Bon écrits avec une OTL : ils restent à 1 après le passage du colis."]],
+  ["B4",["BSR avec Source Bit = Defaut au lieu de Zero_Bit.",
+   "Un seul tag CONTROL pour le BSL et le BSR : des pas sont perdus.",
+   "Pas de XIC KM_Convoyeur : le registre bouge convoyeur arrêté.",
+   "Éjecteur sur le mauvais bit : c’est Suivi[0].5.",
+   "Un ONS devant le BSL n’est pas faux, mais il est inutile : le BSL réagit déjà au front montant."]],
+  ["B5",["CTU sans la condition Bon : tous les colis sont comptés.",
+   "Un CTU aussi sur BP_Recul : la marche arrière compte des colis.",
+   "Deux tags COUNTER différents pour le CTU et le CTD : le retrait ne baisse pas le bon compteur.",
+   "Le voyant « pleine » fait avec une comparaison au lieu du bit .DN : ce qui était demandé, c’est le .DN."]],
+  ["B6",["Capteurs en Momentary Push Button : le capteur retombe à 0 dès qu’on lâche le bouton.",
+   "Un Numeric Input au lieu d’un Numeric Display : l’opérateur pourrait écrire dans le compteur.",
+   "Voyants du registre mal adressés : il faut {::[PLC_Exam]Suivi[0].0} à {::[PLC_Exam]Suivi[0].7}."]]];
+ $("#errBody").innerHTML=E.map(([p,l])=>`<h3>${p}</h3><ul>${l.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`).join("");
+}
+
+/* ================================================================ CONSTRUCTION */
+function build(){
+ PROG=PROGRAMME.map((p,i)=>Object.assign({},p,{i,tree:parseRung(p.txt)}));
+ PROG.forEach(p=>meas(p.tree));
+ GW=Math.max(780,...PROG.map(p=>p.tree.m.w+70));
+ resetTags();
+ let h="", g0="";
+ PROG.forEach((p,i)=>{
+  if(p.g!==g0){ const G=GROUPES[p.g]; if(G && !G.done){ h+=`<div class="grp" id="${G.id}"><h3>${esc(G.t)} · ${G.pts} points</h3><p>${esc(G.p)}</p></div>`; G.done=1; } g0=p.g; }
+  h+=`<div class="rung"><div class="rh"><span class="num">${i}</span><b>${esc(p.role)}</b>${p.b.map(x=>`<span class="bdg">${x}</span>`).join("")}<button class="btn sm" data-copy="${i}">Copier le texte</button></div><div class="svgw" id="rg${i}"></div><code>${esc(p.txt)}</code><p>${esc(p.why)}</p></div>`;
+  if(APRES[i]) h+=APRES[i];
+ });
+ $("#rungs").innerHTML=h;
+ PROG.forEach((p,i)=>{p.el=document.getElementById("rg"+i); p.last="";});
+ $("#lamps").innerHTML=LAMPES.map(([t,l,c])=>`<div class="lamp ${c}" data-tag="${t}"><b></b><span>${esc(l)}<br><span class="mono">${t}</span></span></div>`).join("");
+ $("#reg").innerHTML=[0,1,2,3,4,5,6,7].map(i=>`<div class="${i===V.bit?"ej":""}">b${i}<b>0</b></div>`).join("");
+ renderEssai(); renderErr(); msg("");
+ scan(0); renderLive();
+}
+function copier(t,btn,lab){
+ const done=()=>{btn.textContent="Copié ✓"; setTimeout(()=>btn.textContent=lab,1200);};
+ try{ navigator.clipboard.writeText(t).then(done,()=>{}); }catch(_){}
+}
+document.addEventListener("click",e=>{
+ const cp=e.target.closest("[data-copy]"); if(cp){ copier(PROG[+cp.dataset.copy].txt,cp,"Copier le texte"); return; }
+ if(e.target.id==="copyAll"){ copier(PROG.map(p=>p.txt).join("\n"),e.target,"Copier les 16 lignes"); return; }
+ const es=e.target.closest("[data-essai]"); if(es){ const r=V.essais[+es.dataset.essai]; V.cap.forEach((c,k)=>setb(c,r[k]));
+  msg(`Capteurs réglés : S_Colis = ${r[0]}, S_TropHaut = ${r[1]}. Attendu : Defaut = ${r[2]}, Bon = ${r[3]}.`); return; }
+ if(e.target.id==="prep"){ resetTags(); document.querySelectorAll("[data-res]").forEach(c=>c.innerHTML="");
+  setTimeout(()=>pulse("BP_Marche",200),60); msg("Klaxon 3 s, puis le convoyeur démarre. Faites ensuite les pas dans l’ordre."); return; }
+ const ps=e.target.closest("[data-pas]"); if(ps){ doStep(+ps.dataset.pas); return; }
+ if(e.target.id==="envoi"){ if(!get("KM_Convoyeur")){ msg("Le convoyeur est arrêté : BP_Avance n’a pas d’effet. Cliquez d’abord sur « Préparer ici »."); return; }
+  V.cap.forEach((c,k)=>setb(c,V.ok[k])); setTimeout(()=>pulse("BP_Avance",180),60); return; }
+ if(e.target.id==="arrete"){ resetTags(); document.querySelectorAll("[data-res]").forEach(c=>c.innerHTML=""); V.cap.forEach(c=>setb(c,1));
+  setTimeout(()=>pulse("BP_Avance",180),60); setTimeout(()=>pulse("BP_Recul",180),420);
+  setTimeout(()=>{ const c=(T.counters.C_Zone||{ACC:0}).ACC; msg(T.suivi===0&&c===0?`<span class="ok">✓</span> Convoyeur arrêté : le registre reste à 0000 0000 et C_Zone.ACC à 0.`:`<span class="ko">✗</span> Le registre a bougé alors que le convoyeur est arrêté.`); },900); return; }
+ if(e.target.id==="raz"){ resetTags(); msg("Tout est remis à zéro."); return; }
+ if(e.target.id==="pupT"){ $("#pupitre").classList.toggle("open"); return; }
+});
+function doStep(i){
+ const r=V.seq[i], cell=document.querySelector(`[data-res="${i}"]`);
+ if(!get("KM_Convoyeur")){ msg("Le convoyeur est arrêté : cliquez d’abord sur « Préparer ici » et attendez la fin du klaxon."); cell.innerHTML='<span class="ko">convoyeur arrêté</span>'; return; }
+ if(r[1]) V.cap.forEach((c,k)=>setb(c,r[1][k]));
+ const bt=r[0]==="-"?"BP_Recul":"BP_Avance";
+ setTimeout(()=>pulse(bt,180),80);
+ setTimeout(()=>{ const got=[bin(T.suivi),get(V.eject),(T.counters.C_Zone||{ACC:0}).ACC];
+  const ok=got.every((g,k)=>String(g)===String(r[k+2]));
+  cell.innerHTML=ok?'<span class="ok">✓ pareil</span>':`<span class="ko">✗ ${fmtBin(got[0])} · ${got[1]} · ${got[2]}</span>`; },650);
+}
+
+/* ================================================================ BOUCLE */
+let last=performance.now(), loop=null;
+function start(){ if(loop) return; last=performance.now(); loop=setInterval(()=>{ const now=performance.now(); const dt=Math.min(200,now-last); last=now; scan(dt); renderLive(); },50); }
+function stop(){ clearInterval(loop); loop=null; }
+window.SIM={build,resetTags,set:setb,get,scan,stop,start,renderLive,T:()=>T,PROG:()=>PROG,press,release};
+build(); start();
+</script>
+</body>
+</html>
