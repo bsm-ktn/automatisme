@@ -1,0 +1,698 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Examen final · Solution du pratique</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600;700&family=IBM+Plex+Serif:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--acc:#EF8214;--sec:#2F7D5B;--ink:#1A1A1A;--mut:#5A5A5A;--paper:#FCFBF8;--rule:#E2DED6;--soft:#FBE9E0;
+--head:#F3ECE7;--zeb:#FAF7F3;--on:#1E9E4A;--onsoft:#DDF3E4;--red:#C0392B;--amb:#E08A00;--blu:#2C6FB7;--cmt:#FFF8D9;--cire:#C99A06}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:56px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Serif',Cambria,serif;font-size:16px;line-height:1.5;
+font-variant-numeric:lining-nums tabular-nums;padding-right:360px}
+code,.mono{font-family:'IBM Plex Mono',Consolas,monospace}
+.wrap{max-width:1000px;margin:0 auto;padding:0 18px}
+header.top{background:#fff;border-bottom:3px solid var(--acc)}
+header.top .wrap{padding-top:18px;padding-bottom:14px}
+.kick{font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+h1{font-size:30px;line-height:1.15;margin:4px 0 4px}
+.sub{margin:0 0 10px;color:var(--mut)}
+.sub strong{color:var(--red)}
+.fig{margin:6px 0 0;overflow-x:auto}
+.fig svg{display:block;width:100%;max-width:760px;height:auto}
+.fig figcaption{font-size:13.5px;color:var(--mut);margin-top:2px}
+nav.nav{position:sticky;top:0;z-index:10;background:var(--paper);border-bottom:1px solid var(--rule)}
+nav.nav .wrap{display:flex;gap:18px;overflow-x:auto;padding-top:10px;padding-bottom:10px;white-space:nowrap}
+nav.nav a{font:600 14px 'IBM Plex Sans',sans-serif;color:var(--sec);text-decoration:none}
+nav.nav a:hover{text-decoration:underline}
+section{padding:22px 0 8px}
+h2{font-size:23px;color:var(--acc);border-bottom:1.5px solid var(--rule);padding-bottom:4px;margin:6px 0 12px}
+h3{font-size:17px;color:var(--sec);margin:18px 0 6px}
+p{margin:0 0 10px}
+.note{background:var(--soft);border-left:4px solid var(--sec);padding:10px 14px;margin:10px 0;border-radius:0 6px 6px 0}
+table{border-collapse:collapse;width:100%;margin:8px 0 14px;font-size:14.5px}
+th{background:var(--head);color:var(--mut);font:700 12px 'IBM Plex Sans',sans-serif;text-transform:uppercase;letter-spacing:.04em;text-align:left;padding:7px 8px;border-bottom:1px solid var(--rule)}
+th.nc{text-transform:none;letter-spacing:0;font-size:12.5px}
+td{padding:6px 8px;border-bottom:1px solid var(--rule);vertical-align:middle}
+tr:nth-child(even) td{background:var(--zeb)}
+td.rep{color:var(--red);font-weight:600}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:8px 0 14px}
+.tw table{margin:0}
+.btn{font:600 14px 'IBM Plex Sans',sans-serif;padding:7px 12px;border:1.5px solid var(--sec);background:#fff;color:var(--sec);border-radius:6px;cursor:pointer}
+.btn:hover{background:var(--sec);color:#fff}
+.btn.acc{border-color:var(--acc);color:var(--acc)} .btn.acc:hover{background:var(--acc);color:#fff}
+.btn.sm{padding:3px 9px;font-size:12.5px}
+.ok{color:var(--on);font-weight:700}.ko{color:var(--red);font-weight:700}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font:14px 'IBM Plex Sans',sans-serif;color:var(--mut);margin:6px 0 10px}
+.legend i{display:inline-block;width:26px;height:4px;background:var(--on);vertical-align:middle;margin-right:6px;border-radius:2px}
+.legend em{font-style:normal;color:var(--blu);font-family:'IBM Plex Mono',monospace}
+.task{margin:26px 0 6px;display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.task h3{margin:0;font-size:19px;color:var(--ink)}
+.task span{font:700 14px 'IBM Plex Sans',sans-serif;color:var(--acc)}
+.rung{background:#fff;border:1px solid var(--rule);border-radius:8px;margin:12px 0;padding:10px 12px;break-inside:avoid}
+.rh{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin-bottom:4px}
+.num{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;padding:0 7px;border-radius:14px;background:var(--acc);color:#fff;font:700 13px 'IBM Plex Sans',sans-serif;white-space:nowrap}
+.rh b{font:700 16px 'IBM Plex Sans',sans-serif}
+.bdg{font:600 12px 'IBM Plex Sans',sans-serif;background:var(--soft);color:#8a4a07;border-radius:10px;padding:2px 8px}
+.rh .btn{margin-left:auto}
+.cmt{background:var(--cmt);border:1px solid #E9D98A;border-radius:4px;font:600 13.5px 'IBM Plex Mono',monospace;color:#5b4a00;padding:4px 10px;margin:4px 0 6px;display:inline-block}
+.svgw{overflow-x:auto}
+.svgw svg{display:block;width:100%;height:auto}
+.rung code{display:block;font-size:12.5px;background:var(--zeb);border:1px solid var(--rule);border-radius:5px;padding:6px 8px;margin:6px 0;overflow-wrap:anywhere}
+.rung p{font-size:15px;margin:4px 0 2px}
+.rung p.acc{font-size:14px;color:#7a3d00}
+.rung p.acc b{font-family:'IBM Plex Sans',sans-serif}
+.gtools{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;background:#fff;border:1px solid var(--rule);border-radius:8px;padding:10px 14px;position:sticky;top:44px;z-index:5}
+.gtools input[type=text]{font:15px 'IBM Plex Sans',sans-serif;padding:6px 8px;border:1px solid var(--rule);border-radius:5px;width:220px;max-width:100%}
+.gtools label{font:600 14px 'IBM Plex Sans',sans-serif}
+.total{margin-left:auto;font:700 20px 'IBM Plex Sans',sans-serif;color:var(--acc)}
+.total small{display:block;font-size:12px;color:var(--mut);font-weight:400;text-align:right}
+.gpart{background:#fff;border:1px solid var(--rule);border-radius:8px;margin:12px 0;overflow:hidden}
+.gpart .gh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;background:var(--head);padding:8px 14px;font:700 15px 'IBM Plex Sans',sans-serif}
+.gpart .gh span{color:var(--acc);white-space:nowrap}
+.gitem{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;padding:8px 14px;border-top:1px solid var(--rule)}
+.gitem .t{font-size:15px}
+.gitem .t small{display:block;color:#7a3d00;font-size:13px;line-height:1.35;margin-top:2px}
+.seg{display:flex;border:1.5px solid var(--sec);border-radius:6px;overflow:hidden;flex-wrap:nowrap}
+.seg button{font:600 13px 'IBM Plex Sans',sans-serif;border:0;background:#fff;color:var(--sec);padding:6px 9px;cursor:pointer;min-width:36px}
+.seg button+button{border-left:1px solid var(--sec)}
+.seg button.on{background:var(--sec);color:#fff}
+.seg button.on.z{background:var(--red)}
+.chk{display:flex;flex-wrap:wrap;gap:4px}
+.chk button{font:600 12.5px 'IBM Plex Sans',sans-serif;width:34px;height:30px;border:1.5px solid var(--sec);background:#fff;color:var(--sec);border-radius:6px;cursor:pointer}
+.chk button.on{background:var(--sec);color:#fff}
+.pupitre{position:fixed;top:0;right:0;width:360px;height:100vh;overflow:auto;background:#fff;border-left:1px solid var(--rule);padding:12px 16px 30px;z-index:30;font-family:'IBM Plex Sans',sans-serif}
+.pupitre h2{font-size:19px;margin:2px 0 2px;border:0;padding:0}
+.pupitre .hint{font-size:13px;color:var(--mut);margin-bottom:4px;line-height:1.35}
+.pupitre h3{font-size:12.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--acc);margin:14px 0 6px;border-top:1px solid var(--rule);padding-top:10px}
+.pup-toggle{display:none}
+.field{display:grid;grid-template-columns:1fr 112px;gap:6px;align-items:center;margin:4px 0}
+.field label{font:600 13px 'IBM Plex Mono',monospace;overflow:hidden;text-overflow:ellipsis}
+.field input{font:600 14px 'IBM Plex Mono',monospace;padding:5px 7px;border:1.5px solid #9AA3AD;border-radius:5px;width:100%;text-align:right}
+.field input:focus{outline:2px solid var(--acc);border-color:var(--acc)}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin:2px 0 6px}
+.chips button{font:600 12px 'IBM Plex Mono',monospace;padding:3px 9px;border:1px solid var(--rule);background:var(--zeb);border-radius:12px;cursor:pointer;color:var(--ink)}
+.chips button:hover{border-color:var(--acc)}
+.bgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.pb{font:600 14px 'IBM Plex Sans',sans-serif;padding:9px 6px;border-radius:7px;border:1.5px solid #20242A;background:#5B6B7F;color:#fff;cursor:pointer;user-select:none;-webkit-user-select:none;line-height:1.15}
+.pb small{display:block;font-weight:400;font-size:11px;opacity:.88}
+.pb.green{background:#2E8540}.pb.light{background:#DCE3EA;color:var(--ink)}
+.pb.wide{grid-column:1/-1}
+.pb.flash{box-shadow:inset 0 0 0 3px #FFD54A;filter:brightness(.9)}
+.pb.tog[aria-pressed=true]{background:var(--sec);color:#fff;box-shadow:inset 0 0 0 3px #FFD54A}
+.lamps{display:grid;grid-template-columns:1fr 1fr;gap:5px 8px;font-size:13px;margin-top:6px}
+.lamp{display:flex;align-items:center;gap:7px;min-width:0}
+.lamp b{width:16px;height:16px;border-radius:50%;border:2px solid #9AA3AD;background:#fff;flex:none}
+.lamp.on b{background:var(--on);border-color:var(--on);box-shadow:0 0 8px var(--on)}
+.lamp.on.r b{background:var(--red);border-color:var(--red);box-shadow:0 0 8px var(--red)}
+.lamp.on.y b{background:var(--cire);border-color:var(--cire);box-shadow:0 0 8px var(--cire)}
+.lamp .mono{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vals{width:100%;font-size:13px;margin:4px 0 6px}
+.vals td{padding:3px 4px}
+.vals td:first-child{font-family:'IBM Plex Mono',monospace;font-size:12.5px}
+.vals td:last-child{text-align:right;font:600 13px 'IBM Plex Mono',monospace;color:var(--blu)}
+.speed{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--mut);margin:8px 0 2px}
+.bar{height:8px;background:#E4E8EC;border-radius:4px;overflow:hidden;margin:2px 0 6px}
+.bar i{display:block;height:100%;width:0;background:var(--blu)}
+.reg{display:grid;grid-template-columns:repeat(8,1fr);gap:3px;text-align:center;font-size:10.5px;color:var(--mut)}
+.reg div b{display:block;border:1.5px solid #9AA3AD;border-radius:4px;padding:3px 0;font:600 14px 'IBM Plex Mono',monospace;color:var(--ink)}
+.reg div.one b{background:var(--cire);border-color:var(--cire);color:#fff}
+.reg div.ej b{outline:2px solid var(--acc);outline-offset:1px}
+#msg{font-size:13px;color:var(--sec);min-height:18px;margin-top:8px}
+footer{color:var(--mut);font-size:13px;text-align:center;padding:30px 0}
+@media (max-width:1150px){
+ body{padding-right:0;padding-bottom:60px}
+ .pupitre{top:auto;bottom:0;left:0;width:auto;height:54px;overflow:hidden;border-left:0;border-top:3px solid var(--acc);padding-top:0;box-shadow:0 -4px 14px rgba(0,0,0,.12)}
+ .pupitre.open{height:74vh;overflow:auto}
+ .pup-toggle{display:block;width:100%;font:700 15px 'IBM Plex Sans',sans-serif;background:#fff;border:0;color:var(--acc);padding:15px 0;cursor:pointer;text-align:left;position:sticky;top:0;z-index:2}
+}
+@media (max-width:600px){.svgw svg{min-width:640px}h1{font-size:24px}.total{margin-left:0}.gitem{grid-template-columns:1fr}.gtools{position:static}.rh .btn{margin-left:0}}
+@media print{.pupitre,nav.nav,.btn,.gtools button{display:none!important}body{padding:0}.gtools{position:static}.rung{page-break-inside:avoid}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+ <div class="kick">243-743-MA · Automatismes avancés · Groupe 25628 · Automne 2026</div>
+ <h1>Examen final — solution du pratique, en ladder</h1>
+ <p class="sub">Le lave-auto · Partie B sur 70. <strong>Enseignant seulement : ne pas distribuer avant la fin de l’examen.</strong> · Bassam Kattan</p>
+ <figure class="fig"><svg role="img" aria-label="Le lave-auto : forfait, file d’attente, prélavage, tunnel à 8 positions, arche de cire à la position 5" xmlns="http://www.w3.org/2000/svg" width="760" height="360" viewBox="0 0 760 360"><rect width="760" height="360" fill="#ffffff"/><g font-family="IBM Plex Serif, serif"><rect x="14" y="30" width="92" height="80" rx="8" fill="#E7F2FB" stroke="#003E7E" stroke-width="1.8"/><text x="60" y="52" font-size="12.5" fill="#003E7E" text-anchor="middle" font-weight="bold">Forfait</text><rect x="30" y="60" width="60" height="20" rx="2" fill="#ffffff" stroke="#1A1A1A" stroke-width="1"/><text x="60" y="74" font-size="10" fill="#0079C2" text-anchor="middle" font-weight="bold">Choix : 3</text><text x="60" y="98" font-size="10" fill="#57616B" text-anchor="middle" font-weight="normal">(tâche 1)</text><line x1="120" y1="128" x2="480" y2="128" stroke="#1A1A1A" stroke-width="2.5"/><path d="M153,122 L153,113 Q154,110 159,110 L165,110 L170,102 L184,102 L190,110 L194,110 Q197,111 197,115 L197,122 Z" fill="#7F96AD" stroke="#1A1A1A" stroke-width="1"/><path d="M168,110 L171.5,104.5 L176,104.5 L176,110 Z" fill="#DCEBF7"/><path d="M178,110 L178,104.5 L183,104.5 L187,110 Z" fill="#DCEBF7"/><circle cx="163" cy="123" r="5" fill="#2B2B2B"/><circle cx="163" cy="123" r="2" fill="#BFC7CF"/><circle cx="187" cy="123" r="5" fill="#2B2B2B"/><circle cx="187" cy="123" r="2" fill="#BFC7CF"/><path d="M213,122 L213,113 Q214,110 219,110 L225,110 L230,102 L244,102 L250,110 L254,110 Q257,111 257,115 L257,122 Z" fill="#7F96AD" stroke="#1A1A1A" stroke-width="1"/><path d="M228,110 L231.5,104.5 L236,104.5 L236,110 Z" fill="#DCEBF7"/><path d="M238,110 L238,104.5 L243,104.5 L247,110 Z" fill="#DCEBF7"/><circle cx="223" cy="123" r="5" fill="#2B2B2B"/><circle cx="223" cy="123" r="2" fill="#BFC7CF"/><circle cx="247" cy="123" r="5" fill="#2B2B2B"/><circle cx="247" cy="123" r="2" fill="#BFC7CF"/><path d="M273,122 L273,113 Q274,110 279,110 L285,110 L290,102 L304,102 L310,110 L314,110 Q317,111 317,115 L317,122 Z" fill="#7F96AD" stroke="#1A1A1A" stroke-width="1"/><path d="M288,110 L291.5,104.5 L296,104.5 L296,110 Z" fill="#DCEBF7"/><path d="M298,110 L298,104.5 L303,104.5 L307,110 Z" fill="#DCEBF7"/><circle cx="283" cy="123" r="5" fill="#2B2B2B"/><circle cx="283" cy="123" r="2" fill="#BFC7CF"/><circle cx="307" cy="123" r="5" fill="#2B2B2B"/><circle cx="307" cy="123" r="2" fill="#BFC7CF"/><line x1="140" y1="62" x2="140" y2="128" stroke="#B03A2E" stroke-width="1.6" stroke-dasharray="4 3"/><rect x="136" y="54" width="8" height="8" rx="1" fill="#B03A2E" stroke="#B03A2E" stroke-width="1"/><text x="140" y="50" font-size="10" fill="#B03A2E" text-anchor="middle" font-weight="bold">Cel_Entree</text><line x1="338" y1="62" x2="338" y2="128" stroke="#B03A2E" stroke-width="1.6" stroke-dasharray="4 3"/><rect x="334" y="54" width="8" height="8" rx="1" fill="#B03A2E" stroke="#B03A2E" stroke-width="1"/><text x="338" y="50" font-size="10" fill="#B03A2E" text-anchor="middle" font-weight="bold">Cel_Tunnel</text><text x="239" y="150" font-size="11" fill="#003E7E" text-anchor="middle" font-weight="bold">File d’attente : Cpt_File (tâche 3)</text><rect x="380" y="48" width="8" height="80" rx="1" fill="#8A99A8" stroke="#1A1A1A" stroke-width="1"/><rect x="452" y="48" width="8" height="80" rx="1" fill="#8A99A8" stroke="#1A1A1A" stroke-width="1"/><rect x="380" y="44" width="80" height="10" rx="2" fill="#8A99A8" stroke="#1A1A1A" stroke-width="1"/><line x1="396" y1="56" x2="393" y2="92" stroke="#4FA3D9" stroke-width="2" stroke-dasharray="3 3"/><line x1="408" y1="56" x2="405" y2="92" stroke="#4FA3D9" stroke-width="2" stroke-dasharray="3 3"/><line x1="420" y1="56" x2="417" y2="92" stroke="#4FA3D9" stroke-width="2" stroke-dasharray="3 3"/><line x1="432" y1="56" x2="429" y2="92" stroke="#4FA3D9" stroke-width="2" stroke-dasharray="3 3"/><line x1="444" y1="56" x2="441" y2="92" stroke="#4FA3D9" stroke-width="2" stroke-dasharray="3 3"/><path d="M398,122 L398,113 Q399,110 404,110 L410,110 L415,102 L429,102 L435,110 L439,110 Q442,111 442,115 L442,122 Z" fill="#5B7A99" stroke="#1A1A1A" stroke-width="1"/><path d="M413,110 L416.5,104.5 L421,104.5 L421,110 Z" fill="#DCEBF7"/><path d="M423,110 L423,104.5 L428,104.5 L432,110 Z" fill="#DCEBF7"/><circle cx="408" cy="123" r="5" fill="#2B2B2B"/><circle cx="408" cy="123" r="2" fill="#BFC7CF"/><circle cx="432" cy="123" r="5" fill="#2B2B2B"/><circle cx="432" cy="123" r="2" fill="#BFC7CF"/><circle cx="420" cy="24" r="11" fill="#ffffff" stroke="#003E7E" stroke-width="1.6"/><path d="M420,24 L429,20 L428,28 Z" fill="#003E7E" transform="rotate(0 420 24)"/><path d="M420,24 L429,20 L428,28 Z" fill="#003E7E" transform="rotate(120 420 24)"/><path d="M420,24 L429,20 L428,28 Z" fill="#003E7E" transform="rotate(240 420 24)"/><text x="436" y="28" font-size="10.5" fill="#003E7E" text-anchor="start" font-weight="bold">Extracteur</text><text x="420" y="150" font-size="11" fill="#003E7E" text-anchor="middle" font-weight="bold">Prélavage : Jets (tâche 2)</text><text x="420" y="164" font-size="10" fill="#0079C2" text-anchor="middle" font-weight="bold">Voiture_En_Place</text><path d="M500,114 L560,114 L560,188 L110,188 L110,212" fill="none" stroke="#57616B" stroke-width="1.4" stroke-dasharray="5 4"/><path d="M104,206 L110,216 L116,206 Z" fill="#57616B"/><text x="568" y="118" font-size="10" fill="#57616B" text-anchor="start" font-weight="normal">la chaîne prend la voiture</text><rect x="116" y="210" width="516" height="6" rx="2" fill="#8A99A8" stroke="#1A1A1A" stroke-width="1"/><line x1="116" y1="268" x2="632" y2="268" stroke="#1A1A1A" stroke-width="2.5"/><rect x="116" y="268" width="516" height="7" rx="3" fill="#DDE6EE" stroke="#1A1A1A" stroke-width="1"/><path d="M128,262 L128,253 Q129,250 134,250 L140,250 L145,242 L159,242 L165,250 L169,250 Q172,251 172,255 L172,262 Z" fill="#5B7A99" stroke="#1A1A1A" stroke-width="1"/><path d="M143,250 L146.5,244.5 L151,244.5 L151,250 Z" fill="#DCEBF7"/><path d="M153,250 L153,244.5 L158,244.5 L162,250 Z" fill="#DCEBF7"/><circle cx="138" cy="263" r="5" fill="#2B2B2B"/><circle cx="138" cy="263" r="2" fill="#BFC7CF"/><circle cx="162" cy="263" r="5" fill="#2B2B2B"/><circle cx="162" cy="263" r="2" fill="#BFC7CF"/><path d="M256,262 L256,253 Q257,250 262,250 L268,250 L273,242 L287,242 L293,250 L297,250 Q300,251 300,255 L300,262 Z" fill="#3E6A8F" stroke="#1A1A1A" stroke-width="1"/><path d="M271,250 L274.5,244.5 L279,244.5 L279,250 Z" fill="#DCEBF7"/><path d="M281,250 L281,244.5 L286,244.5 L290,250 Z" fill="#DCEBF7"/><circle cx="266" cy="263" r="5" fill="#2B2B2B"/><circle cx="266" cy="263" r="2" fill="#BFC7CF"/><circle cx="290" cy="263" r="5" fill="#2B2B2B"/><circle cx="290" cy="263" r="2" fill="#BFC7CF"/><circle cx="278" cy="254" r="25" fill="none" stroke="#C99A06" stroke-width="2.4" stroke-dasharray="5 3"/><path d="M320,262 L320,253 Q321,250 326,250 L332,250 L337,242 L351,242 L357,250 L361,250 Q364,251 364,255 L364,262 Z" fill="#5B7A99" stroke="#1A1A1A" stroke-width="1"/><path d="M335,250 L338.5,244.5 L343,244.5 L343,250 Z" fill="#DCEBF7"/><path d="M345,250 L345,244.5 L350,244.5 L354,250 Z" fill="#DCEBF7"/><circle cx="330" cy="263" r="5" fill="#2B2B2B"/><circle cx="330" cy="263" r="2" fill="#BFC7CF"/><circle cx="354" cy="263" r="5" fill="#2B2B2B"/><circle cx="354" cy="263" r="2" fill="#BFC7CF"/><path d="M448,262 L448,253 Q449,250 454,250 L460,250 L465,242 L479,242 L485,250 L489,250 Q492,251 492,255 L492,262 Z" fill="#3E6A8F" stroke="#1A1A1A" stroke-width="1"/><path d="M463,250 L466.5,244.5 L471,244.5 L471,250 Z" fill="#DCEBF7"/><path d="M473,250 L473,244.5 L478,244.5 L482,250 Z" fill="#DCEBF7"/><circle cx="458" cy="263" r="5" fill="#2B2B2B"/><circle cx="458" cy="263" r="2" fill="#BFC7CF"/><circle cx="482" cy="263" r="5" fill="#2B2B2B"/><circle cx="482" cy="263" r="2" fill="#BFC7CF"/><circle cx="470" cy="254" r="25" fill="none" stroke="#C99A06" stroke-width="2.4" stroke-dasharray="5 3"/><path d="M512,262 L512,253 Q513,250 518,250 L524,250 L529,242 L543,242 L549,250 L553,250 Q556,251 556,255 L556,262 Z" fill="#5B7A99" stroke="#1A1A1A" stroke-width="1"/><path d="M527,250 L530.5,244.5 L535,244.5 L535,250 Z" fill="#DCEBF7"/><path d="M537,250 L537,244.5 L542,244.5 L546,250 Z" fill="#DCEBF7"/><circle cx="522" cy="263" r="5" fill="#2B2B2B"/><circle cx="522" cy="263" r="2" fill="#BFC7CF"/><circle cx="546" cy="263" r="5" fill="#2B2B2B"/><circle cx="546" cy="263" r="2" fill="#BFC7CF"/><rect x="444" y="216" width="52" height="8" rx="2" fill="#C99A06" stroke="#1A1A1A" stroke-width="1"/><line x1="455" y1="225" x2="454" y2="236" stroke="#C99A06" stroke-width="2.2" stroke-dasharray="2 2"/><line x1="465" y1="225" x2="464" y2="236" stroke="#C99A06" stroke-width="2.2" stroke-dasharray="2 2"/><line x1="475" y1="225" x2="474" y2="236" stroke="#C99A06" stroke-width="2.2" stroke-dasharray="2 2"/><line x1="485" y1="225" x2="484" y2="236" stroke="#C99A06" stroke-width="2.2" stroke-dasharray="2 2"/><text x="470" y="206" font-size="11" fill="#8A6A00" text-anchor="middle" font-weight="bold">Arche_Cire (position 5)</text><text x="110" y="236" font-size="10.5" fill="#1A1A1A" text-anchor="end" font-weight="normal">Pas_Chaine →</text><rect x="126" y="290" width="48" height="24" rx="3" fill="#ffffff" stroke="#0079C2" stroke-width="1.4"/><text x="150" y="307" font-size="13" fill="#0079C2" text-anchor="middle" font-weight="bold">0</text><text x="150" y="328" font-size="10" fill="#57616B" text-anchor="middle" font-weight="normal">bit 0</text><rect x="190" y="290" width="48" height="24" rx="3" fill="#ffffff" stroke="#0079C2" stroke-width="1.4"/><text x="214" y="307" font-size="13" fill="#0079C2" text-anchor="middle" font-weight="bold">0</text><text x="214" y="328" font-size="10" fill="#57616B" text-anchor="middle" font-weight="normal">bit 1</text><rect x="254" y="290" width="48" height="24" rx="3" fill="#C99A06" stroke="#C99A06" stroke-width="1.4"/><text x="278" y="307" font-size="13" fill="#ffffff" text-anchor="middle" font-weight="bold">1</text><text x="278" y="328" font-size="10" fill="#57616B" text-anchor="middle" font-weight="normal">bit 2</text><rect x="318" y="290" width="48" height="24" rx="3" fill="#ffffff" stroke="#0079C2" stroke-width="1.4"/><text x="342" y="307" font-size="13" fill="#0079C2" text-anchor="middle" font-weight="bold">0</text><text x="342" y="328" font-size="10" fill="#57616B" text-anchor="middle" font-weight="normal">bit 3</text><rect x="382" y="290" width="48" height="24" rx="3" fill="#ffffff" stroke="#0079C2" stroke-width="1.4"/><text x="406" y="307" font-size="13" fill="#0079C2" text-anchor="middle" font-weight="bold">0</text><text x="406" y="328" font-size="10" fill="#57616B" text-anchor="middle" font-weight="normal">bit 4</text><rect x="446" y="290" width="48" height="24" rx="3" fill="#C99A06" stroke="#C99A06" stroke-width="1.4"/><text x="470" y="307" font-size="13" fill="#ffffff" text-anchor="middle" font-weight="bold">1</text><text x="470" y="328" font-size="10" fill="#8A6A00" text-anchor="middle" font-weight="bold">bit 5</text><rect x="510" y="290" width="48" height="24" rx="3" fill="#ffffff" stroke="#0079C2" stroke-width="1.4"/><text x="534" y="307" font-size="13" fill="#0079C2" text-anchor="middle" font-weight="bold">0</text><text x="534" y="328" font-size="10" fill="#57616B" text-anchor="middle" font-weight="normal">bit 6</text><rect x="574" y="290" width="48" height="24" rx="3" fill="#ffffff" stroke="#0079C2" stroke-width="1.4"/><text x="598" y="307" font-size="13" fill="#0079C2" text-anchor="middle" font-weight="bold">0</text><text x="598" y="328" font-size="10" fill="#57616B" text-anchor="middle" font-weight="normal">bit 7</text><text x="120" y="307" font-size="11.5" fill="#003E7E" text-anchor="end" font-weight="bold">Suivi[0]</text><text x="374.0" y="350" font-size="11.5" fill="#003E7E" text-anchor="middle" font-weight="bold">Registre Suivi[0] (tâche 4) : un bit par position, 1 = la voiture a la cire</text></g></svg><figcaption>Le lave-auto. Exemple : les voitures des positions 2 et 5 ont la cire, donc Suivi[0] = 2#0010_0100.</figcaption></figure>
+</div></header>
+<nav class="nav"><div class="wrap">
+ <a href="#programme">1. Programme en ladder</a><a href="#essais">2. Essais au poste</a><a href="#tags">3. Tags</a><a href="#grille">4. Grille sur 70</a>
+</div></nav>
+<main class="wrap">
+
+<section id="programme">
+ <h2>1. Le programme de référence : 15 lignes</h2>
+ <p>Toute la solution tient dans MainRoutine, lignes 0 à 14, dans l’ordre du corrigé. Une autre solution est juste si elle fait la même chose : les variantes acceptées sont notées sous les lignes.</p>
+ <div class="legend"><span><i></i>fil sous tension</span><span>boîte au titre vert = comparaison vraie</span><span><em>bleu</em> = valeur en ce moment</span></div>
+ <div class="note">Le banc d’essai (à droite, ou en bas sur un petit écran) fait tourner ces 15 lignes comme l’automate en ligne : les temporisateurs comptent en vrai temps (ou plus vite), les compteurs et le BSL réagissent aux impulsions.<br>
+ <b>Pour taper une ligne dans Studio 5000 :</b> « Copier le texte », double-clic sur la ligne, coller, Entrée. Avant la v36 : LIMIT → LIM, EQ → EQU, MOVE → MOV.</div>
+ <div id="rungs"></div>
+</section>
+
+<section id="essais">
+ <h2>2. Les essais au poste</h2>
+ <p>Faites ces essais sur le poste de l’étudiant (réponses en rouge). Les boutons <b>Rejouer ici</b> font les mêmes essais sur le programme de cette page, en accéléré, et mettent ✓ quand le résultat est le même que dans le corrigé.</p>
+ <p><button class="btn acc" id="toutVerif">Rejouer tous les essais ici</button> <span id="toutRes"></span></p>
+ <div id="essaiBody"></div>
+</section>
+
+<section id="tags">
+ <h2>3. Les tags (portée Controller)</h2>
+ <p>Le critère « Tags : noms et types exacts » se vérifie ici.</p>
+ <div id="tagBody"></div>
+</section>
+
+<section id="grille">
+ <h2>4. La grille de correction — pratique sur 70</h2>
+ <div class="gtools">
+  <label>Étudiant <input type="text" id="etu" placeholder="nom (rien n’est enregistré)"></label>
+  <button class="btn" id="gnew">Nouvel étudiant</button>
+  <div class="total">Total : <span id="gtot">0</span> / 70<small id="gnon"></small></div>
+ </div>
+ <div id="grilleBody"></div>
+</section>
+</main>
+<footer>Bassam Kattan · 243-743-MA · Examen final · Automne 2026 · Solution du pratique (enseignant)</footer>
+
+<aside class="pupitre" id="pupitre">
+ <button class="pup-toggle" id="pupT">▲ Banc d’essai (programme de référence)</button>
+ <h2>Banc d’essai</h2>
+ <div class="hint">Comme Monitor Tags. L’automate tourne tout le temps : regardez les lignes s’allumer à gauche.</div>
+ <div class="speed">Vitesse du temps <div class="seg" id="vit"><button type="button" data-x="1" class="on">×1</button><button type="button" data-x="5">×5</button><button type="button" data-x="10">×10</button></div></div>
+
+ <h3>Tâche 1 · Le forfait</h3>
+ <div class="field"><label for="in_Choix_Forfait">Choix_Forfait</label><input id="in_Choix_Forfait" data-tag="Choix_Forfait" inputmode="numeric"></div>
+ <div class="chips" data-for="Choix_Forfait"><button>1</button><button>2</button><button>3</button><button>5</button></div>
+ <div class="lamps" id="lamps1"></div>
+ <table class="vals" id="vals1"></table>
+
+ <h3>Tâche 2 · Le prélavage</h3>
+ <div class="bgrid">
+  <button class="pb light tog" data-tag="Voiture_En_Place" aria-pressed="false">Voiture_En_Place<small>maintenu</small></button>
+  <button class="pb light tog" data-tag="Paye" aria-pressed="false">Paye<small>maintenu</small></button>
+ </div>
+ <div class="lamps" id="lamps2"></div>
+ <table class="vals" id="vals2"></table>
+ <div class="bar" title="T_Prelavage : temps écoulé"><i id="bar1"></i></div>
+ <div class="bar" title="T_Extracteur : temps écoulé"><i id="bar2" style="background:var(--amb)"></i></div>
+
+ <h3>Tâche 3 · La file d’attente</h3>
+ <div class="bgrid">
+  <button class="pb green imp" data-tag="Cel_Entree">Cel_Entree<small>impulsion · +1</small></button>
+  <button class="pb imp" data-tag="Cel_Tunnel">Cel_Tunnel<small>impulsion · −1</small></button>
+  <button class="pb light imp wide" data-tag="Vider_File">Vider_File<small>impulsion · RES</small></button>
+ </div>
+ <div class="lamps" id="lamps3"></div>
+ <table class="vals" id="vals3"></table>
+
+ <h3>Tâche 4 · La chaîne du tunnel</h3>
+ <div class="bgrid">
+  <button class="pb green imp wide" data-tag="Pas_Chaine">Pas_Chaine<small>impulsion · la chaîne avance d’une position</small></button>
+ </div>
+ <div style="font-size:12px;color:var(--mut);margin:8px 0 3px">Suivi[0] dans l’ordre du tunnel : position 0 à gauche · bit 5 = arche de cire</div>
+ <div class="reg" id="reg"></div>
+ <div class="mono" style="font-size:12px;color:var(--mut);margin-top:4px">bits 7 → 0 : <b id="regbin"></b></div>
+ <div class="lamps" id="lamps4"></div>
+
+ <p style="margin-top:14px"><button class="btn acc" id="raz" style="width:100%">Tout remettre à zéro (comme un téléchargement)</button></p>
+ <div id="msg"></div>
+</aside>
+
+<script>
+"use strict";
+/* ============================================================ LES TAGS */
+const TAGS=[
+ ["T1","Choix_Forfait","DINT","Forfait : 1, 2 ou 3. Changé à la main."],
+ ["T1","Forfait_Valide","BOOL","Le forfait existe."],
+ ["T1","T_Prelavage","TIMER","Son Preset est écrit par le programme (20000, 30000 ou 40000)."],
+ ["T1","Cire","BOOL","Forfait avec cire."],
+ ["T2","Voiture_En_Place","BOOL","Voiture arrêtée à l’entrée. Changé à la main."],
+ ["T2","Paye","BOOL","Paiement accepté. Changé à la main."],
+ ["T2","Jets","BOOL","Jets du prélavage."],
+ ["T2","T_Extracteur","TIMER","Preset : 8000."],
+ ["T2","Extracteur","BOOL","Extracteur de buée."],
+ ["T3","Cel_Entree","BOOL","Impulsion : une voiture entre dans la file."],
+ ["T3","Cel_Tunnel","BOOL","Impulsion : une voiture quitte la file."],
+ ["T3","Cpt_File","COUNTER","Preset : 4."],
+ ["T3","File_Pleine","BOOL","Panneau « File pleine »."],
+ ["T3","Vider_File","BOOL","Impulsion : remise à 0."],
+ ["T4","Pas_Chaine","BOOL","Impulsion : la chaîne avance d’une position."],
+ ["T4","Suivi","DINT[1]","Registre : bit n = position n."],
+ ["T4","CTL_Chaine","CONTROL","CONTROL du BSL."],
+ ["T4","Arche_Cire","BOOL","Arche de cire (position 5)."]
+];
+const TYPES={}; TAGS.forEach(t=>{ TYPES[t[1]]=t[2]; }); TYPES["Suivi[0]"]="DINT";
+const PRESET={T_Prelavage:0,T_Extracteur:8000,Cpt_File:4};
+const STYLE={"Suivi[0]":"bin"};
+const TASKS={T1:"Tâche 1 · Le forfait",T2:"Tâche 2 · Le prélavage",T3:"Tâche 3 · La file d’attente",T4:"Tâche 4 · La chaîne du tunnel (BSL)"};
+const TPTS={T1:15,T2:20,T3:15,T4:15};
+
+/* ============================================================ LES 15 LIGNES (texte neutre Studio 5000 v36, comme le corrigé) */
+const PROG_SRC=[
+ {t:"T1",r:["R1"],role:"Forfait valide : 1, 2 ou 3",txt:"LIMIT(1,Choix_Forfait,3)OTE(Forfait_Valide);",
+  why:"LIMIT est vraie de 1 à 3, bornes comprises. Avec 0 ou 5, le forfait n’existe pas.",
+  acc:"GE et LE en série au lieu de LIMIT : 2 sur 3."},
+ {t:"T1",r:["R2"],role:"Forfait 1 : prélavage de 20 s",txt:"EQ(Choix_Forfait,1)MOVE(20000,T_Prelavage.PRE);",
+  why:"Le Preset d’un TIMER est en millisecondes : 20 s = 20000.",
+  acc:"Durées en secondes (20 au lieu de 20000) : 3 sur 5."},
+ {t:"T1",r:["R2"],role:"Forfait 2 : 30 s",txt:"EQ(Choix_Forfait,2)MOVE(30000,T_Prelavage.PRE);",
+  why:"Même chose : 30 s = 30000 ms."},
+ {t:"T1",r:["R2"],role:"Forfait 3 : 40 s",txt:"EQ(Choix_Forfait,3)MOVE(40000,T_Prelavage.PRE);",
+  why:"Avec un forfait qui n’existe pas (ex. 5), aucune des trois MOVE ne joue : le Preset garde sa valeur d’avant (essai 4)."},
+ {t:"T1",r:["R3"],role:"Cire : forfait 3 seulement",txt:"EQ(Choix_Forfait,3)OTE(Cire);",
+  why:"Cire sert aussi à la tâche 4 : c’est le bit qui entre dans le registre du BSL."},
+ {t:"T2",r:["R1"],role:"Le prélavage démarre",txt:"XIC(Voiture_En_Place)XIC(Paye)TON(T_Prelavage,?,?);",
+  why:"Le TON compte tant que la voiture est là ET payée. Si la voiture part (ou n’a pas payé), le TON revient à 0.",
+  acc:"Oubli de Paye : 4 sur 6."},
+ {t:"T2",r:["R1"],role:"Jets pendant que le TON compte",txt:"XIC(T_Prelavage.TT)OTE(Jets);",
+  why:".TT vaut 1 pendant le comptage, puis 0 quand le temps est fini (.DN passe à 1).",
+  acc:"Accepté : XIC Voiture_En_Place, XIC Paye, XIO T_Prelavage.DN."},
+ {t:"T2",r:["R2"],role:"Extracteur : TOF de 8 s",txt:"XIC(Jets)TOF(T_Extracteur,?,?);",
+  why:"Dès que Jets = 1, la TOF met .DN à 1. Quand Jets retombe à 0, elle compte 8 s, puis .DN retombe à 0.",
+  acc:"TOF sur Voiture_En_Place : 3 sur 6. TON au lieu de TOF : 0."},
+ {t:"T2",r:["R2"],role:"Extracteur",txt:"XIC(T_Extracteur.DN)OTE(Extracteur);",
+  why:"Extracteur suit le .DN de la TOF : pendant les jets, et 8 s après."},
+ {t:"T3",r:["R1"],role:"Une voiture entre dans la file : +1",txt:"XIC(Cel_Entree)CTU(Cpt_File,?,?);",
+  why:"CTU ajoute 1 à chaque front montant de Cel_Entree (une impulsion = +1, même si on la tient longtemps).",
+  acc:"Deux COUNTER différents pour le CTU et le CTD : 3 sur 6 (la file ne descend pas)."},
+ {t:"T3",r:["R1"],role:"Une voiture quitte la file : −1",txt:"XIC(Cel_Tunnel)CTD(Cpt_File,?,?);",
+  why:"Le MÊME COUNTER : CTD enlève 1 à chaque front montant de Cel_Tunnel."},
+ {t:"T3",r:["R2"],role:"File pleine : 4 voitures ou plus",txt:"XIC(Cpt_File.DN)OTE(File_Pleine);",
+  why:".DN vaut 1 quand .ACC ≥ Preset (4).",acc:"Accepté : GE (Cpt_File.ACC, 4)."},
+ {t:"T3",r:["R3"],role:"Vider la file",txt:"XIC(Vider_File)RES(Cpt_File);",
+  why:"RES remet .ACC et .DN du compteur à 0."},
+ {t:"T4",r:["R1"],role:"La chaîne avance : BSL",txt:"XIC(Pas_Chaine)BSL(Suivi[0],CTL_Chaine,Cire,8);",
+  why:"Un seul décalage par impulsion (front montant). Cire entre au bit 0, chaque bit monte d’une position, le bit 7 sort dans CTL_Chaine.UL.",
+  acc:"Length différent de 8 : 5 sur 6. Source Bit faux : 3 sur 6."},
+ {t:"T4",r:["R2"],role:"Arche de cire à la position 5",txt:"XIC(Suivi[0].5)OTE(Arche_Cire);",
+  why:"La voiture qui a payé la cire est sous l’arche quand le bit 5 de Suivi[0] vaut 1.",acc:"Bit 4 ou bit 6 au lieu du bit 5 : 0."}
+];
+
+/* ============================================================ LECTURE DU TEXTE NEUTRE */
+function parseRung(src){
+ const s=src.replace(/;\s*$/,""); let i=0;
+ function series(){
+  const items=[];
+  while(i<s.length){
+   const c=s[i];
+   if(c==="["){ i++; items.push(par()); }
+   else if(c===","||c==="]") break;
+   else if(c===" ") i++;
+   else { const m=/^([A-Z_]+)\(([^)]*)\)/.exec(s.slice(i)); if(!m) throw new Error("lecture : "+s.slice(i));
+     items.push({t:"ins",mn:m[1],args:m[2].split(",").map(x=>x.trim())}); i+=m[0].length; }
+  }
+  return {t:"ser",items};
+ }
+ function par(){ const brs=[series()]; while(s[i]===","){ i++; brs.push(series()); }
+  if(s[i]!=="]") throw new Error("] attendu"); i++; return {t:"par",brs}; }
+ return series();
+}
+
+/* ============================================================ MOTEUR : un balayage = les 15 lignes, dans l'ordre ; DT ms par balayage */
+let T, DT=10;
+function resetTags(){
+ T={v:{},tm:{},cn:{},ctl:{CTL_Chaine:{EN:0,DN:0,UL:0}}};
+ for(const [,n,ty] of TAGS){
+  if(ty==="BOOL"||ty==="DINT") T.v[n]=0;
+  if(ty==="TIMER") T.tm[n]={PRE:PRESET[n],ACC:0,EN:0,TT:0,DN:0};
+  if(ty==="COUNTER") T.cn[n]={PRE:PRESET[n],ACC:0,CU:0,CD:0,DN:0};
+ }
+ delete T.v.Suivi; T.v["Suivi[0]"]=0;
+}
+function lit(s){
+ let m;
+ if(/^[-+]?\d+$/.test(s)) return parseInt(s,10);
+ if((m=/^16#([0-9A-Fa-f_]+)$/.exec(s))) return parseInt(m[1].replace(/_/g,""),16)|0;
+ if((m=/^2#([01_]+)$/.exec(s))) return parseInt(m[1].replace(/_/g,""),2)|0;
+ return null;
+}
+const isLit=s=>lit(s)!==null;
+function memb(s){ const m=/^(\w+)\.(EN|TT|DN|PRE|ACC|CU|CD|UL)$/.exec(s); if(!m) return null;
+ const o=T.tm[m[1]]||T.cn[m[1]]||T.ctl[m[1]]; return o?{o,k:m[2]}:null; }
+function rv(s){
+ const L=lit(s); if(L!==null) return L;
+ const mb=memb(s); if(mb) return mb.o[mb.k]|0;
+ const m=/^(.+)\.(\d+)$/.exec(s);
+ if(m&&TYPES[m[1]]==="DINT") return (T.v[m[1]]>>>(+m[2]))&1;
+ return T.v[s]|0;
+}
+function wr(name,val){
+ const mb=memb(name); if(mb){ mb.o[mb.k]=val|0; return; }
+ T.v[name]=TYPES[name]==="BOOL"?(val?1:0):(val|0);
+}
+function tmr(kind,t,rin){
+ if(kind==="TOF"){
+  if(rin){ t.EN=1; t.DN=1; t.TT=0; t.ACC=0; }
+  else { t.EN=0; if(t.DN){ t.ACC+=DT; if(t.ACC>=t.PRE){ t.DN=0; t.TT=0; } else t.TT=1; } }
+  return;
+ }
+ if(rin){ t.EN=1; if(!t.DN){ t.ACC+=DT; if(t.ACC>=t.PRE){ t.DN=1; t.TT=0; } else t.TT=1; } }
+ else { t.ACC=0; t.EN=0; t.TT=0; t.DN=0; }
+}
+function exec(n,rin){
+ n.rin=rin;
+ if(n.t==="ser"){ let r=rin; for(const it of n.items) r=exec(it,r); return n.out=r; }
+ if(n.t==="par"){ let any=false; for(const b of n.brs){ if(exec(b,rin)) any=true; } return n.out=any; }
+ const a=n.args; let ok=true, out=rin;
+ switch(n.mn){
+  case "XIC": ok=rv(a[0])===1; out=rin&&ok; break;
+  case "XIO": ok=rv(a[0])===0; out=rin&&ok; break;
+  case "OTE": wr(a[0],rin?1:0); break;
+  case "EQ": ok=rv(a[0])===rv(a[1]); out=rin&&ok; break;
+  case "NE": ok=rv(a[0])!==rv(a[1]); out=rin&&ok; break;
+  case "GE": ok=rv(a[0])>=rv(a[1]); out=rin&&ok; break;
+  case "LIMIT": { const lo=rv(a[0]), t=rv(a[1]), hi=rv(a[2]); ok=lo<=hi?(t>=lo&&t<=hi):(t>=lo||t<=hi); out=rin&&ok; break; }
+  case "TON": case "TOF": tmr(n.mn,T.tm[a[0]],rin); break;
+  case "CTU": { const c=T.cn[a[0]]; if(rin&&!c.CU) c.ACC++; c.CU=rin?1:0; c.DN=c.ACC>=c.PRE?1:0; break; }
+  case "CTD": { const c=T.cn[a[0]]; if(rin&&!c.CD) c.ACC--; c.CD=rin?1:0; c.DN=c.ACC>=c.PRE?1:0; break; }
+  case "RES": if(rin){ const o=T.tm[a[0]]||T.cn[a[0]]; o.ACC=0; o.DN=0; if("TT" in o){o.EN=0;o.TT=0;} } break;
+  case "MOVE": if(rin) wr(a[1],rv(a[0])); break;
+  case "CLR": if(rin) wr(a[0],0); break;
+  case "BSL": { const ct=T.ctl[a[1]], len=+a[3], mask=len>=32?-1:((1<<len)-1), w=T.v[a[0]]|0;
+   if(rin&&!ct.EN){ const lo=w&mask; ct.UL=(lo>>>(len-1))&1; T.v[a[0]]=((w&~mask)|((((lo<<1)&mask)|rv(a[2]))&mask))|0; ct.DN=1; }
+   ct.EN=rin?1:0; if(!rin) ct.DN=0; break; }
+ }
+ n.ok=ok; return n.out=out;
+}
+let PROG=[];
+function scan(){ for(const r of PROG) exec(r.tree,true); }
+function runFor(sec){ const n=Math.round(sec*1000/DT); for(let k=0;k<n;k++) scan(); }
+function setTag(name,v){ wr(name,v); }
+function pulse(tag){ T.v[tag]=1; runFor(0.3); T.v[tag]=0; runFor(0.3); }
+
+/* ============================================================ FORMATS */
+const nbfr=x=>String(x).replace(".",",").replace("-","−");
+function bin8(v){ const b=((v>>>0)&255).toString(2).padStart(8,"0"); return "2#"+b.slice(0,4)+"_"+b.slice(4); }
+function fmtTag(name){
+ if(memb(name)) return String(rv(name));
+ const v=T.v[name]; if(v===undefined) return "";
+ if(STYLE[name]==="bin") return bin8(v);
+ return String(v);
+}
+</script>
+
+<script>
+"use strict";
+/* ============================================================ DESSIN LADDER (SVG) */
+const ON="#1E9E4A", OFF="#1A1A1A", MUTC="#6A6A6A", VALC="#2C6FB7", PAD=18;
+const MONO="IBM Plex Mono, Consolas, monospace", SANS="IBM Plex Sans, Arial, sans-serif";
+const BOXDEF={
+ EQ:["Equal",["Source A","Source B"],1], GE:["Grtr Than or Eql (A>=B)",["Source A","Source B"],1],
+ LIMIT:["Limit Test",["Low Limit","Test","High Limit"],1],
+ MOVE:["Move",["Source","Dest"]], CLR:["Clear",["Dest"]],
+ TON:["Timer On Delay",["Timer","Preset","Accum"]], TOF:["Timer Off Delay",["Timer","Preset","Accum"]],
+ CTU:["Count Up",["Counter","Preset","Accum"]], CTD:["Count Down",["Counter","Preset","Accum"]],
+ BSL:["Bit Shift Left",["Array","Control","Source Bit","Length"]]
+};
+const BITS={TON:["EN","TT","DN"],TOF:["EN","TT","DN"],CTU:["CU","DN"],CTD:["CD","DN"],BSL:["EN","DN","UL"]};
+const ROWH=30, HEADH=26, CH=7.6;
+let GW=780;
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const isBox=mn=>mn in BOXDEF;
+function L_(x1,y1,x2,y2,on){return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${on?ON:OFF}" stroke-width="${on?3.4:1.8}" stroke-linecap="round"/>`;}
+function TX(x,y,s,o={}){return `<text x="${x}" y="${y}" font-size="${o.size||12.5}" fill="${o.fill||OFF}" text-anchor="${o.anchor||"middle"}" font-family="${o.font||MONO}" font-weight="${o.weight||400}">${esc(s)}</text>`;}
+function shown(n,i){                      /* ce qui est écrit dans la case i de la boîte */
+ const a=n.args;
+ if(n.mn in {TON:1,TOF:1,CTU:1,CTD:1}){ const o=T.tm[a[0]]||T.cn[a[0]]; return i===0?a[0]:String(i===1?o.PRE:o.ACC); }
+ return a[i];
+}
+function opVal(n,i){                      /* valeur en bleu sous la case */
+ const a=n.args, arg=a[i];
+ if(n.mn in {TON:1,TOF:1,CTU:1,CTD:1}) return "";
+ if(arg===undefined||isLit(arg)) return "";
+ if(n.mn==="BSL"&&(i===1)) return "";
+ if(/^.+\.\d+$/.test(arg)) return String(rv(arg));
+ return fmtTag(arg);
+}
+function cellW(label){ return Math.max(104,Math.ceil(label.length*CH)+22); }
+function boxW(n){
+ let px=214; BOXDEF[n.mn][1].forEach((_,i)=>{ const s=shown(n,i)||""; px=Math.max(px,Math.ceil(96+Math.max(s.length,opVal(n,i).length)*7.2)); });
+ return px;
+}
+function boxH(n){ return HEADH+BOXDEF[n.mn][1].length*ROWH+(BITS[n.mn]?22:6); }
+function meas(n){
+ if(n.t==="ser"){let w=0,up=0,dn=0; for(const it of n.items){const m=meas(it); w+=m.w; up=Math.max(up,m.up); dn=Math.max(dn,m.dn);} return n.m={w,up,dn};}
+ if(n.t==="par"){const ms=n.brs.map(meas); const offs=[0]; let y=0;
+  for(let k=1;k<ms.length;k++){y+=ms[k-1].dn+ms[k].up+8; offs.push(y);} n.offs=offs;
+  return n.m={w:Math.max(...ms.map(m=>m.w))+2*PAD, up:ms[0].up, dn:y+ms[ms.length-1].dn};}
+ if(isBox(n.mn)) return n.m={w:boxW(n)+24,up:16,dn:boxH(n)-14+8};
+ return n.m={w:cellW(n.args[0]),up:38,dn:36};
+}
+function draw(n,x,y){
+ if(n.t==="ser"){let s="",xx=x; for(const it of n.items){s+=draw(it,xx,y); xx+=it.m.w;} return s;}
+ if(n.t==="par"){
+  const xl=x+6, xr=x+n.m.w-6, yl=y+n.offs[n.offs.length-1];
+  let s=L_(x,y,xl,y,n.rin)+L_(xl,y,xl,yl,n.rin)+L_(xr,y,xr,yl,n.out)+L_(xr,y,x+n.m.w,y,n.out);
+  n.brs.forEach((b,k)=>{const yk=y+n.offs[k]; s+=L_(xl,yk,x+PAD,yk,n.rin)+draw(b,x+PAD,yk)+L_(x+PAD+b.m.w,yk,xr,yk,b.out);});
+  return s;
+ }
+ const a=n.args, W=n.m.w, cx=x+W/2;
+ if(n.mn==="XIC"||n.mn==="XIO"){
+  const col=n.ok?ON:OFF;
+  let s=L_(x,y,cx-11,y,n.rin)+L_(cx+11,y,x+W,y,n.out);
+  if(n.ok) s+=`<rect x="${cx-16}" y="${y-17}" width="32" height="34" rx="5" fill="#DDF3E4"/>`;
+  s+=`<line x1="${cx-11}" y1="${y-14}" x2="${cx-11}" y2="${y+14}" stroke="${col}" stroke-width="2.8"/>`;
+  s+=`<line x1="${cx+11}" y1="${y-14}" x2="${cx+11}" y2="${y+14}" stroke="${col}" stroke-width="2.8"/>`;
+  if(n.mn==="XIO") s+=`<line x1="${cx-8}" y1="${y+11}" x2="${cx+8}" y2="${y-11}" stroke="${col}" stroke-width="2.2"/>`;
+  return s+TX(cx,y-23,a[0])+TX(cx,y+31,n.mn,{size:10.5,font:SANS,fill:MUTC});
+ }
+ if(n.mn==="OTE"||n.mn==="RES"){
+  const on=n.mn==="OTE"?rv(a[0])===1:n.rin, col=on?ON:OFF, wd=15;
+  let s=L_(x,y,cx-wd,y,n.rin)+L_(cx+wd,y,x+W,y,n.out);
+  if(on) s+=`<ellipse cx="${cx}" cy="${y}" rx="${wd+6}" ry="17" fill="#DDF3E4"/>`;
+  s+=`<path d="M${cx-wd+5},${y-14} Q${cx-wd-5},${y} ${cx-wd+5},${y+14}" fill="none" stroke="${col}" stroke-width="2.6"/>`;
+  s+=`<path d="M${cx+wd-5},${y-14} Q${cx+wd+5},${y} ${cx+wd-5},${y+14}" fill="none" stroke="${col}" stroke-width="2.6"/>`;
+  if(n.mn==="RES") s+=TX(cx,y+4,"RES",{size:10,font:SANS,weight:700,fill:col});
+  return s+TX(cx,y-23,a[0])+TX(cx,y+31,n.mn,{size:10.5,font:SANS,fill:MUTC});
+ }
+ /* boîte */
+ const D=BOXDEF[n.mn], cmp=!!D[2], hot=cmp?(n.rin&&n.ok):n.rin;
+ const x0=x+12, w0=W-24, top=y-14, h=boxH(n);
+ const sc=hot?ON:OFF, sw=hot?2.4:1.5;
+ let s=L_(x,y,x0,y,n.rin)+L_(x0+w0,y,x+W,y,n.out);
+ s+=`<rect x="${x0}" y="${top}" width="${w0}" height="${h}" fill="#fff" stroke="${sc}" stroke-width="${sw}"/>`;
+ s+=`<rect x="${x0}" y="${top}" width="${w0}" height="${HEADH}" fill="${cmp&&hot?"#DDF3E4":"#FBE9E0"}" stroke="${sc}" stroke-width="${sw}"/>`;
+ s+=TX(x0+8,top+18,n.mn,{anchor:"start",weight:700,size:13.5})+TX(x0+w0-7,top+17,D[0],{anchor:"end",size:9.5,font:SANS,fill:MUTC});
+ const tc=n.mn in {TON:1,TOF:1,CTU:1,CTD:1};
+ D[1].forEach((lab,i)=>{
+  const yy=top+HEADH+14+ROWH*i;
+  s+=TX(x0+8,yy,lab,{anchor:"start",size:10.5,font:SANS,fill:MUTC});
+  s+=TX(x0+w0-8,yy,shown(n,i),{anchor:"end",size:12,weight:600,fill:(tc&&i===2)?VALC:OFF});
+  const v=opVal(n,i); if(v!=="") s+=TX(x0+w0-8,yy+13,v,{anchor:"end",size:11,fill:VALC});
+ });
+ if(BITS[n.mn]){ const o=T.tm[a[0]]||T.cn[a[0]]||T.ctl[a[1]], yb=top+HEADH+D[1].length*ROWH+12;
+  BITS[n.mn].forEach((b,i)=>{const bx=x0+14+i*48, v=o[b];
+   s+=`<circle cx="${bx}" cy="${yb-4}" r="5.5" fill="${v?ON:"#fff"}" stroke="${v?ON:"#9AA3AD"}" stroke-width="1.6"/>`+
+      TX(bx+9,yb,b,{anchor:"start",size:10.5,font:SANS,weight:600,fill:v?ON:MUTC});}); }
+ return s;
+}
+function renderRung(p,idx){
+ const m=p.tree.m, y0=14+m.up, H=y0+m.dn+12, W=GW;
+ return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ligne ${idx} : ${esc(p.txt)}">`+
+  `<text x="2" y="${y0+4}" font-size="12" font-family="${SANS}" font-weight="700" fill="${MUTC}">${idx}</text>`+
+  `<line x1="22" y1="4" x2="22" y2="${H-4}" stroke="${OFF}" stroke-width="3.2"/><line x1="${W-12}" y1="4" x2="${W-12}" y2="${H-4}" stroke="${OFF}" stroke-width="3.2"/>`+
+  draw(p.tree,22,y0)+L_(22+m.w,y0,W-12,y0,p.tree.out)+`</svg>`;
+}
+</script>
+
+<script>
+"use strict";
+/* ============================================================ LES ESSAIS (valeurs du corrigé) */
+const E1=[[1,1,20000,0],[2,1,30000,0],[3,1,40000,1],[5,0,null,0]];
+const E2=[["Voiture_En_Place = 1. Lisez 5 s plus tard.",1,1],["Lisez 23 s après l’arrivée.",0,1],["Lisez 30 s après l’arrivée.",0,0],
+ ["Voiture_En_Place = 0, Paye = 0, puis Voiture_En_Place = 1. Lisez 5 s plus tard.",0,0]];
+const E3=[["3 impulsions de Cel_Entree",3,0],["1 impulsion de Cel_Entree",4,1],["2 impulsions de Cel_Tunnel",2,0],["1 impulsion de Vider_File",0,0]];
+const E4=[["Choix_Forfait = 3, puis impulsion Pas_Chaine","2#0000_0001",0],["Choix_Forfait = 1, puis impulsion Pas_Chaine","2#0000_0010",0],
+ ["Impulsion Pas_Chaine","2#0000_0100",0],["Impulsion Pas_Chaine","2#0000_1000",0],["Impulsion Pas_Chaine","2#0001_0000",0],["Impulsion Pas_Chaine","2#0010_0000",1]];
+
+function run1(i){ const pre=T.tm.T_Prelavage.PRE; setTag("Choix_Forfait",E1[i][0]); runFor(0.5); const r=E1[i];
+ return rv("Forfait_Valide")===r[1]&&rv("Cire")===r[3]&&(r[2]===null?T.tm.T_Prelavage.PRE===pre:T.tm.T_Prelavage.PRE===r[2]); }
+function seq2(){ /* même déroulé que le corrigé */
+ const res=[], J=()=>[rv("Jets"),rv("Extracteur")];
+ T.v.Voiture_En_Place=0; setTag("Choix_Forfait",1); T.v.Paye=1; runFor(10);
+ T.v.Voiture_En_Place=1; runFor(5); res.push(J());
+ runFor(18); res.push(J());
+ runFor(7); res.push(J());
+ T.v.Voiture_En_Place=0; T.v.Paye=0; runFor(1); T.v.Voiture_En_Place=1; runFor(5); res.push(J());
+ T.v.Voiture_En_Place=0; runFor(0.5);
+ return res.map((r,i)=>r[0]===E2[i][1]&&r[1]===E2[i][2]);
+}
+function seq3(){
+ const res=[], L=()=>[T.cn.Cpt_File.ACC,rv("File_Pleine")];
+ pulse("Vider_File");
+ for(let k=0;k<3;k++) pulse("Cel_Entree"); res.push(L());
+ pulse("Cel_Entree"); res.push(L());
+ pulse("Cel_Tunnel"); pulse("Cel_Tunnel"); res.push(L());
+ pulse("Vider_File"); res.push(L());
+ return res.map((r,i)=>r[0]===E3[i][1]&&r[1]===E3[i][2]);
+}
+function seq4(){
+ const res=[]; T.v["Suivi[0]"]=0; runFor(0.5);
+ const ch=[3,1,null,null,null,null];
+ ch.forEach(c=>{ if(c!==null){ setTag("Choix_Forfait",c); runFor(0.5); } pulse("Pas_Chaine"); res.push([bin8(T.v["Suivi[0]"]),rv("Arche_Cire")]); });
+ return res.map((r,i)=>r[0]===E4[i][1]&&r[1]===E4[i][2]);
+}
+const mark=(id,ok)=>{ const c=document.getElementById(id); if(c) c.innerHTML=ok?'<span class="ok">✓ pareil</span>':'<span class="ko">✗ différent</span>'; };
+function renderEssais(){
+ let h=`<h3>${TASKS.T1} · 4 points (1 par ligne)</h3><div class="tw"><table><thead><tr><th class="nc">Choix_Forfait</th><th class="nc">Forfait_Valide</th><th class="nc">T_Prelavage.PRE</th><th class="nc">Cire</th><th></th><th>Ici</th></tr></thead><tbody>`+
+  E1.map((r,i)=>`<tr><td class="mono">${r[0]}</td><td class="mono rep">${r[1]}</td><td class="mono rep">${r[2]===null?"— (ne change pas)":r[2]}</td><td class="mono rep">${r[3]}</td><td><button class="btn sm" data-e="1" data-i="${i}">Essayer ici</button></td><td id="r1_${i}"></td></tr>`).join("")+`</tbody></table></div>`+
+  `<p>Essai 4 : aucune des trois MOVE ne joue, le Preset garde la valeur d’avant (40000 si les essais sont faits dans l’ordre).</p>`;
+ h+=`<h3>${TASKS.T2} · 8 points (2 par ligne)</h3><p>Avant : Choix_Forfait = 1 (20 s) et Paye = 1. Une seconde d’écart ne change rien. <button class="btn acc sm" data-seq="2">Rejouer ici</button></p><div class="tw"><table><thead><tr><th>N°</th><th>Action</th><th class="nc">Jets</th><th class="nc">Extracteur</th><th>Ici</th></tr></thead><tbody>`+
+  E2.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r[0])}</td><td class="mono rep">${r[1]}</td><td class="mono rep">${r[2]}</td><td id="r2_${i}"></td></tr>`).join("")+`</tbody></table></div>`+
+  `<p>Essai 2 : les jets s’arrêtent à 20 s, l’extracteur continue jusqu’à 28 s. Essai 4 : pas payé, donc pas de prélavage.</p>`;
+ h+=`<h3>${TASKS.T3} · 4 points (1 par ligne)</h3><p>Avant : une impulsion de Vider_File. Puis, dans l’ordre. <button class="btn acc sm" data-seq="3">Rejouer ici</button></p><div class="tw"><table><thead><tr><th>N°</th><th>Action</th><th class="nc">Cpt_File.ACC</th><th class="nc">File_Pleine</th><th>Ici</th></tr></thead><tbody>`+
+  E3.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r[0])}</td><td class="mono rep">${r[1]}</td><td class="mono rep">${r[2]}</td><td id="r3_${i}"></td></tr>`).join("")+`</tbody></table></div>`;
+ h+=`<h3>${TASKS.T4} · 6 points (1 par ligne)</h3><p>Avant : Suivi[0] = 0 dans Monitor Tags. Puis, dans l’ordre. <button class="btn acc sm" data-seq="4">Rejouer ici</button></p><div class="tw"><table><thead><tr><th>N°</th><th>Action</th><th class="nc">Suivi[0]</th><th class="nc">Arche_Cire</th><th>Ici</th></tr></thead><tbody>`+
+  E4.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r[0])}</td><td class="mono rep">${r[1]}</td><td class="mono rep">${r[2]}</td><td id="r4_${i}"></td></tr>`).join("")+`</tbody></table></div>`+
+  `<p>Essai 6 : la voiture qui a payé la cire (entrée à l’essai 1) arrive sous l’arche, à la position 5.</p>`;
+ document.getElementById("essaiBody").innerHTML=h;
+}
+function runSeq(k){ const r=k===2?seq2():k===3?seq3():seq4(); r.forEach((ok,i)=>mark(`r${k}_${i}`,ok)); return r; }
+function runAll(){
+ resetTags(); setTag("Choix_Forfait",1); runFor(0.5); let n=0, ok=0;
+ E1.forEach((_,i)=>{ const r=run1(i); mark("r1_"+i,r); n++; if(r) ok++; });
+ [2,3,4].forEach(k=>runSeq(k).forEach(r=>{ n++; if(r) ok++; }));
+ return {n,ok};
+}
+
+/* ============================================================ TAGS ET GRILLE */
+function renderTags(){
+ document.getElementById("tagBody").innerHTML=["T1","T2","T3","T4"].map(k=>`<h3>${TASKS[k]}</h3><div class="tw"><table><thead><tr><th class="nc">Tag</th><th class="nc">Type</th><th>Rôle</th></tr></thead><tbody>`+
+  TAGS.filter(t=>t[0]===k).map(t=>`<tr><td class="mono">${t[1]}</td><td class="mono">${t[2]}</td><td>${esc(t[3])}</td></tr>`).join("")+`</tbody></table></div>`).join("");
+}
+const GRILLE=[
+ {p:"T1",t:TASKS.T1,pts:15,it:[
+  ["R1","Forfait_Valide : une LIMIT de 1 à 3",3,"GE et LE en série : 2."],
+  ["R2","MOVE 20000 / 30000 / 40000 dans T_Prelavage.PRE",5,"Durées en secondes (20 au lieu de 20000) : 3."],
+  ["R3","Cire = 1 si Choix_Forfait = 3",3,""],
+  ["E","4 lignes",4,1,4]]},
+ {p:"T2",t:TASKS.T2,pts:20,it:[
+  ["R1","TON si Voiture_En_Place ET Paye ; Jets = .TT",6,"Oubli de Paye : 4. XIO T_Prelavage.DN avec les mêmes conditions : accepté."],
+  ["R2","Extracteur : TOF de 8 s sur Jets",6,"TOF sur Voiture_En_Place : 3. TON au lieu de TOF : 0."],
+  ["E","4 lignes, 2 points chacune",8,2,4]]},
+ {p:"T3",t:TASKS.T3,pts:15,it:[
+  ["R1","CTU sur Cel_Entree et CTD sur Cel_Tunnel, le même COUNTER",6,"Deux COUNTER différents : 3."],
+  ["R2","File_Pleine quand 4 voitures ou plus",3,"Accepté : GE (Cpt_File.ACC, 4)."],
+  ["R3","Vider_File : RES (Cpt_File)",2,""],
+  ["E","4 lignes",4,1,4]]},
+ {p:"T4",t:TASKS.T4,pts:15,it:[
+  ["R1","BSL sur Pas_Chaine : Suivi[0], Length 8, Source Bit Cire, CTL_Chaine",6,"Length différent de 8 : 5. Source Bit faux : 3."],
+  ["R2","Arche_Cire sur Suivi[0].5",3,"Bit 4 ou bit 6 au lieu du bit 5 : 0."],
+  ["E","6 lignes",6,1,6]]},
+ {p:"Q",t:"Qualité et remise",pts:5,it:[
+  ["Q1","Tags : noms et types exacts",2,""],["Q2","Un commentaire au début de chaque tâche",1,""],
+  ["Q3","Verify Controller sans erreur, en mode Run",1,""],["Q4","Final_Nom_Prenom.ACD remis",1,""]]}
+];
+let SC={}, CK={};
+function renderGrille(){
+ let h="";
+ for(const g of GRILLE){
+  h+=`<div class="gpart"><div class="gh">${esc(g.t)}<span data-sub="${g.p}"></span></div>`;
+  for(const it of g.it){
+   const key=g.p+"."+it[0];
+   if(it[0]==="E"){
+    h+=`<div class="gitem"><div class="t"><b>Essais</b> · ${esc(it[1])}<small>${nbfr(it[3])} point${it[3]>1?"s":""} par case cochée (une case = un essai juste)</small></div><div class="chk" data-key="${key}" data-val="${it[3]}">`+
+     Array.from({length:it[4]},(_,k)=>`<button type="button" data-k="${k}" class="${CK[key+"."+k]?"on":""}">${k+1}</button>`).join("")+`</div></div>`;
+   } else {
+    h+=`<div class="gitem"><div class="t"><b>${it[0]}</b> · ${esc(it[1])}${it[3]?`<small>${esc(it[3])}</small>`:""}</div><div class="seg" data-key="${key}">`+
+     Array.from({length:it[2]+1},(_,v)=>`<button type="button" data-v="${v}" class="${SC[key]===v?"on":""}${v===0?" z":""}">${v}</button>`).join("")+`</div></div>`;
+   }
+  }
+  h+=`</div>`;
+ }
+ document.getElementById("grilleBody").innerHTML=h; totals();
+}
+function totals(){
+ let tot=0, non=0;
+ for(const g of GRILLE){ let sub=0, nonp=0;
+  for(const it of g.it){ const key=g.p+"."+it[0];
+   if(it[0]==="E"){ for(let k=0;k<it[4];k++) if(CK[key+"."+k]) sub+=it[3]; }
+   else { const v=SC[key]; if(v==null){ non++; nonp++; } else sub+=v; } }
+  tot+=sub; const el=document.querySelector(`[data-sub="${g.p}"]`); if(el) el.textContent=`${nbfr(sub)} / ${g.pts}`+(nonp?" · à noter":"");
+ }
+ document.getElementById("gtot").textContent=nbfr(tot);
+ document.getElementById("gnon").textContent=non?`${non} critère${non>1?"s":""} pas encore noté${non>1?"s":""}`:"tout est noté";
+}
+
+/* ============================================================ PAGE, BANC D'ESSAI ET HORLOGE */
+const $=s=>document.querySelector(s);
+function msg(s){ $("#msg").innerHTML=s; }
+function lampHtml(list){ return list.map(([t,c])=>`<div class="lamp ${c}" data-tag="${t}"><b></b><span class="mono">${t}</span></div>`).join(""); }
+function vrows(list){ return list.map(t=>`<tr><td>${t}</td><td>${fmtTag(t)}</td></tr>`).join(""); }
+function setVals(id,list){ const el=$(id), h=vrows(list); if(el._h!==h){ el.innerHTML=h; el._h=h; } }
+function renderLive(){
+ for(const p of PROG){ const h=renderRung(p,p.idx); if(h!==p.last){ p.el.innerHTML=h; p.last=h; } }
+ document.querySelectorAll(".lamp").forEach(el=>el.classList.toggle("on",rv(el.dataset.tag)===1));
+ document.querySelectorAll(".field input").forEach(inp=>{ if(document.activeElement!==inp) inp.value=fmtTag(inp.dataset.tag); });
+ setVals("#vals1",["T_Prelavage.PRE"]); setVals("#vals2",["T_Prelavage.ACC","T_Extracteur.ACC"]); setVals("#vals3",["Cpt_File.ACC"]);
+ const t1=T.tm.T_Prelavage, t2=T.tm.T_Extracteur;
+ $("#bar1").style.width=(t1.PRE?Math.min(100,100*t1.ACC/t1.PRE):0)+"%";
+ $("#bar2").style.width=(t2.DN?100-Math.min(100,100*t2.ACC/t2.PRE):0)+"%";
+ const s=T.v["Suivi[0]"]; $("#regbin").textContent=bin8(s).slice(2);
+ document.querySelectorAll("#reg div").forEach(el=>{ const i=+el.dataset.b, v=(s>>>i)&1; el.classList.toggle("one",!!v); el.querySelector("b").textContent=v; });
+ document.querySelectorAll(".pb.tog").forEach(el=>el.setAttribute("aria-pressed",rv(el.dataset.tag)?"true":"false"));
+}
+function build(){
+ PROG=PROG_SRC.map((p,i)=>Object.assign({},p,{idx:i,tree:parseRung(p.txt)}));
+ resetTags(); setTag("Choix_Forfait",1); runFor(0.2);
+ PROG.forEach(p=>meas(p.tree));
+ GW=Math.max(780,...PROG.map(p=>p.tree.m.w+50));
+ let h="", cur="";
+ PROG.forEach((p,i)=>{
+  if(p.t!==cur){ cur=p.t; h+=`<div class="task"><h3>${TASKS[p.t]}</h3><span>${TPTS[p.t]} points</span></div>`; }
+  const first=i===0||PROG[i-1].t!==p.t;
+  h+=`<div class="rung"><div class="rh"><span class="num">Ligne ${i}</span><b>${esc(p.role)}</b>${p.r.map(x=>`<span class="bdg">${p.t} · ${x}</span>`).join("")}<button class="btn sm" data-copy="${i}">Copier le texte</button></div>`+
+   (first?`<div class="cmt">Commentaire : « ${TASKS[p.t].split(" · ")[0]} »</div>`:"")+
+   `<div class="svgw" id="rg${i}"></div><code>${esc(p.txt)}</code><p>${esc(p.why)}</p>${p.acc?`<p class="acc"><b>Barème :</b> ${esc(p.acc)}</p>`:""}</div>`;
+ });
+ $("#rungs").innerHTML=h;
+ PROG.forEach((p,i)=>{ p.el=document.getElementById("rg"+i); p.last=""; });
+ $("#lamps1").innerHTML=lampHtml([["Forfait_Valide",""],["Cire","y"]]);
+ $("#lamps2").innerHTML=lampHtml([["Jets",""],["Extracteur",""]]);
+ $("#lamps3").innerHTML=lampHtml([["File_Pleine","r"]]);
+ $("#lamps4").innerHTML=lampHtml([["Arche_Cire","y"]]);
+ $("#reg").innerHTML=[0,1,2,3,4,5,6,7].map(i=>`<div class="${i===5?"ej":""}" data-b="${i}">b${i}<b>0</b></div>`).join("");
+ renderEssais(); renderTags(); renderGrille(); renderLive();
+}
+/* horloge : l'automate balaie en continu (DT = 10 ms de temps simulé par balayage) */
+let SPEED=1, last=performance.now(), dette=0;
+function tick(){
+ const now=performance.now(); dette+=Math.min(1000,(now-last))*SPEED; last=now;
+ const n=Math.floor(dette/DT); dette-=n*DT; for(let k=0;k<n;k++) scan();
+ renderLive();
+}
+let TIMER=setInterval(tick,100);
+function applyInput(inp){
+ const t=inp.dataset.tag, v=lit(String(inp.value).trim());
+ if(v===null){ msg(`<span class="ko">Valeur non lue pour ${t}.</span>`); inp.value=fmtTag(t); return; }
+ setTag(t,v); runFor(0.05); renderLive(); msg(`${t} = ${fmtTag(t)}`);
+}
+document.addEventListener("keydown",e=>{ if(e.target.matches&&e.target.matches(".field input")&&e.key==="Enter"){ e.preventDefault(); applyInput(e.target); e.target.select(); } });
+document.addEventListener("change",e=>{ if(e.target.matches&&e.target.matches(".field input")) applyInput(e.target); });
+document.addEventListener("click",e=>{
+ const chip=e.target.closest(".chips button"); if(chip){ const t=chip.parentElement.dataset.for; setTag(t,lit(chip.textContent)); runFor(0.05); renderLive(); msg(`${t} = ${fmtTag(t)}`); return; }
+ const im=e.target.closest(".pb.imp"); if(im){ pulse(im.dataset.tag); renderLive(); im.classList.add("flash"); setTimeout(()=>im.classList.remove("flash"),180);
+  msg(`Impulsion ${im.dataset.tag}`); return; }
+ const tg=e.target.closest(".pb.tog"); if(tg){ const t=tg.dataset.tag; T.v[t]=T.v[t]?0:1; renderLive(); msg(`${t} = ${T.v[t]}`); return; }
+ const vt=e.target.closest("#vit button"); if(vt){ SPEED=+vt.dataset.x; document.querySelectorAll("#vit button").forEach(b=>b.classList.toggle("on",b===vt)); msg(`Le temps va ${SPEED} fois plus vite.`); return; }
+ const cp=e.target.closest("[data-copy]"); if(cp){ const t=PROG[+cp.dataset.copy].txt;
+  try{ navigator.clipboard.writeText(t).then(()=>{cp.textContent="Copié ✓"; setTimeout(()=>cp.textContent="Copier le texte",1200);}); }catch(_){} return; }
+ const es=e.target.closest("[data-e]"); if(es){ const i=+es.dataset.i, ok=run1(i); mark(`r1_${i}`,ok); renderLive(); msg(ok?"Même résultat que le corrigé ✓":"Résultat différent du corrigé"); return; }
+ const sq=e.target.closest("[data-seq]"); if(sq){ const r=runSeq(+sq.dataset.seq); renderLive(); msg(r.every(Boolean)?"Mêmes résultats que le corrigé ✓":"Un résultat diffère du corrigé"); return; }
+ if(e.target.id==="toutVerif"){ const r=runAll(); renderLive(); $("#toutRes").innerHTML=r.ok===r.n?`<span class="ok">✓ ${r.ok} essais sur ${r.n} : pareil au corrigé</span>`:`<span class="ko">${r.ok} sur ${r.n}</span>`; return; }
+ if(e.target.id==="raz"){ resetTags(); setTag("Choix_Forfait",1); runFor(0.2); renderLive(); msg("Tout est remis à zéro (Choix_Forfait = 1)."); return; }
+ const sg=e.target.closest(".gitem .seg button"); if(sg){ const seg=sg.parentElement; SC[seg.dataset.key]=+sg.dataset.v; seg.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===sg)); totals(); return; }
+ const ck=e.target.closest(".chk button"); if(ck){ const key=ck.parentElement.dataset.key+"."+ck.dataset.k; CK[key]=!CK[key]; ck.classList.toggle("on",CK[key]); totals(); return; }
+ if(e.target.id==="gnew"){ SC={}; CK={}; $("#etu").value=""; renderGrille(); window.scrollTo({top:$("#grille").offsetTop-10}); return; }
+ if(e.target.id==="pupT"){ $("#pupitre").classList.toggle("open"); return; }
+});
+window.SIM={build,resetTags,setTag,scan,runFor,pulse,rv,T:()=>T,PROG:()=>PROG,runAll,runSeq,bin8,stop:()=>clearInterval(TIMER)};
+build();
+</script>
+</body>
+</html>
