@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Structured Text — instructions les plus utilisées (Studio 5000 v38)</title>
+<style>
+:root{--bg:#f6f7f9;--ink:#1b2430;--mut:#5b6675;--acc:#c8102e;--card:#fff;--code:#0f1b2b}
+*{box-sizing:border-box}body{margin:0;font:16px/1.5 system-ui,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:var(--code);color:#fff;padding:32px 24px}header h1{margin:0 0 6px;font-size:28px}header p{margin:0;color:#c9d3e0}
+.wrap{max-width:1200px;margin:0 auto;padding:0 20px}
+nav{position:sticky;top:0;background:#fff;border-bottom:1px solid #dde2e8;z-index:5}
+nav .wrap{display:flex;gap:6px;flex-wrap:wrap;padding:10px 20px;align-items:center}
+nav a{text-decoration:none;color:var(--ink);font-size:14px;padding:5px 10px;border-radius:14px;background:#eef1f5}
+nav a:hover{background:var(--acc);color:#fff}
+#q{margin-left:auto;padding:6px 12px;border:1px solid #cfd6de;border-radius:14px;font-size:14px;min-width:200px}
+h2{display:flex;align-items:center;gap:10px;margin:34px 0 14px;font-size:22px}
+.ic{display:inline-grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--acc);color:#fff;font-size:16px;font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.card{background:var(--card);border-radius:10px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.card h3{margin:0 0 6px;font-size:17px;font-family:Consolas,monospace;color:var(--acc)}
+.card p{margin:0 0 10px;color:var(--mut);font-size:15px}
+pre{margin:0;background:var(--code);color:#e6edf5;padding:10px 12px;border-radius:8px;overflow:auto;font-size:13.5px}
+.note{background:#fff;border-radius:10px;padding:16px 20px;margin:30px 0}
+footer{text-align:center;color:var(--mut);font-size:14px;padding:30px}
+.hide{display:none}
+</style></head><body>
+<header><div class="wrap"><h1>Structured Text — les instructions les plus utilisées</h1>
+<p>Studio 5000 Logix Designer v38 · automates CompactLogix et ControlLogix · 39 instructions en 7 familles</p></div></header>
+<nav><div class="wrap"><a href="#c0">Opérateurs et affectation</a><a href="#c1">Structures de contrôle</a><a href="#c2">Temporisations et compteurs</a><a href="#c3">Mathématiques</a><a href="#c4">Déplacement et tableaux</a><a href="#c5">Chaînes de caractères</a><a href="#c6">Programme et système</a><input id="q" placeholder="Chercher une instruction…" aria-label="Chercher"></div></nav>
+<main class="wrap">
+<section id="c0"><h2><span class="ic">=</span>Opérateurs et affectation</h2>
+<div class="grid">
+<article class="card" data-t="affectation := écrit une valeur dans un tag (garde sa valeur au prochain scan)."><h3>Affectation :=</h3><p>Écrit une valeur dans un tag (garde sa valeur au prochain scan).</p><pre><code>Moteur := 1;</code></pre></article>
+<article class="card" data-t="affectation non rétentive [:=] le tag est remis à 0 à l'entrée en mode run ou au redémarrage."><h3>Affectation non rétentive [:=]</h3><p>Le tag est remis à 0 à l'entrée en mode Run ou au redémarrage.</p><pre><code>Alarme [:=] Defaut;</code></pre></article>
+<article class="card" data-t="arithmétique + - * / mod ** addition, soustraction, multiplication, division, reste, puissance."><h3>Arithmétique + - * / MOD **</h3><p>Addition, soustraction, multiplication, division, reste, puissance.</p><pre><code>Total := Lot * 12 + Reste;</code></pre></article>
+<article class="card" data-t="comparaison = &lt;&gt; &lt; &lt;= &gt; &gt;= compare deux valeurs, donne vrai ou faux."><h3>Comparaison = &lt;&gt; &lt; &lt;= &gt; &gt;=</h3><p>Compare deux valeurs, donne VRAI ou FAUX.</p><pre><code>Plein := Niveau &gt;= 95.0;</code></pre></article>
+<article class="card" data-t="logique and or xor not combine des conditions bool (and s'écrit aussi &amp;)."><h3>Logique AND OR XOR NOT</h3><p>Combine des conditions BOOL (AND s'écrit aussi &amp;).</p><pre><code>Marche := Start AND NOT Arret;</code></pre></article>
+<article class="card" data-t="commentaires // (* *) /* */ explique le code ; ignoré par l'automate."><h3>Commentaires // (* *) /* */</h3><p>Explique le code ; ignoré par l'automate.</p><pre><code>// Démarrage du convoyeur</code></pre></article>
+</div></section>
+<section id="c1"><h2><span class="ic">⇄</span>Structures de contrôle</h2>
+<div class="grid">
+<article class="card" data-t="if … then … elsif … else … end_if; exécute un bloc selon une ou plusieurs conditions."><h3>IF … THEN … ELSIF … ELSE … END_IF;</h3><p>Exécute un bloc selon une ou plusieurs conditions.</p><pre><code>IF Capteur THEN
+  Verin := 1;
+ELSE
+  Verin := 0;
+END_IF;</code></pre></article>
+<article class="card" data-t="case … of … end_case; choisit un bloc selon la valeur d'un entier — idéal pour une séquence par étapes."><h3>CASE … OF … END_CASE;</h3><p>Choisit un bloc selon la valeur d'un entier — idéal pour une séquence par étapes.</p><pre><code>CASE Etape OF
+  0: IF Start THEN Etape := 10; END_IF;
+  10: Moteur := 1;
+ELSE
+  Etape := 0;
+END_CASE;</code></pre></article>
+<article class="card" data-t="for … to … by … do … end_for; répète un bloc un nombre connu de fois (parcourir un tableau)."><h3>FOR … TO … BY … DO … END_FOR;</h3><p>Répète un bloc un nombre connu de fois (parcourir un tableau).</p><pre><code>FOR i := 0 TO 9 DO
+  Tab[i] := 0;
+END_FOR;</code></pre></article>
+<article class="card" data-t="while … do … end_while; répète tant que la condition est vraie (attention au chien de garde)."><h3>WHILE … DO … END_WHILE;</h3><p>Répète tant que la condition est VRAIE (attention au chien de garde).</p><pre><code>WHILE i &lt; 10 DO
+  i := i + 1;
+END_WHILE;</code></pre></article>
+<article class="card" data-t="repeat … until … end_repeat; répète au moins une fois, jusqu'à ce que la condition soit vraie."><h3>REPEAT … UNTIL … END_REPEAT;</h3><p>Répète au moins une fois, jusqu'à ce que la condition soit VRAIE.</p><pre><code>REPEAT
+  i := i + 1;
+UNTIL i &gt;= 10
+END_REPEAT;</code></pre></article>
+<article class="card" data-t="exit; sort immédiatement d'une boucle for, while ou repeat."><h3>EXIT;</h3><p>Sort immédiatement d'une boucle FOR, WHILE ou REPEAT.</p><pre><code>IF Tab[i] = 0 THEN EXIT; END_IF;</code></pre></article>
+</div></section>
+<section id="c2"><h2><span class="ic">⏱</span>Temporisations et compteurs</h2>
+<div class="grid">
+<article class="card" data-t="tonr temporisation au travail (tag de type fbd_timer) : .timerenable, .pre, .reset → .dn, .acc."><h3>TONR</h3><p>Temporisation au travail (tag de type FBD_TIMER) : .TimerEnable, .PRE, .Reset → .DN, .ACC.</p><pre><code>T1.TimerEnable := Capteur;
+T1.PRE := 3000;
+TONR(T1);
+Lampe := T1.DN;</code></pre></article>
+<article class="card" data-t="tofr temporisation au repos : .dn reste vrai pendant .pre ms après la chute de l'entrée."><h3>TOFR</h3><p>Temporisation au repos : .DN reste VRAI pendant .PRE ms après la chute de l'entrée.</p><pre><code>T2.TimerEnable := Marche;
+T2.PRE := 5000;
+TOFR(T2);
+Ventilo := T2.DN;</code></pre></article>
+<article class="card" data-t="rtor temporisation cumulative : garde .acc quand l'entrée tombe ; remise à zéro par .reset."><h3>RTOR</h3><p>Temporisation cumulative : garde .ACC quand l'entrée tombe ; remise à zéro par .Reset.</p><pre><code>T3.TimerEnable := Moteur;
+T3.PRE := 60000;
+T3.Reset := RAZ;
+RTOR(T3);</code></pre></article>
+<article class="card" data-t="ctud compteur/décompteur (tag fbd_counter) : .cuenable, .cdenable, .pre, .reset → .dn, .acc."><h3>CTUD</h3><p>Compteur/décompteur (tag FBD_COUNTER) : .CUEnable, .CDEnable, .PRE, .Reset → .DN, .ACC.</p><pre><code>C1.CUEnable := Photocellule;
+C1.PRE := 10;
+C1.Reset := RAZ;
+CTUD(C1);
+BoitePleine := C1.DN;</code></pre></article>
+<article class="card" data-t="osri / osfi front montant / descendant (tag fbd_oneshot) : .inputbit → .outputbit pendant un scan."><h3>OSRI / OSFI</h3><p>Front montant / descendant (tag FBD_ONESHOT) : .InputBit → .OutputBit pendant un scan.</p><pre><code>OS1.InputBit := Bouton;
+OSRI(OS1);
+IF OS1.OutputBit THEN
+  Cpt := Cpt + 1;
+END_IF;</code></pre></article>
+</div></section>
+<section id="c3"><h2><span class="ic">√</span>Mathématiques</h2>
+<div class="grid">
+<article class="card" data-t="abs valeur absolue."><h3>ABS</h3><p>Valeur absolue.</p><pre><code>Ecart := ABS(Consigne - Mesure);</code></pre></article>
+<article class="card" data-t="sqrt racine carrée."><h3>SQRT</h3><p>Racine carrée.</p><pre><code>Debit := K * SQRT(Pression);</code></pre></article>
+<article class="card" data-t="trn tronque : enlève la partie décimale."><h3>TRN</h3><p>Tronque : enlève la partie décimale.</p><pre><code>Entier := TRN(Valeur);</code></pre></article>
+<article class="card" data-t="ln / log logarithme naturel / logarithme base 10."><h3>LN / LOG</h3><p>Logarithme naturel / logarithme base 10.</p><pre><code>dB := 20.0 * LOG(Rapport);</code></pre></article>
+<article class="card" data-t="sin / cos / tan fonctions trigonométriques (angle en radians)."><h3>SIN / COS / TAN</h3><p>Fonctions trigonométriques (angle en radians).</p><pre><code>Y := R * SIN(Angle);</code></pre></article>
+<article class="card" data-t="deg / rad convertit radians → degrés / degrés → radians."><h3>DEG / RAD</h3><p>Convertit radians → degrés / degrés → radians.</p><pre><code>Angle := RAD(45.0);</code></pre></article>
+</div></section>
+<section id="c4"><h2><span class="ic">⇉</span>Déplacement et tableaux</h2>
+<div class="grid">
+<article class="card" data-t="cop copie un bloc de données (tableau, structure) octet par octet."><h3>COP</h3><p>Copie un bloc de données (tableau, structure) octet par octet.</p><pre><code>COP(Source[0], Dest[0], 10);</code></pre></article>
+<article class="card" data-t="cps copie synchrone : les données ne changent pas pendant la copie (e/s, hmi)."><h3>CPS</h3><p>Copie synchrone : les données ne changent pas pendant la copie (E/S, HMI).</p><pre><code>CPS(Local:1:I.Data, Image, 1);</code></pre></article>
+<article class="card" data-t="size donne le nombre d'éléments d'un tableau."><h3>SIZE</h3><p>Donne le nombre d'éléments d'un tableau.</p><pre><code>SIZE(Tab, 0, Nb);</code></pre></article>
+<article class="card" data-t="tod / frd entier → bcd / bcd → entier (afficheurs 7 segments, roues codeuses)."><h3>TOD / FRD</h3><p>Entier → BCD / BCD → entier (afficheurs 7 segments, roues codeuses).</p><pre><code>Afficheur := TOD(Compte);</code></pre></article>
+</div></section>
+<section id="c5"><h2><span class="ic">Aa</span>Chaînes de caractères</h2>
+<div class="grid">
+<article class="card" data-t="concat colle deux chaînes bout à bout."><h3>CONCAT</h3><p>Colle deux chaînes bout à bout.</p><pre><code>CONCAT(Texte1, Texte2, Message);</code></pre></article>
+<article class="card" data-t="mid extrait une partie d'une chaîne."><h3>MID</h3><p>Extrait une partie d'une chaîne.</p><pre><code>MID(Code, 3, 1, Lot);</code></pre></article>
+<article class="card" data-t="find cherche une chaîne dans une autre, donne la position."><h3>FIND</h3><p>Cherche une chaîne dans une autre, donne la position.</p><pre><code>FIND(Message, Cle, 1, Pos);</code></pre></article>
+<article class="card" data-t="insert / delete insère / enlève des caractères dans une chaîne."><h3>INSERT / DELETE</h3><p>Insère / enlève des caractères dans une chaîne.</p><pre><code>DELETE(Message, 2, 1, Court);</code></pre></article>
+<article class="card" data-t="dtos / stod nombre entier ↔ chaîne."><h3>DTOS / STOD</h3><p>Nombre entier ↔ chaîne.</p><pre><code>DTOS(Compte, TexteCompte);</code></pre></article>
+<article class="card" data-t="rtos / stor nombre réel ↔ chaîne."><h3>RTOS / STOR</h3><p>Nombre réel ↔ chaîne.</p><pre><code>RTOS(Temperature, TexteTemp);</code></pre></article>
+<article class="card" data-t="upper / lower met une chaîne en majuscules / minuscules."><h3>UPPER / LOWER</h3><p>Met une chaîne en majuscules / minuscules.</p><pre><code>UPPER(Saisie, SaisieMaj);</code></pre></article>
+</div></section>
+<section id="c6"><h2><span class="ic">⚙</span>Programme et système</h2>
+<div class="grid">
+<article class="card" data-t="jsr / sbr / ret appelle une sous-routine, reçoit ses paramètres, retourne au programme."><h3>JSR / SBR / RET</h3><p>Appelle une sous-routine, reçoit ses paramètres, retourne au programme.</p><pre><code>JSR(Sequence_Remplissage, 0);</code></pre></article>
+<article class="card" data-t="gsv / ssv lit / écrit une donnée système (heure, défauts, état du module)."><h3>GSV / SSV</h3><p>Lit / écrit une donnée système (heure, défauts, état du module).</p><pre><code>GSV(WallClockTime, , LocalDateTime, Heure[0]);</code></pre></article>
+<article class="card" data-t="msg envoie un message à un autre automate ou module (tag message)."><h3>MSG</h3><p>Envoie un message à un autre automate ou module (tag MESSAGE).</p><pre><code>IF NOT Msg1.EN THEN
+  MSG(Msg1);
+END_IF;</code></pre></article>
+<article class="card" data-t="pide régulateur pid amélioré (tag pide) : .pv, .sp → .cveu."><h3>PIDE</h3><p>Régulateur PID amélioré (tag PIDE) : .PV, .SP → .CVEU.</p><pre><code>Reg.PV := Niveau;
+Reg.SP := 50.0;
+PIDE(Reg);
+Vanne := Reg.CVEU;</code></pre></article>
+<article class="card" data-t="scl mise à l'échelle linéaire d'une valeur (tag scale)."><h3>SCL</h3><p>Mise à l'échelle linéaire d'une valeur (tag SCALE).</p><pre><code>S1.In := Brut;
+SCL(S1);
+Pression := S1.Out;</code></pre></article>
+</div></section>
+<div class="note"><h2 style="margin-top:0"><span class="ic">!</span>À retenir</h2>
+<ul><li>Chaque instruction se termine par un <b>point-virgule</b> <code>;</code>.</li>
+<li>En ST, on n'utilise pas MOV : on écrit simplement <code>Dest := Source;</code>.</li>
+<li>Les temporisations et compteurs du ST (TONR, TOFR, RTOR, CTUD) utilisent des tags FBD_TIMER / FBD_COUNTER — pas TIMER / COUNTER.</li>
+<li>Une boucle WHILE ou REPEAT trop longue déclenche le chien de garde de la tâche : préférer FOR quand on connaît le nombre de tours.</li>
+<li>Le ST n'est pas sensible aux majuscules : <code>moteur</code> et <code>Moteur</code> sont le même tag.</li></ul></div>
+</main><footer>Bassam Kattan · Control System Engineering</footer>
+<script>
+document.getElementById('q').addEventListener('input',e=>{const v=e.target.value.toLowerCase().trim();
+document.querySelectorAll('.card').forEach(c=>c.classList.toggle('hide',v&&!c.dataset.t.includes(v)));
+document.querySelectorAll('section').forEach(s=>s.classList.toggle('hide',v&&!s.querySelector('.card:not(.hide)')));});
+</script></body></html>
