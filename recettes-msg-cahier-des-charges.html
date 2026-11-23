@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Les recettes demandées par MSG — cahier des charges du laboratoire</title>
+<meta name="description" content="Laboratoire Réseaux industriels : deux automates Allen-Bradley (L32E et L30ER) qui se parlent par MSG (CIP Data Table Write et Read). Le cahier des charges expliqué, pas à pas, sans la solution.">
+<style>
+:root{--ink:#141820;--muted:#566070;--line:#DCE2EA;--soft:#F4F6F9;--card:#fff;--l32:#0E7490;--l32s:#E0F2F5;--l30:#C2410C;--l30s:#FDEBE2;
+  --ok:#15803D;--oks:#DFF3E6;--bad:#B91C1C;--bads:#FDE8E8;--udt:#7C3AED;--udts:#EFE7FE;--w:#B45309;--r:#0369A1;--hl:#FACC15;
+  --serif:'IBM Plex Serif',Georgia,'Times New Roman',serif;--sans:'Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;--mono:Consolas,'Courier New',monospace}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--soft);line-height:1.5;font-size:17px}
+a{color:var(--r)}
+code,.mono{font-family:var(--mono);font-size:.95em}
+code{background:#EEF2F7;padding:1px 6px;border-radius:6px;color:#1E293B}
+.wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+header.hero{background:#fff;border-bottom:1px solid var(--line)}
+header.hero .wrap{padding:34px 20px 26px}
+.kick{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700}
+h1{font-family:var(--serif);font-size:clamp(30px,4.6vw,48px);line-height:1.08;margin:8px 0 10px}
+.lead{font-size:19px;color:#334155;max-width:900px;margin:0 0 16px}
+.meta{display:flex;flex-wrap:wrap;gap:10px;font-size:14px}
+.meta span{background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+nav.tabs{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+nav.tabs .wrap{display:flex;gap:4px;overflow-x:auto;padding:8px 20px}
+nav.tabs a{flex:none;text-decoration:none;color:var(--ink);font-weight:600;font-size:15px;padding:8px 14px;border-radius:10px;border:1px solid transparent}
+nav.tabs a:hover{background:var(--soft)}
+nav.tabs a.on{background:var(--ink);color:#fff}
+section{padding:36px 0 10px}
+h2{font-family:var(--serif);font-size:32px;margin:0 0 6px;line-height:1.15}
+h2 small{display:block;font-family:var(--sans);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+h3{font-size:21px;margin:26px 0 8px}
+.sub{color:var(--muted);margin:0 0 18px;font-size:17px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px 22px;box-shadow:0 8px 24px rgba(20,24,32,.05)}
+.grid{display:grid;gap:18px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.tag{display:inline-block;padding:3px 11px;border-radius:999px;font-size:13px;font-weight:700;color:#fff;vertical-align:middle}
+.pts{float:right;background:var(--ink);color:#fff;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;font-size:16px}
+th{background:#EEF2F7;text-align:left;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:10px 12px}
+td{padding:9px 12px;border-top:1px solid #EEF1F5;vertical-align:top}
+tr.zero td{color:#64748B;background:#F8FAFC}
+.rule{display:flex;gap:14px;align-items:flex-start;padding:14px 16px;border-radius:14px;border:2px solid var(--line);background:#fff}
+.rule .n{flex:none;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
+.rule b{display:block;margin-bottom:2px}
+.retiens{background:var(--ink);color:#fff;border-radius:16px;padding:16px 22px;font-size:18px;font-weight:600;margin:18px 0}
+.retiens span{color:var(--hl)}
+.warn{border-left:5px solid var(--bad);background:var(--bads);padding:12px 16px;border-radius:0 12px 12px 0;margin:14px 0}
+.tip{border-left:5px solid var(--ok);background:var(--oks);padding:12px 16px;border-radius:0 12px 12px 0;margin:14px 0}
+.steps{counter-reset:s;list-style:none;padding:0;margin:0}
+.steps li{position:relative;padding:12px 0 12px 54px;border-top:1px solid #EEF1F5}
+.steps li:first-child{border-top:none}
+.steps li::before{counter-increment:s;content:counter(s);position:absolute;left:6px;top:12px;width:34px;height:34px;border-radius:50%;background:var(--l30);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center}
+.steps.teal li::before{background:var(--l32)}
+/* bloc d'instruction façon Studio 5000 */
+.blk{display:inline-block;background:#fff;border:3px solid #1F2933;border-radius:4px;font-family:var(--sans);color:#111;min-width:300px;margin:6px 10px 6px 0;vertical-align:top;position:relative}
+.blk .hd{display:flex;justify-content:space-between;gap:16px;padding:4px 10px;border-bottom:2px solid #1F2933;font-weight:700;font-size:17px;background:#F1F4F8}
+.blk .hd span:last-child{font-weight:400;color:#555;font-size:14px}
+.blk .op{display:flex;justify-content:space-between;gap:16px;padding:2px 10px;font-size:15px}
+.blk .op b{font-weight:400;color:#333}
+.blk .op span{font-family:var(--mono);font-weight:700}
+.blk .bits{position:absolute;right:-30px;top:4px;display:flex;flex-direction:column;gap:6px}
+.blk .bits i{font-style:normal;font-size:12px;font-weight:700;border:2px solid #1F2933;background:#fff;border-radius:4px;padding:0 4px}
+/* fenêtre Message Configuration */
+.win{background:#F3F3F3;border:2px solid #7A8699;border-radius:8px;font-family:var(--sans);color:#111;box-shadow:0 12px 36px rgba(0,0,0,.14);max-width:620px;margin:10px 0}
+.win .t{height:34px;background:#2F3B4D;color:#fff;font-size:15px;font-weight:600;display:flex;align-items:center;padding:0 12px;border-radius:5px 5px 0 0}
+.win .tabs{display:flex;gap:2px;padding:10px 12px 0}
+.win .tabs span{padding:4px 12px;font-size:14px;background:#E3E6EA;border:1px solid #AEB6C2;border-bottom:none;color:#555}
+.win .tabs span.on{background:#fff;color:#111;font-weight:600}
+.win .pane{margin:0 12px 12px;background:#fff;border:1px solid #AEB6C2;padding:14px}
+.fld{display:flex;align-items:center;gap:10px;margin:6px 0;font-size:15px;flex-wrap:wrap}
+.fld .lb{width:170px;text-align:right;color:#333}
+.fld .in{background:#fff;border:2px solid #9AA4B2;border-radius:3px;padding:3px 10px;font-family:var(--mono);font-weight:700;font-size:16px;min-width:120px}
+.fld select.in{font-family:var(--sans);font-weight:400}
+.path{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:10px 0 4px}
+.path b{font-family:var(--mono);font-size:26px;padding:4px 12px;border-radius:10px;border:3px solid}
+.path small{display:block;font-size:12px;font-family:var(--sans);font-weight:600;text-align:center;margin-top:2px}
+/* schéma */
+.schema{background:#fff;border:1px solid var(--line);border-radius:18px;padding:10px;overflow:hidden}
+.schema svg{width:100%;height:auto;display:block}
+@keyframes go1{0%,5%{transform:translateX(0);opacity:0}10%{opacity:1}40%{transform:translateX(560px);opacity:1}45%,100%{opacity:0;transform:translateX(560px)}}
+@keyframes go3{0%,50%{transform:translateX(0);opacity:0}55%{opacity:1}85%{transform:translateX(-560px);opacity:1}90%,100%{opacity:0;transform:translateX(-560px)}}
+.env1{animation:go1 7s infinite ease-in-out}
+.env3{animation:go3 7s infinite ease-in-out}
+/* étapes de la séquence */
+.seq{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.seq .s{background:#fff;border:3px solid var(--line);border-radius:16px;padding:14px 14px 12px;position:relative}
+.seq .s .n{position:absolute;left:-12px;top:-12px;width:36px;height:36px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
+.seq .s b.t{display:block;font-size:19px;margin:0 0 8px 14px}
+.seq .s .q,.seq .s .f{font-size:14.5px;line-height:1.35}
+.seq .s .q{color:var(--muted);min-height:58px}
+.seq .s .f{border-top:2px solid #EEF1F5;margin-top:8px;padding-top:8px}
+.seq .s .lbl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:#94A3B8;display:block}
+/* écran ME */
+.hmi{background:#1E293B;border:10px solid #334155;border-radius:14px;padding:14px;max-width:560px;box-shadow:0 14px 40px rgba(0,0,0,.2)}
+.hmi .scr{background:#DCE6F2;border-radius:4px;padding:12px;font-family:var(--sans)}
+.hmi .row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.hmi .bt{flex:1;min-width:76px;height:46px;border-radius:8px;background:linear-gradient(#F8FAFC,#CBD5E1);border:2px solid #64748B;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;cursor:pointer;user-select:none}
+.hmi .bt:active{background:#CBD5E1}
+.hmi .dsp{flex:1;min-width:140px;background:#fff;border:2px solid #94A3B8;border-radius:4px;padding:4px 8px;font-family:var(--mono);font-size:15px;display:flex;justify-content:space-between}
+.hmi .dsp i{font-style:normal;font-family:var(--sans);font-size:12px;color:#475569}
+.hmi .lp{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600}
+.hmi .lp i{width:22px;height:22px;border-radius:50%;border:2px solid #475569;background:#CBD5E1;display:block}
+.hmi .lp.on i{background:#22C55E;box-shadow:0 0 10px #22C55E}
+.hmi .lp.red i{background:#EF4444;box-shadow:0 0 10px #EF4444}
+/* essais */
+.essais td:first-child{font-weight:700;color:var(--l30);width:40px}
+.essais input[type=checkbox]{width:22px;height:22px;accent-color:var(--ok)}
+.visa{width:120px}
+details{background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px 16px;margin:10px 0}
+summary{cursor:pointer;font-weight:700;font-size:17px}
+details[open] summary{margin-bottom:8px}
+.chk{list-style:none;padding:0;margin:0}
+.chk li{padding:6px 0 6px 36px;position:relative}
+.chk li::before{content:'✓';position:absolute;left:0;top:4px;width:26px;height:26px;border:2px solid var(--l30);border-radius:7px;color:var(--l30);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px}
+footer{padding:40px 0 60px;color:var(--muted);font-size:14px;text-align:center}
+.btn{display:inline-block;background:var(--ink);color:#fff;text-decoration:none;padding:9px 16px;border-radius:10px;font-weight:600;font-size:15px}
+.btn.o{background:#fff;color:var(--ink);border:2px solid var(--ink)}
+@media print{nav.tabs{display:none}body{background:#fff;font-size:13px}.card{box-shadow:none}section{padding:14px 0}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kick">Laboratoire · Réseaux industriels · 3 à 4 h · en équipe de deux</div>
+    <h1>Les recettes demandées par MSG</h1>
+    <p class="lead">Deux automates Allen-Bradley qui se parlent : la station de mélange (<b style="color:var(--l30)">L30ER</b>) demande une recette au serveur de recettes (<b style="color:var(--l32)">L32E</b>) avec deux instructions <b>MSG</b> — une écriture, puis une lecture. Cette page explique le cahier des charges et comment utiliser la MSG. <b>La solution, c'est à vous de la faire.</b></p>
+    <div class="meta">
+      <span><b>L32E</b> · RSLogix 5000 v20 · <code>10.20.49.80</code></span>
+      <span><b>L30ER</b> · Studio 5000 · <code>10.20.49.40</code></span>
+      <span>Écran FactoryTalk View ME · PanelView Plus 600</span>
+      <span>Remise sur Léa</span>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs"><div class="wrap">
+  <a href="#situation">Mise en situation</a>
+  <a href="#cahier">Cahier des charges</a>
+  <a href="#p1">Partie 1 · L32E</a>
+  <a href="#p2">Partie 2 · Les MSG</a>
+  <a href="#p3">Partie 3 · Séquence</a>
+  <a href="#p4">Partie 4 · Écran et essais</a>
+  <a href="#remise">Remise</a>
+  <a href="#defi">Défi</a>
+</div></nav>
+
+<main class="wrap">
+
+<!-- ============ MISE EN SITUATION ============ -->
+<section id="situation">
+  <h2><small>Le problème</small>La mise en situation</h2>
+  <p class="sub">Une usine de boissons garde ses <b>5 recettes</b> dans un seul automate, le L32E. La station de mélange (le L30ER) ne les a pas. À chaque lot, l'opérateur choisit une recette à l'écran.</p>
+  <div class="schema">
+    <svg viewBox="0 0 1100 330" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,Arial,sans-serif">
+      <defs>
+        <marker id="aw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#B45309"/></marker>
+        <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#0369A1"/></marker>
+        <g id="plc"><rect x="0" y="0" width="150" height="100" rx="8" fill="#2B3440"/><rect x="8" y="8" width="28" height="84" rx="3" fill="#CBD5E1"/>
+          <rect x="44" y="8" width="24" height="84" rx="3" fill="#F8FAFC"/><rect x="74" y="8" width="24" height="84" rx="3" fill="#F8FAFC"/><rect x="104" y="8" width="20" height="84" rx="3" fill="#F8FAFC"/><rect x="128" y="8" width="16" height="84" rx="3" fill="#F8FAFC"/>
+          <circle cx="50" cy="18" r="3" fill="#22C55E"/><circle cx="60" cy="18" r="3" fill="#22C55E"/><circle cx="80" cy="18" r="3" fill="#22C55E"/><circle cx="90" cy="18" r="3" fill="#FACC15"/></g>
+      </defs>
+      <!-- L30ER -->
+      <use href="#plc" x="60" y="110"/>
+      <text x="135" y="238" text-anchor="middle" font-weight="700" font-size="24" fill="#C2410C">L30ER</text>
+      <text x="135" y="262" text-anchor="middle" font-size="15" fill="#566070">station de mélange</text>
+      <rect x="78" y="70" width="114" height="28" rx="8" fill="#fff" stroke="#DCE2EA" stroke-width="2"/><text x="135" y="90" text-anchor="middle" font-family="Consolas,monospace" font-weight="700" font-size="16" fill="#0369A1">10.20.49.40</text>
+      <!-- écran -->
+      <rect x="40" y="280" width="60" height="40" rx="5" fill="#2B3440"/><rect x="45" y="285" width="50" height="30" rx="2" fill="#DBEAFE"/><text x="110" y="306" font-size="14" fill="#566070">écran · 5 boutons</text>
+      <!-- switch -->
+      <rect x="470" y="140" width="160" height="40" rx="6" fill="#2B3440"/>
+      <g fill="#0F172A" stroke="#94A3B8"><rect x="484" y="154" width="12" height="10"/><rect x="502" y="154" width="12" height="10"/><rect x="520" y="154" width="12" height="10"/><rect x="538" y="154" width="12" height="10"/><rect x="556" y="154" width="12" height="10"/><rect x="574" y="154" width="12" height="10"/><rect x="592" y="154" width="12" height="10"/><rect x="610" y="154" width="12" height="10"/></g>
+      <text x="550" y="200" text-anchor="middle" font-size="13" fill="#566070">switch Ethernet</text>
+      <line x1="210" y1="160" x2="470" y2="160" stroke="#94A3B8" stroke-width="5" stroke-linecap="round"/>
+      <line x1="630" y1="160" x2="890" y2="160" stroke="#94A3B8" stroke-width="5" stroke-linecap="round"/>
+      <!-- L32E -->
+      <use href="#plc" x="890" y="110"/>
+      <text x="965" y="238" text-anchor="middle" font-weight="700" font-size="24" fill="#0E7490">L32E</text>
+      <text x="965" y="262" text-anchor="middle" font-size="15" fill="#566070">serveur de recettes</text>
+      <rect x="908" y="70" width="114" height="28" rx="8" fill="#fff" stroke="#DCE2EA" stroke-width="2"/><text x="965" y="90" text-anchor="middle" font-family="Consolas,monospace" font-weight="700" font-size="16" fill="#0369A1">10.20.49.80</text>
+      <g font-size="12" font-weight="700" fill="#fff"><rect x="900" y="276" width="130" height="20" rx="10" fill="#0E7490"/><text x="965" y="290" text-anchor="middle">Recettes[1] à [5]</text></g>
+      <!-- flèches -->
+      <line x1="230" y1="40" x2="880" y2="40" stroke="#B45309" stroke-width="5" marker-end="url(#aw)"/>
+      <text x="550" y="28" text-anchor="middle" font-weight="700" font-size="16" fill="#B45309">① MSG_Demande · écrit le numéro voulu dans Num_Demande</text>
+      <g class="env1"><rect x="240" y="48" width="72" height="26" rx="8" fill="#B45309"/><text x="276" y="66" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">✉ n° 3</text></g>
+      <line x1="870" y1="300" x2="220" y2="300" stroke="#0369A1" stroke-width="5" marker-end="url(#ar)"/>
+      <text x="550" y="292" text-anchor="middle" font-weight="700" font-size="16" fill="#0369A1">③ MSG_Recette · lit Reponse (la recette préparée)</text>
+      <g class="env3"><rect x="790" y="306" width="90" height="26" rx="8" fill="#0369A1"/><text x="835" y="324" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">✉ Punch…</text></g>
+      <text x="965" y="56" text-anchor="middle" font-weight="700" font-size="15" fill="#0E7490">② prépare la recette</text>
+      <text x="135" y="56" text-anchor="middle" font-weight="700" font-size="15" fill="#C2410C">④ vérifie le numéro</text>
+    </svg>
+  </div>
+  <div class="grid g2" style="margin-top:18px">
+    <div class="card">
+      <h3 style="margin-top:0">Les quatre étapes d'un lot</h3>
+      <ol class="steps">
+        <li>Le <b style="color:var(--l30)">L30ER</b> écrit le numéro voulu dans le L32E (<code>Num_Demande</code>).</li>
+        <li>Le <b style="color:var(--l32)">L32E</b> prépare la recette (il la copie dans <code>Reponse</code>).</li>
+        <li>Le <b style="color:var(--l30)">L30ER</b> la lit (dans <code>Recette_Recue</code>).</li>
+        <li>Le <b style="color:var(--l30)">L30ER</b> vérifie le numéro reçu avant de s'en servir (<code>Active</code>).</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">À retenir tout de suite</h3>
+      <div class="retiens" style="margin:0 0 12px">Les deux MSG partent du <span>L30ER</span> : il écrit le numéro, puis il lit la recette. Le L32E ne fait que répondre.</div>
+      <p style="margin:0">Durée : 3 à 4 h. Automates : <b>L32E</b> <code>10.20.49.80</code> (RSLogix 5000 v20) et <b>L30ER</b> <code>10.20.49.40</code> (Studio 5000). Remise en équipe de deux, sur Léa.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CAHIER DES CHARGES ============ -->
+<section id="cahier">
+  <h2><small>Ce qu'on vous demande</small>Le cahier des charges</h2>
+
+  <h3>Le type <code>Recette</code> (UDT) — le même dans les deux automates</h3>
+  <div class="warn"><b>Mêmes membres, mêmes noms, même ordre, mêmes types</b> dans les deux projets : sinon, la MSG échoue (ou copie n'importe quoi).</div>
+  <table>
+    <thead><tr><th>Membre</th><th>Type</th><th>Unité</th><th>Rôle</th></tr></thead>
+    <tbody>
+      <tr><td><code>Numero</code></td><td><b>DINT</b></td><td></td><td>numéro de la recette, 1 à 5 ; <b>0 = pas de recette</b></td></tr>
+      <tr><td><code>Nom</code></td><td><b>STRING</b></td><td></td><td>nom du produit</td></tr>
+      <tr><td><code>Niveau_1</code></td><td><b>REAL</b></td><td>mm</td><td>fin du remplissage par la vanne 1</td></tr>
+      <tr><td><code>Niveau_2</code></td><td><b>REAL</b></td><td>mm</td><td>fin du remplissage par la vanne 2</td></tr>
+      <tr><td><code>Temps_Melange</code></td><td><b>DINT</b></td><td>ms</td><td>durée du mélange (le preset d'un TON)</td></tr>
+      <tr><td><code>Vitesse</code></td><td><b>REAL</b></td><td>%</td><td>vitesse de l'agitateur</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Les 5 recettes : le tableau <code>Recettes</code> du L32E</h3>
+  <p class="sub">Niveaux en mm, temps en ms, vitesse en %. Logix compte à partir de 0 : <code>Recettes</code> est un <code>Recette[6]</code>, et <code>Recettes[0]</code> ne sert pas.</p>
+  <table>
+    <thead><tr><th>Indice</th><th>Numero</th><th>Nom</th><th>Niveau_1</th><th>Niveau_2</th><th>Temps_Melange</th><th>Vitesse</th></tr></thead>
+    <tbody>
+      <tr class="zero"><td><code>[0]</code></td><td>—</td><td colspan="5">ne sert pas</td></tr>
+      <tr><td><code>[1]</code></td><td>1</td><td>Limonade</td><td>100</td><td>250</td><td>10 000</td><td>60</td></tr>
+      <tr><td><code>[2]</code></td><td>2</td><td>Orangeade</td><td>80</td><td>200</td><td>15 000</td><td>80</td></tr>
+      <tr><td><code>[3]</code></td><td>3</td><td>Punch</td><td>120</td><td>280</td><td>8 000</td><td>50</td></tr>
+      <tr><td><code>[4]</code></td><td>4</td><td>Boisson sport</td><td>60</td><td>150</td><td>20 000</td><td>100</td></tr>
+      <tr><td><code>[5]</code></td><td>5</td><td>Sirop</td><td>100</td><td>200</td><td>12 000</td><td>40</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Les tags (Controller Tags)</h3>
+  <div class="grid g2">
+    <div class="card" style="border-color:var(--l32)">
+      <b style="color:var(--l32);font-size:19px">L32E</b>
+      <table style="margin-top:10px;border:none">
+        <tr><td><code>Recettes</code></td><td><code>Recette[6]</code></td><td>les 5 recettes</td></tr>
+        <tr><td><code>Num_Demande</code></td><td><code>DINT</code></td><td>← écrit par le L30ER</td></tr>
+        <tr><td><code>Reponse</code></td><td><code>Recette</code></td><td>→ lue par le L30ER</td></tr>
+      </table>
+    </div>
+    <div class="card" style="border-color:var(--l30)">
+      <b style="color:var(--l30);font-size:19px">L30ER</b>
+      <table style="margin-top:10px;border:none">
+        <tr><td><code>Num_Choisi</code> · <code>Duree_ms</code></td><td><code>DINT</code></td></tr>
+        <tr><td><code>Recette_Recue</code> · <code>Active</code></td><td><code>Recette</code></td></tr>
+        <tr><td><code>MSG_Demande</code> · <code>MSG_Recette</code></td><td><code>MESSAGE</code></td></tr>
+        <tr><td><code>T_Lire</code> · <code>T_Delai</code></td><td><code>TIMER</code></td></tr>
+        <tr><td><code>Demande</code> · <code>Lire</code> · <code>Recette_OK</code> · <code>Defaut_Com</code> · <code>Front_Choix</code> · <code>Mem_Choix</code></td><td><code>BOOL</code></td></tr>
+        <tr><td><code>HMI_R1</code> à <code>HMI_R5</code> (les boutons de l'écran)</td><td><code>BOOL</code></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <h3>Les quatre règles</h3>
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(420px,1fr))">
+    <div class="rule" style="border-color:var(--l30)"><div class="n" style="background:var(--l30)">1</div><div><b>Une à la fois</b>Pendant une demande, les boutons de l'écran sont ignorés.</div></div>
+    <div class="rule" style="border-color:var(--l32)"><div class="n" style="background:var(--l32)">2</div><div><b>Le L32E refuse un numéro hors de 1 à 5</b>…sans s'arrêter : <code>Reponse.Numero = 0</code>.</div></div>
+    <div class="rule" style="border-color:var(--ok)"><div class="n" style="background:var(--ok)">3</div><div><b>La vérification</b>La recette reçue va dans <code>Active</code> seulement si son <code>Numero</code> est celui demandé.</div></div>
+    <div class="rule" style="border-color:var(--bad)"><div class="n" style="background:var(--bad)">4</div><div><b>Le chien de garde</b>Sans bonne réponse en <b>2 s</b> : <code>Defaut_Com = 1</code> et <code>Active</code> ne change pas.</div></div>
+  </div>
+</section>
+
+<!-- ============ PARTIE 1 ============ -->
+<section id="p1">
+  <h2><small>RSLogix 5000 v20 · projet Recettes_L32E · 1769-L32E · 10.20.49.80</small>Partie 1 · Le L32E : le serveur de recettes <span class="pts">20 points</span></h2>
+  <div class="card">
+    <ol class="steps teal">
+      <li>Créez le type <code>Recette</code> (<i>Data Types › User-Defined</i>), avec les membres <b>dans l'ordre du tableau</b>.</li>
+      <li>Créez les tags du L32E. Entrez les 5 recettes dans <code>Recettes[1]</code> à <code>Recettes[5]</code>.</li>
+      <li><b>Ligne 0</b> : <code>LIM 1 Num_Demande 5</code>, puis <code>COP Recettes[Num_Demande]</code> vers <code>Reponse</code>, longueur 1.<br>
+          <b>Ligne 1</b> : si <code>Num_Demande</code> est plus petit que 1 (<code>LES</code>) ou plus grand que 5 (<code>GRT</code>), <code>CLR Reponse.Numero</code>.</li>
+      <li>Téléchargez, passez en Run. Écrivez <code>Num_Demande = 3</code>, puis <code>7</code>, et regardez <code>Reponse</code> (essai 1).</li>
+    </ol>
+    <div style="margin-top:14px">
+      <div class="blk"><div class="hd"><span>LIM</span><span>Limit Test</span></div><div class="op"><b>Low Limit</b><span>1</span></div><div class="op"><b>Test</b><span>Num_Demande</span></div><div class="op"><b>High Limit</b><span>5</span></div></div>
+      <div class="blk"><div class="hd"><span>COP</span><span>Copy File</span></div><div class="op"><b>Source</b><span>Recettes[Num_Demande]</span></div><div class="op"><b>Dest</b><span>Reponse</span></div><div class="op"><b>Length</b><span>1</span></div></div>
+      <div class="blk"><div class="hd"><span>CLR</span><span>Clear</span></div><div class="op"><b>Dest</b><span>Reponse.Numero</span></div></div>
+    </div>
+    <div class="tip">Le test qui compte : avec <b>3</b>, <code>Reponse</code> = la recette 3 (Punch, 120, 280, 8000, 50). Avec <b>7</b>, <code>Reponse.Numero = 0</code> — et l'automate reste en Run.</div>
+  </div>
+</section>
+
+<!-- ============ PARTIE 2 ============ -->
+<section id="p2">
+  <h2><small>Studio 5000 · projet Recettes_L30ER · 1769-L30ER · 10.20.49.40</small>Partie 2 · Le L30ER : les deux MSG <span class="pts">25 points</span></h2>
+  <p class="sub">La <b>MSG</b>, c'est l'instruction qui envoie un message à un autre automate. Ici, on en fait deux. Source et destination sont <b>toujours vues du L30ER</b> : il pousse un numéro, puis il tire une recette.</p>
+
+  <div class="grid g2">
+    <div class="card" style="border-color:var(--w)">
+      <span class="tag" style="background:var(--w)">MSG_Demande · écriture</span>
+      <h3 style="margin:10px 0 6px">CIP Data Table Write</h3>
+      <div class="win">
+        <div class="t">Message Configuration - MSG_Demande</div>
+        <div class="tabs"><span class="on">Configuration</span><span>Communication</span><span>Tag</span></div>
+        <div class="pane">
+          <div class="fld"><span class="lb">Message Type :</span><span class="in" style="font-family:var(--sans);font-weight:400">CIP Data Table Write</span></div>
+          <div class="fld"><span class="lb">Source Element :</span><span class="in">Num_Choisi</span></div>
+          <div class="fld"><span class="lb">Number Of Elements :</span><span class="in">1</span></div>
+          <div class="fld"><span class="lb">Destination Element :</span><span class="in">Num_Demande</span></div>
+        </div>
+      </div>
+      <p style="margin:0;font-size:15px;color:var(--muted)">La source est <b>ici</b> (dans le L30ER) ; la destination est un <b>Controller Tag du L32E</b>, écrit en toutes lettres.</p>
+    </div>
+    <div class="card" style="border-color:var(--r)">
+      <span class="tag" style="background:var(--r)">MSG_Recette · lecture</span>
+      <h3 style="margin:10px 0 6px">CIP Data Table Read</h3>
+      <div class="win">
+        <div class="t">Message Configuration - MSG_Recette</div>
+        <div class="tabs"><span class="on">Configuration</span><span>Communication</span><span>Tag</span></div>
+        <div class="pane">
+          <div class="fld"><span class="lb">Message Type :</span><span class="in" style="font-family:var(--sans);font-weight:400">CIP Data Table Read</span></div>
+          <div class="fld"><span class="lb">Source Element :</span><span class="in">Reponse</span></div>
+          <div class="fld"><span class="lb">Number Of Elements :</span><span class="in">1</span></div>
+          <div class="fld"><span class="lb">Destination Element :</span><span class="in">Recette_Recue</span></div>
+        </div>
+      </div>
+      <p style="margin:0;font-size:15px;color:var(--muted)">La source est dans le <b>L32E</b> ; la destination est <b>ici</b>. Un élément : une recette complète, grâce à l'UDT.</p>
+    </div>
+  </div>
+
+  <h3>L'onglet Communication : le Path (le même pour les deux MSG)</h3>
+  <div class="card">
+    <div class="win" style="max-width:100%">
+      <div class="t">Message Configuration - MSG_Demande</div>
+      <div class="tabs"><span>Configuration</span><span class="on">Communication</span><span>Tag</span></div>
+      <div class="pane">
+        <div class="fld"><span class="lb">Path :</span><span class="in" style="border-color:var(--r);min-width:260px">2, 10.20.49.80, 1, 0</span></div>
+        <div class="fld"><span class="lb">Communication Method</span><span>● CIP &nbsp; ○ DH+ &nbsp; ○ CIP With Source ID</span></div>
+        <div class="fld"><span class="lb"></span><span>☐ Connected &nbsp; ☑ Cache Connections</span></div>
+      </div>
+    </div>
+    <div class="path">
+      <span><b style="color:var(--l30);border-color:var(--l30);background:var(--l30s)">2</b><small>port Ethernet du L30ER</small></span>
+      <span style="font-size:26px;color:#94A3B8">,</span>
+      <span><b style="color:var(--l32);border-color:var(--l32);background:var(--l32s)">10.20.49.80</b><small>adresse IP du L32E</small></span>
+      <span style="font-size:26px;color:#94A3B8">,</span>
+      <span><b style="color:var(--udt);border-color:var(--udt);background:var(--udts)">1</b><small>fond de panier (backplane)</small></span>
+      <span style="font-size:26px;color:#94A3B8">,</span>
+      <span><b style="color:var(--r);border-color:var(--r);background:#E0EEF8">0</b><small>slot du processeur</small></span>
+    </div>
+  </div>
+
+  <h3>Essayez chaque MSG toute seule avant la séquence</h3>
+  <div class="grid g2">
+    <div class="card">
+      <p style="margin-top:0">Une <b>ligne provisoire</b> : un <code>XIC</code> sur un bit d'essai, puis la MSG. Forcez le bit à 1 et regardez les bits de la MSG :</p>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;margin:8px 0 12px">
+        <span class="tag" style="background:var(--ok);font-size:15px;padding:6px 14px">DN = 1 → réussie</span>
+        <span class="tag" style="background:var(--bad);font-size:15px;padding:6px 14px">ER = 1 → erreur</span>
+      </div>
+      <div class="blk" style="min-width:260px"><div class="hd"><span>MSG</span><span>Message</span></div><div class="op"><b>Message Control</b><span>MSG_Demande</span></div><div class="bits"><i>EN</i><i>DN</i><i>ER</i></div></div>
+      <p style="margin:12px 0 0;color:var(--muted);font-size:15px">Quand les deux MSG marchent, <b>effacez ces lignes d'essai</b>.</p>
+    </div>
+    <div class="card" style="border-color:var(--bad)">
+      <b style="color:var(--bad);font-size:19px">Si ER = 1, vérifiez :</b>
+      <ol style="margin:10px 0 0;padding-left:22px;line-height:1.7">
+        <li>le <b>Path</b> (onglet Communication) ;</li>
+        <li>le type <code>Recette</code> : <b>le même des deux côtés, membre pour membre</b> ;</li>
+        <li>que <code>Num_Demande</code> et <code>Reponse</code> sont bien des <b>Controller Tags</b> du L32E (pas des tags de programme).</li>
+      </ol>
+      <p style="margin:10px 0 0;font-size:15px;color:var(--muted)">Aussi : les deux automates dans le même réseau, le L32E en Run, le câble branché.</p>
+    </div>
+  </div>
+  <div class="card" style="margin-top:18px">
+    <ol class="steps">
+      <li>Créez le même type <code>Recette</code>, membre pour membre, puis les tags du L30ER.</li>
+      <li><code>MSG_Demande</code> : CIP Data Table Write · Source Element <code>Num_Choisi</code> · Destination Element <code>Num_Demande</code> · 1 élément.</li>
+      <li><code>MSG_Recette</code> : CIP Data Table Read · Source Element <code>Reponse</code> · Destination Element <code>Recette_Recue</code> · 1 élément.</li>
+      <li>Onglet Communication des deux MSG : Path <code>2, 10.20.49.80, 1, 0</code>.</li>
+      <li>Essayez chaque MSG seule avec une ligne provisoire (XIC d'un bit d'essai, puis la MSG) : DN = réussie, ER = erreur. Effacez ces lignes ensuite.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ PARTIE 3 ============ -->
+<section id="p3">
+  <h2><small>Dans le L30ER</small>Partie 3 · La demande, la vérification, le chien de garde <span class="pts">20 points</span></h2>
+  <p class="sub">Écrivez la séquence en ladder dans le L30ER, avec <code>OTL</code> / <code>OTU</code>, <code>ONS</code>, <code>TON</code>, <code>RES</code>, <code>EQ</code> et <code>COP</code> (avant la v36 : <code>EQU</code> et <code>MOV</code> au lieu de <code>EQ</code> et <code>MOVE</code>). Faites d'abord marcher les étapes 1 à 4, puis ajoutez l'étape 5.</p>
+  <div class="seq">
+    <div class="s" style="border-color:var(--l30)"><div class="n" style="background:var(--l30)">1</div><b class="t">Choix</b>
+      <div class="q"><span class="lbl">Quand</span>un bouton <code>HMI_Rk</code> de l'écran, sans demande en cours</div>
+      <div class="f"><span class="lbl">Le L30ER fait</span><code>Num_Choisi = k</code>. Sur le front (ONS) : OTL <code>Demande</code> ; OTU <code>Lire</code>, <code>Recette_OK</code> et <code>Defaut_Com</code> ; CLR <code>Recette_Recue.Numero</code> ; RES <code>T_Delai</code>.</div></div>
+    <div class="s" style="border-color:var(--w)"><div class="n" style="background:var(--w)">2</div><b class="t">Demande</b>
+      <div class="q"><span class="lbl">Quand</span><code>Demande = 1</code> et <code>Lire = 0</code></div>
+      <div class="f"><span class="lbl">Le L30ER fait</span><code>MSG_Demande</code> envoie <code>Num_Choisi</code> au L32E. À son DN : OTL <code>Lire</code>.</div></div>
+    <div class="s" style="border-color:var(--r)"><div class="n" style="background:var(--r)">3</div><b class="t">Lecture</b>
+      <div class="q"><span class="lbl">Quand</span><code>Lire = 1</code></div>
+      <div class="f"><span class="lbl">Le L30ER fait</span>toutes les 200 ms (<code>T_Lire</code>), <code>MSG_Recette</code> lit <code>Reponse</code> dans <code>Recette_Recue</code>.</div></div>
+    <div class="s" style="border-color:var(--ok)"><div class="n" style="background:var(--ok)">4</div><b class="t">Vérification</b>
+      <div class="q"><span class="lbl">Quand</span><code>MSG_Recette.DN</code>, et <code>Recette_Recue.Numero = Num_Choisi</code></div>
+      <div class="f"><span class="lbl">Le L30ER fait</span>COP <code>Recette_Recue</code> vers <code>Active</code>, longueur 1 ; <code>Duree_ms = T_Delai.ACC</code> ; OTL <code>Recette_OK</code> ; OTU <code>Demande</code> et <code>Lire</code>.</div></div>
+    <div class="s" style="border-color:var(--bad)"><div class="n" style="background:var(--bad)">5</div><b class="t">Chien de garde</b>
+      <div class="q"><span class="lbl">Quand</span><code>Demande = 1</code> depuis 2 s (<code>T_Delai</code>)</div>
+      <div class="f"><span class="lbl">Le L30ER fait</span>OTL <code>Defaut_Com</code> ; OTU <code>Demande</code> et <code>Lire</code>. <code>Active</code> ne change pas.</div></div>
+  </div>
+  <div class="warn" style="margin-top:18px"><b>Un piège :</b> une recette est une <b>structure</b>. On la copie avec <code>COP</code>, <b>jamais</b> avec <code>MOV</code>.</div>
+</section>
+
+<!-- ============ PARTIE 4 ============ -->
+<section id="p4">
+  <h2><small>FactoryTalk View ME · PanelView Plus 600 · raccourci L30ER</small>Partie 4 · L'écran et les essais <span class="pts">25 points</span></h2>
+  <div class="grid g2">
+    <div>
+      <p class="sub">Écran « Recettes » : 5 boutons momentanés Recette 1 à 5 (<code>HMI_R1</code> à <code>HMI_R5</code>) ; afficheurs de <code>Num_Choisi</code>, de <code>Duree_ms</code> et des 6 membres de <code>Active</code> (<code>Temps_Melange</code> en s) ; voyants <b>En cours</b> (<code>Demande</code>), <b>Recette chargée</b> (<code>Recette_OK</code>) et <b>Défaut de communication</b> (<code>Defaut_Com</code>). Le <code>.mer</code> dans le PanelView 600, puis les essais.</p>
+      <p style="font-size:15px;color:var(--muted)">Ci-contre : à quoi l'écran peut ressembler (les boutons de la maquette montrent la recette, pour vous donner une idée du résultat attendu — ce n'est pas la solution).</p>
+    </div>
+    <div class="hmi"><div class="scr">
+      <b>Recettes</b>
+      <div class="row" id="btns"></div>
+      <div class="row"><div class="dsp"><i>Num_Choisi</i><span id="d_num">0</span></div><div class="dsp"><i>Duree_ms</i><span id="d_dur">0</span></div></div>
+      <div class="row"><div class="dsp"><i>Numero</i><span id="d_a0">0</span></div><div class="dsp"><i>Nom</i><span id="d_a1">—</span></div></div>
+      <div class="row"><div class="dsp"><i>Niveau_1</i><span id="d_a2">0.0</span></div><div class="dsp"><i>Niveau_2</i><span id="d_a3">0.0</span></div></div>
+      <div class="row"><div class="dsp"><i>Temps_Melange</i><span id="d_a4">0 s</span></div><div class="dsp"><i>Vitesse</i><span id="d_a5">0 %</span></div></div>
+      <div class="row" style="gap:18px;margin-top:12px"><div class="lp" id="l_dem"><i></i>En cours</div><div class="lp" id="l_ok"><i></i>Recette chargée</div><div class="lp" id="l_def"><i></i>Défaut de communication</div></div>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;margin-top:10px;color:#334155"><input type="checkbox" id="cable" checked> câble du L32E branché (décochez pour simuler l'essai 6)</label>
+    </div></div>
+  </div>
+
+  <h3>Les essais — un par un, faites signer</h3>
+  <table class="essais">
+    <thead><tr><th>#</th><th>Faites</th><th>Vous devez voir</th><th style="width:60px">Fait</th><th class="visa">Visa</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Dans le L32E : <code>Num_Demande = 3</code>, puis <code>7</code></td><td><code>Reponse</code> = recette 3 ; puis <code>Numero = 0</code>, en Run</td><td><input type="checkbox" data-k="e1"></td><td></td></tr>
+      <tr><td>2</td><td>Bouton Recette 2</td><td>Recette chargée : Orangeade, 80, 200, 15 s, 80 %</td><td><input type="checkbox" data-k="e2"></td><td></td></tr>
+      <tr><td>3</td><td>Recettes 1, 3, 4 et 5, une à la fois</td><td>les bonnes valeurs ; <code>Duree_ms</code> = ________ ms</td><td><input type="checkbox" data-k="e3"></td><td></td></tr>
+      <tr><td>4</td><td>L32E : <code>Recettes[4].Vitesse = 90</code> ; puis Recette 4</td><td><code>Active.Vitesse = 90 %</code></td><td><input type="checkbox" data-k="e4"></td><td></td></tr>
+      <tr><td>5</td><td>L32E en Program, une autre recette ; Run, la même</td><td>Défaut en 2 s, <code>Active</code> inchangée ; en Run : chargée</td><td><input type="checkbox" data-k="e5"></td><td></td></tr>
+      <tr><td>6</td><td>Câble du L32E débranché ; Recette 1, puis Recette 5 pendant « En cours »</td><td><code>Num_Choisi</code> reste 1 ; Défaut en 2 s ; <code>Active</code> ne change pas</td><td><input type="checkbox" data-k="e6"></td><td></td></tr>
+      <tr><td>7</td><td>Câble rebranché ; Recette 1</td><td>Recette chargée (si Défaut : attendez, refaites)</td><td><input type="checkbox" data-k="e7"></td><td></td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:14px;color:var(--muted)">Les cases « Fait » restent cochées dans ce navigateur, pour vous. Le vrai visa, c'est sur le tableau papier signé.</p>
+
+  <h3>Les questions (dans votre remise)</h3>
+  <div class="card">
+    <ol style="margin:0;padding-left:22px;line-height:1.8">
+      <li>Pourquoi le L30ER vérifie-t-il le numéro reçu avant de copier ? (essai 5)</li>
+      <li>Pourquoi <code>CLR Recette_Recue.Numero</code> à chaque demande ? Pensez à la même recette demandée deux fois (essai 4).</li>
+      <li>À quoi sert le <code>LIM</code> du L32E ? Sans lui, que ferait le L32E s'il recevait 7 ?</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ REMISE ============ -->
+<section id="remise">
+  <h2><small>Sur Léa, en équipe de deux</small>À remettre <span class="pts">Qualité · 10 points</span></h2>
+  <div class="grid g2">
+    <div class="card">
+      <ul class="chk">
+        <li>les deux projets (<code>.ACD</code>) ;</li>
+        <li>leurs routines en PDF ;</li>
+        <li>l'écran : le <code>.apa</code> et le <code>.mer</code> ;</li>
+        <li>le tableau des essais <b>signé</b> ;</li>
+        <li>vos réponses aux trois questions.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <b>Qualité, 10 points</b>
+      <ul style="margin:8px 0 0;padding-left:22px;line-height:1.8">
+        <li>lignes commentées ;</li>
+        <li>noms des tags respectés ;</li>
+        <li><b>une seule MSG à la fois</b>.</li>
+      </ul>
+      <p style="margin:12px 0 0;color:var(--muted);font-size:15px">Barème : Partie 1 · 20 — Partie 2 · 25 — Partie 3 · 20 — Partie 4 · 25 — Qualité · 10 = <b>100</b>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DÉFI ============ -->
+<section id="defi">
+  <h2><small>Si vous avez fini</small>Le défi</h2>
+  <div class="card">
+    <p style="margin-top:0">Enregistrez dans le L32E une recette <b>changée à l'écran</b>. Une 3<sup>e</sup> MSG (CIP Data Table Write) envoie <code>Modif</code> (<code>Recette</code>) dans <code>Recette_Modif</code> du L32E ; le L32E la range dans <code>Recettes[Recette_Modif.Numero]</code> (avec un <code>LIM</code>), puis remet <code>Recette_Modif.Numero</code> à 0.</p>
+    <details><summary>Indices (sans la solution)</summary>
+      <ul style="line-height:1.7">
+        <li>Le L32E doit lui aussi vérifier le numéro (1 à 5) avant de ranger : c'est le même réflexe que la partie 1.</li>
+        <li>Remettre <code>Recette_Modif.Numero</code> à 0 après la copie évite de ranger deux fois la même modification à chaque scrutation.</li>
+        <li>Côté L30ER : une seule MSG à la fois — attendez que la demande en cours soit finie avant d'envoyer <code>Modif</code>.</li>
+      </ul>
+    </details>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  Les recettes demandées par MSG · Réseaux industriels · Bassam Kattan, Ph. D. — Control System Engineering<br>
+  Page pour les étudiants : le cahier des charges et la méthode, sans la solution.
+</footer>
+
+<script>
+(function(){
+  // onglets : surligner la section visible
+  const links=[...document.querySelectorAll('nav.tabs a')], secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.toggle('on',l.getAttribute('href')==='#'+e.target.id));}})},{rootMargin:'-40% 0px -55% 0px'});
+  secs.forEach(s=>s&&io.observe(s));
+  // essais : cases mémorisées
+  const K='recettes-msg-essais';let st={};try{st=JSON.parse(localStorage.getItem(K)||'{}')}catch(e){}
+  document.querySelectorAll('.essais input[type=checkbox]').forEach(c=>{c.checked=!!st[c.dataset.k];c.addEventListener('change',()=>{st[c.dataset.k]=c.checked;try{localStorage.setItem(K,JSON.stringify(st))}catch(e){}})});
+  // maquette de l'écran : ce que l'opérateur verra (pas le programme)
+  const R=[null,['Limonade',100,250,10000,60],['Orangeade',80,200,15000,80],['Punch',120,280,8000,50],['Boisson sport',60,150,20000,100],['Sirop',100,200,12000,40]];
+  const $=id=>document.getElementById(id);let busy=false,timer=null;
+  const bts=$('btns');for(let k=1;k<=5;k++){const b=document.createElement('div');b.className='bt';b.textContent='Recette '+k;b.onclick=()=>choix(k);bts.appendChild(b);}
+  function lamp(id,on,red){const e=$(id);e.className='lp'+(on?(red?' red':' on'):'');}
+  function choix(k){
+    if(busy)return;                       // règle 1 : une à la fois
+    busy=true;$('d_num').textContent=k;lamp('l_dem',true);lamp('l_ok',false);lamp('l_def',false);$('d_dur').textContent='…';
+    const t0=performance.now();
+    clearTimeout(timer);
+    if($('cable').checked){
+      timer=setTimeout(()=>{const r=R[k];$('d_a0').textContent=k;$('d_a1').textContent=r[0];$('d_a2').textContent=r[1].toFixed(1);$('d_a3').textContent=r[2].toFixed(1);
+        $('d_a4').textContent=(r[3]/1000)+' s';$('d_a5').textContent=r[4]+' %';$('d_dur').textContent=Math.round(performance.now()-t0);
+        lamp('l_dem',false);lamp('l_ok',true);busy=false;},250+Math.random()*200);
+    }else{
+      timer=setTimeout(()=>{lamp('l_dem',false);lamp('l_def',true,true);$('d_dur').textContent='—';busy=false;},2000);   // règle 4 : chien de garde 2 s, Active inchangée
+    }
+  }
+})();
+</script>
+</body>
+</html>
