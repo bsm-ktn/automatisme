@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="fr" data-astryx-theme="neutral">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Démo Astryx — Démarrage d'un moteur (ladder)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@astryxdesign/core@0.7.17/src/reset.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@astryxdesign/core@0.7.17/dist/astryx.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@astryxdesign/theme-neutral@0.7.17/dist/theme.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "react": "https://esm.sh/react@19.2.0",
+          "react/jsx-runtime": "https://esm.sh/react@19.2.0/jsx-runtime",
+          "react-dom": "https://esm.sh/react-dom@19.2.0",
+          "react-dom/client": "https://esm.sh/react-dom@19.2.0/client",
+          "htm": "https://esm.sh/htm@3.1.1",
+          "@astryxdesign/core": "https://esm.sh/@astryxdesign/core@0.7.17?external=react,react-dom",
+          "@astryxdesign/theme-neutral": "https://esm.sh/@astryxdesign/theme-neutral@0.7.17?external=react,react-dom"
+        }
+      }
+    </script>
+    <style>
+      body { font-family: var(--font-family-body); }
+      #root:empty::after { content: 'Chargement…'; display: block; padding: 2rem; color: var(--color-text-secondary); }
+      pre.ladder { font-family: ui-monospace, Consolas, monospace; font-size: 14px; line-height: 1.5; margin: 0; white-space: pre; overflow-x: auto; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import * as React from 'react';
+      import {createRoot} from 'react-dom/client';
+      import htm from 'htm';
+      import {Theme, Stack, HStack, Card, Heading, Text, Button, Badge, Banner, Collapsible, Divider} from '@astryxdesign/core';
+      import {neutralTheme} from '@astryxdesign/theme-neutral';
+      const h = htm.bind(React.createElement);
+      const {useState} = React;
+
+      const LADDER = `Ligne 1 : Démarrage / arrêt avec maintien
+     Arret     Depart       Moteur
+----] / [------] [-----+-----(   )----
+                       |
+          Moteur       |
+----------] [----------+
+
+Ligne 2 : Témoin de marche
+     Moteur                Lampe
+----] [-------------------(   )----`;
+
+      const QUESTIONS = [
+        {q: 'Dans la ligne 1, pourquoi le contact « Moteur » est-il en parallèle avec « Depart » ?',
+         choix: ['Pour maintenir le moteur en marche quand on relâche le bouton Départ', 'Pour arrêter le moteur plus vite', 'Pour alimenter la lampe'], bonne: 0},
+        {q: 'Le bouton « Arret » est câblé avec un contact normalement fermé. Que se passe-t-il si son fil est coupé ?',
+         choix: ['Le moteur démarre tout seul', 'Le moteur s’arrête (sécurité positive)', 'Rien ne change'], bonne: 1},
+        {q: 'Que représente la bobine entre parenthèses au bout d’une ligne ?',
+         choix: ['Une entrée (bouton, capteur)', 'Une sortie (moteur, lampe, bit interne)', 'Un temporisateur'], bonne: 1},
+      ];
+      function Question({n, data}) {
+        const [rep, setRep] = useState(null);
+        const ok = rep === data.bonne;
+        return h`
+          <${Card} elevation="low">
+            <${Stack} gap=${3} align="start">
+              <${HStack} gap=${2} align="center">
+                <${Badge} variant="info" label=${'Question ' + n} />
+                ${rep !== null && h`<${Badge} variant=${ok ? 'success' : 'error'} label=${ok ? 'Bonne réponse' : 'À revoir'} />`}
+              </${HStack}>
+              <${Text}>${data.q}</${Text}>
+              <${HStack} gap=${2} wrap>
+                ${data.choix.map((c, i) => h`
+                  <${Button} key=${i} label=${c} variant=${rep === i ? (i === data.bonne ? 'primary' : 'secondary') : 'secondary'}
+                    onClick=${() => setRep(i)} />`)}
+              </${HStack}>
+              ${rep !== null && !ok && h`<${Text} type="supporting">Indice : relis la ligne concernée dans le programme ci-dessus.</${Text}>`}
+            </${Stack}>
+          </${Card}>`;
+      }
+      function App() {
+        return h`
+          <${Theme} theme=${neutralTheme} mode="system">
+            <${Stack} padding=${6} gap=${5} align="stretch" style=${{maxWidth: 860, margin: '0 auto'}}>
+              <${Stack} gap=${2} align="start">
+                <${Badge} variant="purple" label="Démo Astryx — page d'essai" />
+                <${Heading} level=${1}>Démarrage d'un moteur avec maintien</${Heading}>
+                <${Text} type="supporting">Automates programmables — exercice d'introduction au langage ladder. Page générée avec la bibliothèque Astryx (Meta), sans installation côté étudiant.</${Text}>
+              </${Stack}>
+              <${Banner} status="info" title="Objectif" description="Comprendre le maintien (auto-alimentation) et la sécurité positive du bouton d'arrêt." collapsible=${false} />
+              <${Card} elevation="low">
+                <${Stack} gap=${3} align="start">
+                  <${Heading} level=${2}>Programme (2 lignes)</${Heading}>
+                  <pre class="ladder">${LADDER}</pre>
+                </${Stack}>
+              </${Card}>
+              <${Heading} level=${2}>Vérifie ta compréhension</${Heading}>
+              ${QUESTIONS.map((d, i) => h`<${Question} key=${i} n=${i + 1} data=${d} />`)}
+              <${Divider} />
+              <${Collapsible} trigger="Voir la solution commentée" defaultIsOpen=${false}>
+                <${Stack} gap=${2} align="start" padding=${3}>
+                  <${Text}>• Ligne 1 : quand on appuie sur Départ, la bobine Moteur s'active. Le contact Moteur en parallèle garde la ligne fermée même après avoir relâché le bouton : c'est le maintien.</${Text}>
+                  <${Text}>• Le bouton Arrêt est normalement fermé : un fil coupé ou un bouton pressé ouvre la ligne et coupe le moteur. C'est la sécurité positive.</${Text}>
+                  <${Text}>• Ligne 2 : la lampe suit simplement l'état du moteur.</${Text}>
+                </${Stack}>
+              </${Collapsible}>
+              <${Text} type="supporting">Bassam Kattan — Cégep du Vieux Montréal, 243.D0</${Text}>
+            </${Stack}>
+          </${Theme}>`;
+      }
+      createRoot(document.getElementById('root')).render(h`<${App} />`);
+    </script>
+  </body>
+</html>
