@@ -68,14 +68,14 @@
 
       // ---------- Figures (SVG) ----------
       function FigCablage() {
-        const dev = [40, 85, 130, 175, 220, 265];
+        const dev = [110, 130, 150, 170, 190, 210];
         return h`<svg class="fig" viewBox="0 0 640 300" role="img" aria-label="Câblage conventionnel contre réseau">
           <text x="150" y="22" textAnchor="middle" fontWeight="600" fontSize="14">Câblage conventionnel</text>
           <rect class="plc" x="120" y="40" width="60" height="60" rx="6"/><text x="150" y="75" textAnchor="middle" fontSize="12" class="white">API</text>
           ${dev.map((y, i) => h`<g key=${i}>
-            <line class="wire" x1=${125 + i * 10} y1="100" x2=${125 + i * 10} y2=${y + 150 - 80} />
-            <line class="wire" x1=${125 + i * 10} y1=${y + 150 - 80} x2=${30 + i * 48} y2=${y + 150 - 80} />
-            <line class="wire" x1=${30 + i * 48} y1=${y + 150 - 80} x2=${30 + i * 48} y2="250" />
+            <line class="wire" x1=${125 + i * 10} y1="100" x2=${125 + i * 10} y2=${y} />
+            <line class="wire" x1=${125 + i * 10} y1=${y} x2=${30 + i * 48} y2=${y} />
+            <line class="wire" x1=${30 + i * 48} y1=${y} x2=${30 + i * 48} y2="250" />
             <circle class="dev" cx=${30 + i * 48} cy="258" r="9" />
           </g>`)}
           <text x="150" y="290" textAnchor="middle" fontSize="12" class="muted">1 capteur = 1 ou 2 fils jusqu'à l'armoire</text>
